@@ -48,16 +48,13 @@
         <div class="mt-4">
             <x-input-label for="id_role" :value="__('Role')" />
             <select id="id_role" name="id_role" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
-                <option value="">Select Role</option>
-                @if (count($roles) == 0)
-                    <option value="1">No roles available</option>
-                @else
+                <option value="1">Select Role</option>
+                
                 @foreach($roles as $role)
                 <option value="{{ $role->id_role }}" {{ old('id_role') == $role->id_role ? 'selected' : '' }}>
                     {{ $role->libelle ?? $role->code }}
                 </option>
                 @endforeach
-                @endif
             </select>
             <x-input-error :messages="$errors->get('id_role')" class="mt-2" />
         </div>
