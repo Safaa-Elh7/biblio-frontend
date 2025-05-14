@@ -796,77 +796,167 @@
         </div>
     </div>
 
-    <script>
+   <script>
     // Fonction pour gérer la visibilité de la bannière "Best of Today"
-    function updateBannerVisibility() {
-        const searchTerm = document.getElementById('searchInput').value.trim();
-        const activeCategory = document.querySelector('.category-item.active');
-        const categoryType = activeCategory ? activeCategory.dataset.category : 'all';
-        const banner = document.querySelector('.banner');
-        
-        // Masquer la bannière si la recherche n'est pas vide OU si la catégorie n'est pas "all"
-        if (searchTerm !== '' || (categoryType !== 'all' && categoryType !== undefined)) {
-            banner.style.display = 'none';
-        } else {
-            banner.style.display = 'block';
-        }
+function updateBannerVisibility() {
+    const searchTerm = document.getElementById('searchInput').value.trim();
+    const activeCategory = document.querySelector('.category-item.active');
+    const categoryType = activeCategory ? activeCategory.dataset.category : 'all';
+    const banner = document.querySelector('.banner');
+    
+    // Masquer la bannière si la recherche n'est pas vide OU si la catégorie n'est pas "all"
+    if (searchTerm !== '' || (categoryType !== 'all' && categoryType !== undefined)) {
+        banner.style.display = 'none';
+    } else {
+        banner.style.display = 'block';
     }
+}
 
-    // Données des livres avec des images réelles d'Unsplash
-    let books = [];
+// Données des livres par défaut au cas où l'API échoue
+let books = [
+    {
+        id: 1,
+        title: "Chargement...",
+        author: "Chargement...",
+        category: "all",
+        cover: "https://images.unsplash.com/photo-1598618253208-d75408cee680?q=80&w=1000&auto=format&fit=crop",
+        prix_emprunt: 0,
+        isBestSeller: false
+    }
+];
+
+// Fonction pour sécuriser l'accès aux propriétés
+function getBookProperty(book, property, defaultValue = "Non disponible") {
+    return book && book[property] !== undefined && book[property] !== null 
+        ? book[property] 
+        : defaultValue;
+}
+
+// Fonction pour charger les livres depuis l'API
+function loadBooks() {
     fetch("http://localhost:8081/api/articles")
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) {
+                throw new Error("Erreur réseau lors de la récupération des articles");
+            }
+            return res.json();
+        })
         .then(data => {
-            // Remplir books avec les données récupérées
-            books = data.map(book => ({
-                ...book,
-                isBestSeller: book.prix_emprunt > 100 // ou ta propre logique
-            }));
+            if (Array.isArray(data) && data.length > 0) {
+                // Remplir books avec les données récupérées
+                books = data.map(book => ({
+                    id: getBookProperty(book, 'id', Math.random().toString(36).substr(2, 9)),
+                    title: getBookProperty(book, 'title', 'Titre inconnu'),
+                    author: getBookProperty(book, 'author', 'Auteur inconnu'),
+                    category: getBookProperty(book, 'category', 'all'),
+                    cover: getBookProperty(book, 'cover', 'https://images.unsplash.com/photo-1598618253208-d75408cee680?q=80&w=1000&auto=format&fit=crop'),
+                    prix_emprunt: getBookProperty(book, 'prix_emprunt', 0),
+                    // Déterminer si c'est un best-seller en fonction du prix ou d'une autre propriété
+                    isBestSeller: book.prix_emprunt > 100 || getBookProperty(book, 'isBestSeller', false)
+                }));
 
-            // Exemple de traitement : filtrer les livres romantiques
-            const romanticBooks = books.filter(book => book.category === 'romantic');
-            console.log('Livres romantiques:', romanticBooks);
+                console.log('Livres chargés avec succès:', books.length);
 
-            // Exemple de tri : livres triés par prix
-            const sortedBooks = [...books].sort((a, b) => a.prix_emprunt - b.prix_emprunt);
-            console.log('Livres triés par prix:', sortedBooks);
-
-            // Appeler les fonctions d'affichage après le chargement
+                // Afficher les livres après le chargement
+                displayBooks("popularBooks", books);
+                displayBooks("bestSellerBooks", books.filter(book => book.isBestSeller));
+                
+                // Afficher un message de confirmation
+                showToast(`${books.length} livres chargés avec succès`);
+            } else {
+                console.warn("Aucun livre n'a été renvoyé par l'API ou format invalide");
+                showToast("Aucun livre disponible pour le moment");
+            }
+        })
+        .catch(err => {
+            console.error("Erreur lors du chargement des articles :", err);
+            showToast("Impossible de charger les livres. Veuillez réessayer plus tard.");
+            
+            // Utiliser des données de démonstration en cas d'échec
+            const demoBooks = generateDemoBooks();
+            books = demoBooks;
+            
+            // Afficher les livres de démonstration
             displayBooks("popularBooks", books);
             displayBooks("bestSellerBooks", books.filter(book => book.isBestSeller));
-        })
-        .catch(err => console.error("Erreur lors du chargement des articles :", err));
+        });
+}
 
-    // Fonction pour afficher les livres avec animation
-    function displayBooks(containerId, booksToDisplay) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = '';
+// Fonction pour générer des livres de démonstration en cas d'échec de l'API
+function generateDemoBooks() {
+    const categories = ['romantic', 'fiction', 'manga', 'education', 'all'];
+    const demoBooks = [];
+    
+    // Générer 12 livres de démonstration
+    for (let i = 1; i <= 12; i++) {
+        const category = categories[Math.floor(Math.random() * categories.length)];
+        const isBestSeller = Math.random() > 0.7; // 30% de chance d'être un best-seller
         
-        booksToDisplay.forEach((book, index) => {
-            const bookCard = document.createElement('div');
-            bookCard.className = 'book-card fade-in';
-            bookCard.dataset.category = book.category;
-            bookCard.style.animationDelay = `${index * 0.05}s`;
-            
-            const bestSellerBadge = book.isBestSeller ? `<span class="book-badge">Best Seller</span>` : '';
-            
-            bookCard.innerHTML = `
-                <img src="${book.cover}" alt="${book.title}" class="book-cover">
-                <h3 class="book-title">${book.title}</h3>
-                <span class="author-name">${book.author}</span>
-                ${bestSellerBadge}
-            `;
-            
-            // Ajouter un effet de clic
-            bookCard.addEventListener('click', function() {
-                showToast(`You selected "${book.title}" by ${book.author}`);
-            });
-            
-            container.appendChild(bookCard);
+        demoBooks.push({
+            id: i,
+            title: `Livre de démonstration ${i}`,
+            author: `Auteur ${i}`,
+            category: category,
+            cover: `https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000&auto=format&fit=crop`,
+            prix_emprunt: Math.floor(Math.random() * 200) + 50,
+            isBestSeller: isBestSeller
         });
     }
+    
+    return demoBooks;
+}
 
-    // Filtrage par catégorie avec animation
+// Fonction pour afficher les livres avec animation
+function displayBooks(containerId, booksToDisplay) {
+    const container = document.getElementById(containerId);
+    if (!container) {
+        console.error(`Conteneur avec l'ID ${containerId} introuvable`);
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    // Vérifier si nous avons des livres à afficher
+    if (!Array.isArray(booksToDisplay) || booksToDisplay.length === 0) {
+        const emptyMessage = document.createElement('div');
+        emptyMessage.className = 'col-span-full text-center py-8 text-text-medium';
+        emptyMessage.textContent = 'Aucun livre à afficher pour cette catégorie';
+        container.appendChild(emptyMessage);
+        return;
+    }
+    
+    booksToDisplay.forEach((book, index) => {
+        const bookCard = document.createElement('div');
+        bookCard.className = 'book-card fade-in';
+        bookCard.dataset.category = getBookProperty(book, 'category', 'all');
+        bookCard.style.animationDelay = `${index * 0.05}s`;
+        
+        const title = getBookProperty(book, 'title', 'Titre inconnu');
+        const author = getBookProperty(book, 'author', 'Auteur inconnu');
+        const cover = getBookProperty(book, 'cover', 'https://images.unsplash.com/photo-1598618253208-d75408cee680?q=80&w=1000&auto=format&fit=crop');
+        const isBestSeller = getBookProperty(book, 'isBestSeller', false);
+        
+        const bestSellerBadge = isBestSeller ? `<span class="book-badge">Best Seller</span>` : '';
+        
+        bookCard.innerHTML = `
+            <img src="${cover}" alt="${title}" class="book-cover" 
+                 onerror="this.src='https://images.unsplash.com/photo-1598618253208-d75408cee680?q=80&w=1000&auto=format&fit=crop'; this.onerror=null;">
+            <h3 class="book-title">${title}</h3>
+            <span class="author-name">${author}</span>
+            ${bestSellerBadge}
+        `;
+        
+        // Ajouter un effet de clic
+        bookCard.addEventListener('click', function() {
+            showToast(`Vous avez sélectionné "${title}" de ${author}`);
+        });
+        
+        container.appendChild(bookCard);
+    });
+}
+
+// Filtrage par catégorie avec animation
+function initCategoryFilters() {
     const categoryItems = document.querySelectorAll('.category-item');
     categoryItems.forEach(item => {
         if (!item.dataset.category) return; // Ignorer l'élément "category"
@@ -891,7 +981,9 @@
             if (category === 'all') {
                 filteredBooks = books;
             } else {
-                filteredBooks = books.filter(book => book.category === category);
+                filteredBooks = books.filter(book => 
+                    getBookProperty(book, 'category', '') === category
+                );
             }
             
             // Afficher les livres filtrés dans la section Popular
@@ -899,8 +991,11 @@
             
             // Filtrer les best-sellers également
             const filteredBestSellers = category === 'all'
-                ? books.filter(book => book.isBestSeller)
-                : books.filter(book => book.category === category && book.isBestSeller);
+                ? books.filter(book => getBookProperty(book, 'isBestSeller', false))
+                : books.filter(book => 
+                    getBookProperty(book, 'category', '') === category && 
+                    getBookProperty(book, 'isBestSeller', false)
+                );
             
             displayBooks('bestSellerBooks', filteredBestSellers);
             
@@ -908,13 +1003,20 @@
             updateBannerVisibility();
             
             // Afficher un message de confirmation
-            showToast(`Showing ${category} books`);
+            showToast(`Affichage des livres de la catégorie: ${category}`);
         });
     });
+}
 
-    // Recherche de livres avec animation
+// Recherche de livres avec animation
+function initSearchFunctionality() {
     const searchInput = document.getElementById('searchInput');
     const searchButton = document.getElementById('searchButton');
+    
+    if (!searchInput || !searchButton) {
+        console.error("Éléments de recherche introuvables");
+        return;
+    }
     
     function searchBooks() {
         const searchTerm = searchInput.value.toLowerCase().trim();
@@ -922,7 +1024,9 @@
         if (searchTerm === '') {
             // Si la recherche est vide, afficher tous les livres
             displayBooks('popularBooks', books);
-            displayBooks('bestSellerBooks', books.filter(book => book.isBestSeller));
+            displayBooks('bestSellerBooks', books.filter(book => 
+                getBookProperty(book, 'isBestSeller', false)
+            ));
             
             // Mettre à jour la visibilité de la bannière
             updateBannerVisibility();
@@ -931,15 +1035,17 @@
         
         // Filtrer les livres par titre ou auteur
         const filteredBooks = books.filter(book => 
-            book.title.toLowerCase().includes(searchTerm) || 
-            book.author.toLowerCase().includes(searchTerm)
+            getBookProperty(book, 'title', '').toLowerCase().includes(searchTerm) || 
+            getBookProperty(book, 'author', '').toLowerCase().includes(searchTerm)
         );
         
         // Afficher les résultats
         displayBooks('popularBooks', filteredBooks);
         
         // Filtrer également les best-sellers
-        const filteredBestSellers = filteredBooks.filter(book => book.isBestSeller);
+        const filteredBestSellers = filteredBooks.filter(book => 
+            getBookProperty(book, 'isBestSeller', false)
+        );
         
         displayBooks('bestSellerBooks', filteredBestSellers);
         
@@ -947,7 +1053,7 @@
         updateBannerVisibility();
         
         // Afficher un message de confirmation
-        showToast(`Found ${filteredBooks.length} books matching "${searchTerm}"`);
+        showToast(`${filteredBooks.length} livres correspondent à "${searchTerm}"`);
     }
     
     // Événement de clic sur le bouton de recherche
@@ -962,52 +1068,55 @@
     
     // Événement d'entrée de texte dans le champ de recherche
     searchInput.addEventListener('input', updateBannerVisibility);
-    
-    // Fonction pour afficher un toast de notification
-    function showToast(message) {
-        // Créer l'élément toast s'il n'existe pas déjà
-        let toast = document.getElementById('toast');
-        if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'toast';
-            toast.className = 'fixed bottom-4 right-4 bg-sidebar text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-500 z-50';
-            document.body.appendChild(toast);
-            
-            // Ajouter du CSS pour l'animation
-            document.head.insertAdjacentHTML('beforeend', `
-                <style>
-                    @keyframes shake {
-                        0%, 100% { transform: translateX(0); }
-                        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-                        20%, 40%, 60%, 80% { transform: translateX(5px); }
-                    }
-                    .shake {
-                        animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-                    }
-                    .animate-click {
-                        animation: click 0.3s ease;
-                    }
-                    @keyframes click {
-                        0% { transform: scale(1); }
-                        50% { transform: scale(0.9); }
-                        100% { transform: scale(1); }
-                    }
-                </style>
-            `);
-        }
+}
+
+// Fonction pour afficher un toast de notification
+function showToast(message) {
+    // Créer l'élément toast s'il n'existe pas déjà
+    let toast = document.getElementById('toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.className = 'fixed bottom-4 right-4 bg-sidebar text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-500 z-50';
+        document.body.appendChild(toast);
         
-        // Mettre à jour le message et afficher le toast
-        toast.textContent = message;
-        toast.style.transform = 'translateY(0)';
-        toast.style.opacity = '1';
-        
-        // Masquer le toast après 3 secondes
-        setTimeout(() => {
-            toast.style.transform = 'translateY(20px)';
-            toast.style.opacity = '0';
-        }, 3000);
+        // Ajouter du CSS pour l'animation
+        document.head.insertAdjacentHTML('beforeend', `
+            <style>
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                    20%, 40%, 60%, 80% { transform: translateX(5px); }
+                }
+                .shake {
+                    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+                }
+                .animate-click {
+                    animation: click 0.3s ease;
+                }
+                @keyframes click {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(0.9); }
+                    100% { transform: scale(1); }
+                }
+            </style>
+        `);
     }
     
+    // Mettre à jour le message et afficher le toast
+    toast.textContent = message;
+    toast.style.transform = 'translateY(0)';
+    toast.style.opacity = '1';
+    
+    // Masquer le toast après 3 secondes
+    setTimeout(() => {
+        toast.style.transform = 'translateY(20px)';
+        toast.style.opacity = '0';
+    }, 3000);
+}
+
+// Initialiser les effets des boutons "view all"
+function initButtonEffects() {
     // Ajouter des effets de survol aux boutons "view all"
     document.querySelectorAll('.view-all-btn').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -1015,22 +1124,44 @@
             this.classList.add('animate-click');
             setTimeout(() => {
                 this.classList.remove('animate-click');
-                showToast('Viewing all books in this category');
+                showToast('Affichage de tous les livres de cette catégorie');
             }, 300);
         });
     });
     
     // Ajouter un effet de clic au bouton de la bannière
-    document.querySelector('.banner-btn').addEventListener('click', function(e) {
-        e.preventDefault();
-        // Ajouter une animation au clic
-        this.classList.add('animate-click');
-        setTimeout(() => {
-            this.classList.remove('animate-click');
-            showToast('Exploring the Best of Today collection');
-        }, 300);
-    });
-</script>
+    const bannerBtn = document.querySelector('.banner-btn');
+    if (bannerBtn) {
+        bannerBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Ajouter une animation au clic
+            this.classList.add('animate-click');
+            setTimeout(() => {
+                this.classList.remove('animate-click');
+                showToast('Exploration de la collection "Meilleurs du jour"');
+            }, 300);
+        });
+    }
+}
+
+// Fonction d'initialisation principale
+function init() {
+    // Charger les livres
+    loadBooks();
+    
+    // Initialiser les filtres de catégorie
+    initCategoryFilters();
+    
+    // Initialiser la fonctionnalité de recherche
+    initSearchFunctionality();
+    
+    // Initialiser les effets des boutons
+    initButtonEffects();
+}
+
+// Lancer l'initialisation au chargement de la page
+document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
 
 </html>
