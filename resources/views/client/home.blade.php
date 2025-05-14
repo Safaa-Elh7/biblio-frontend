@@ -813,92 +813,29 @@
     }
 
     // Données des livres avec des images réelles d'Unsplash
-    const books = [
-        { 
-            title: "Harry Potter", 
-            author: "J. K. Rowling", 
-            category: "fiction", 
-            cover: "https://images.unsplash.com/photo-1626618012641-bfbca5a31239?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=464&q=80", 
-            isBestSeller: true 
-        },
-        { 
-            title: "Crime and Punishment", 
-            author: "Fyodor Dostoevsky", 
-            category: "fiction", 
-            cover: "https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=688&q=80", 
-            isBestSeller: true 
-        },
-        { 
-            title: "War and Peace", 
-            author: "Leo Tolstoy", 
-            category: "fiction", 
-            cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80", 
-            isBestSeller: false 
-        },
-        { 
-            title: "Communist Manifesto", 
-            author: "Karl Marx", 
-            category: "education", 
-            cover: "https://images.unsplash.com/photo-1614332287897-cdc485fa562d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80", 
-            isBestSeller: true 
-        },
-        { 
-            title: "Manga Title", 
-            author: "Manga Author", 
-            category: "manga", 
-            cover: "https://images.unsplash.com/photo-1613376023733-0a73315d9b06?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80", 
-            isBestSeller: true 
-        },
-        { 
-            title: "Das Kapital", 
-            author: "Karl Marx", 
-            category: "education", 
-            cover: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1212&q=80", 
-            isBestSeller: false 
-        },
-        { 
-            title: "Das Kapital 2", 
-            author: "Karl Marx", 
-            category: "education", 
-            cover: "https://images.unsplash.com/photo-1592496431122-2349e0fbc666?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1212&q=80", 
-            isBestSeller: true 
-        },
-        { 
-            title: "Journey to the Center", 
-            author: "Jules Verne", 
-            category: "fiction", 
-            cover: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80", 
-            isBestSeller: true 
-        },
-        { 
-            title: "Pride and Prejudice", 
-            author: "Jane Austen", 
-            category: "romantic", 
-            cover: "https://images.unsplash.com/photo-1474932430478-367dbb6832c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80", 
-            isBestSeller: true 
-        },
-        { 
-            title: "Romeo and Juliet", 
-            author: "William Shakespeare", 
-            category: "romantic", 
-            cover: "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80", 
-            isBestSeller: true 
-        },
-        { 
-            title: "One Piece", 
-            author: "Eiichiro Oda", 
-            category: "manga", 
-            cover: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80", 
-            isBestSeller: true 
-        },
-        { 
-            title: "Attack on Titan", 
-            author: "Hajime Isayama", 
-            category: "manga", 
-            cover: "https://images.unsplash.com/photo-1618519764620-7403abdbdfe9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80", 
-            isBestSeller: true 
-        }
-    ];
+    let books = [];
+    fetch("http://localhost:8081/api/articles")
+        .then(res => res.json())
+        .then(data => {
+            // Remplir books avec les données récupérées
+            books = data.map(book => ({
+                ...book,
+                isBestSeller: book.prix_emprunt > 100 // ou ta propre logique
+            }));
+
+            // Exemple de traitement : filtrer les livres romantiques
+            const romanticBooks = books.filter(book => book.category === 'romantic');
+            console.log('Livres romantiques:', romanticBooks);
+
+            // Exemple de tri : livres triés par prix
+            const sortedBooks = [...books].sort((a, b) => a.prix_emprunt - b.prix_emprunt);
+            console.log('Livres triés par prix:', sortedBooks);
+
+            // Appeler les fonctions d'affichage après le chargement
+            displayBooks("popularBooks", books);
+            displayBooks("bestSellerBooks", books.filter(book => book.isBestSeller));
+        })
+        .catch(err => console.error("Erreur lors du chargement des articles :", err));
 
     // Fonction pour afficher les livres avec animation
     function displayBooks(containerId, booksToDisplay) {
@@ -928,18 +865,6 @@
             container.appendChild(bookCard);
         });
     }
-
-    // Afficher les livres initiaux avec un léger délai pour l'animation
-    setTimeout(() => {
-        displayBooks('popularBooks', books);
-        
-        // Afficher les best-sellers
-        const bestSellers = books.filter(book => book.isBestSeller);
-        displayBooks('bestSellerBooks', bestSellers);
-        
-        // Vérifier la visibilité de la bannière au chargement initial
-        updateBannerVisibility();
-    }, 100);
 
     // Filtrage par catégorie avec animation
     const categoryItems = document.querySelectorAll('.category-item');
