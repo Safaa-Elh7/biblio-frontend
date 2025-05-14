@@ -14,7 +14,7 @@ class RegisteredUserController extends Controller
 {
     public function create()
     {
-        $roles = Role::all();    // récupère tous tes rôles (id_role, code, libelle…)
+        $roles = Role::all();
         return view('auth.register', compact('roles'));
     }
 
@@ -31,7 +31,6 @@ class RegisteredUserController extends Controller
             'id_role'        => ['required', 'exists:roles,id_role'],
         ]);
 
-        // 1) Création du User
         $user = User::create([
             'name'           => $request->name,
             'prenom'         => $request->prenom,
@@ -42,16 +41,15 @@ class RegisteredUserController extends Controller
             'password'       => Hash::make($request->password),
         ]);
 
-        // 2) Création de la ligne dans la table `utilisateur`
         $user->utilisateur()->create([
             'email'        => $request->email,
             'mot_de_passe' => Hash::make($request->password),
             'id_role'      => $request->id_role,
         ]);
 
-        // 3) Création du sous‐modèle métier selon le code du rôle
         $role = Role::findOrFail($request->id_role);
-        switch($role->code) {
+
+        switch($role->libelle) {
             case 'livreur':
                 $user->livreur()->create();
                 $redirect = 'livreur.dashboard';
@@ -60,14 +58,19 @@ class RegisteredUserController extends Controller
                 $user->employe()->create();
                 $redirect = 'employe.dashboard';
                 break;
+            case 'client':
+                $user->employe()->create();
+                $redirect = 'client.home';
+                break;
+            case 'bibliothecaire':
+                $user->employe()->create();
+                $redirect = 'bibliothecaire.dashboard';
+                break;
             default:
                 $user->client()->create();
                 $redirect = 'home';
                 break;
         }
-
-        event(new Registered($user));
-        auth()->login($user);
 
         return redirect()->route($redirect);
     }
