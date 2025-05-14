@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('article', function (Blueprint $table) {
             $table->bigIncrements('id_article');
+            $table->string('image', 255)->nullable();
             $table->string('titre', 255);
             $table->year('annee_pub')->nullable();
             $table->unsignedInteger('qte')->default(1);

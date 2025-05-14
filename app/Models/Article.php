@@ -20,7 +20,7 @@ class Article extends Authenticatable
     public $incrementing = true;
     public $timestamps = true;
 
-    protected $fillable = ['titre','annee_pub','qte','prix_emprunt','description','langue','auteur','id_categorie'];
+    protected $fillable = ['titre','annee_pub','qte','prix_emprunt','description','langue','auteur','id_categorie','image'];
 
     public function categorie()
     {

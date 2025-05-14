@@ -778,284 +778,239 @@
     </div>
 
     <script>
-        // Données des livres avec des images réelles d'Unsplash
-        const books = [
-            { 
-                title: "Harry Potter", 
-                author: "J. K. Rowling", 
-                category: "fiction", 
-                cover: "https://images.unsplash.com/photo-1626618012641-bfbca5a31239?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=464&q=80", 
-                isBestSeller: true 
-            },
-            { 
-                title: "Crime and Punishment", 
-                author: "Fyodor Dostoevsky", 
-                category: "fiction", 
-                cover: "https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=688&q=80", 
-                isBestSeller: true 
-            },
-            { 
-                title: "War and Peace", 
-                author: "Leo Tolstoy", 
-                category: "fiction", 
-                cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80", 
-                isBestSeller: false 
-            },
-            { 
-                title: "Communist Manifesto", 
-                author: "Karl Marx", 
-                category: "education", 
-                cover: "https://images.unsplash.com/photo-1614332287897-cdc485fa562d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80", 
-                isBestSeller: true 
-            },
-            { 
-                title: "Manga Title", 
-                author: "Manga Author", 
-                category: "manga", 
-                cover: "https://images.unsplash.com/photo-1613376023733-0a73315d9b06?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80", 
-                isBestSeller: true 
-            },
-            { 
-                title: "Das Kapital", 
-                author: "Karl Marx", 
-                category: "education", 
-                cover: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1212&q=80", 
-                isBestSeller: false 
-            },
-            { 
-                title: "Das Kapital 2", 
-                author: "Karl Marx", 
-                category: "education", 
-                cover: "https://images.unsplash.com/photo-1592496431122-2349e0fbc666?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1212&q=80", 
-                isBestSeller: true 
-            },
-            { 
-                title: "Journey to the Center", 
-                author: "Jules Verne", 
-                category: "fiction", 
-                cover: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80", 
-                isBestSeller: true 
-            },
-            { 
-                title: "Pride and Prejudice", 
-                author: "Jane Austen", 
-                category: "romantic", 
-                cover: "https://images.unsplash.com/photo-1474932430478-367dbb6832c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80", 
-                isBestSeller: true 
-            },
-            { 
-                title: "Romeo and Juliet", 
-                author: "William Shakespeare", 
-                category: "romantic", 
-                cover: "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80", 
-                isBestSeller: true 
-            },
-            { 
-                title: "One Piece", 
-                author: "Eiichiro Oda", 
-                category: "manga", 
-                cover: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80", 
-                isBestSeller: true 
-            },
-            { 
-                title: "Attack on Titan", 
-                author: "Hajime Isayama", 
-                category: "manga", 
-                cover: "https://images.unsplash.com/photo-1618519764620-7403abdbdfe9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80", 
-                isBestSeller: true 
-            }
-        ];
-
-        // Fonction pour afficher les livres avec animation
-        function displayBooks(containerId, booksToDisplay) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-            
-            booksToDisplay.forEach((book, index) => {
-                const bookCard = document.createElement('div');
-                bookCard.className = 'book-card fade-in';
-                bookCard.dataset.category = book.category;
-                bookCard.style.animationDelay = `${index * 0.05}s`;
-                
-                const bestSellerBadge = book.isBestSeller ? `<span class="book-badge">Best Seller</span>` : '';
-                
-                bookCard.innerHTML = `
-                    <img src="${book.cover}" alt="${book.title}" class="book-cover">
-                    <h3 class="book-title">${book.title}</h3>
-                    <span class="author-name">${book.author}</span>
-                    ${bestSellerBadge}
-                `;
-                
-                // Ajouter un effet de clic
-                bookCard.addEventListener('click', function() {
-                    showToast(`You selected "${book.title}" by ${book.author}`);
-                });
-                
-                container.appendChild(bookCard);
-            });
-        }
-
-        // Afficher les livres initiaux avec un léger délai pour l'animation
-        setTimeout(() => {
-            displayBooks('popularBooks', books);
-            
-            // Afficher les best-sellers
-            const bestSellers = books.filter(book => book.isBestSeller);
-            displayBooks('bestSellerBooks', bestSellers);
-        }, 100);
-
-        // Filtrage par catégorie avec animation
-        const categoryItems = document.querySelectorAll('.category-item');
-        categoryItems.forEach(item => {
-            if (!item.dataset.category) return; // Ignorer l'élément "category"
-            
-            item.addEventListener('click', () => {
-                // Retirer la classe active de tous les éléments
-                categoryItems.forEach(cat => cat.classList.remove('active'));
-                
-                // Ajouter la classe active à l'élément cliqué
-                item.classList.add('active');
-                
-                const category = item.dataset.category;
-                
-                // Ajouter une animation au clic
-                item.classList.add('animate-click');
-                setTimeout(() => {
-                    item.classList.remove('animate-click');
-                }, 300);
-                
-                // Filtrer les livres
-                let filteredBooks;
-                if (category === 'all') {
-                    filteredBooks = books;
-                } else {
-                    filteredBooks = books.filter(book => book.category === category);
-                }
-                
-                // Afficher les livres filtrés dans la section Popular
-                displayBooks('popularBooks', filteredBooks);
-                
-                // Filtrer les best-sellers également
-                const filteredBestSellers = category === 'all'
-                    ? books.filter(book => book.isBestSeller)
-                    : books.filter(book => book.category === category && book.isBestSeller);
-                
-                displayBooks('bestSellerBooks', filteredBestSellers);
-                
-                // Afficher un message de confirmation
-                showToast(`Showing ${category} books`);
-            });
-        });
-
-        // Recherche de livres avec animation
-        const searchInput = document.getElementById('searchInput');
-        const searchButton = document.getElementById('searchButton');
+    // Fonction pour gérer la visibilité de la bannière "Best of Today"
+    function updateBannerVisibility() {
+        const searchTerm = document.getElementById('searchInput').value.trim();
+        const activeCategory = document.querySelector('.category-item.active');
+        const categoryType = activeCategory ? activeCategory.dataset.category : 'all';
+        const banner = document.querySelector('.banner');
         
-        function searchBooks() {
-            const searchTerm = searchInput.value.toLowerCase().trim();
+        // Masquer la bannière si la recherche n'est pas vide OU si la catégorie n'est pas "all"
+        if (searchTerm !== '' || (categoryType !== 'all' && categoryType !== undefined)) {
+            banner.style.display = 'none';
+        } else {
+            banner.style.display = 'block';
+        }
+    }
+
+    // Données des livres avec des images réelles d'Unsplash
+    let books = [];
+    fetch("http://localhost:8081/api/articles")
+        .then(res => res.json())
+        .then(data => {
+            // Remplir books avec les données récupérées
+            books = data.map(book => ({
+                ...book,
+                isBestSeller: book.prix_emprunt > 100 // ou ta propre logique
+            }));
+
+            // Exemple de traitement : filtrer les livres romantiques
+            const romanticBooks = books.filter(book => book.category === 'romantic');
+            console.log('Livres romantiques:', romanticBooks);
+
+            // Exemple de tri : livres triés par prix
+            const sortedBooks = [...books].sort((a, b) => a.prix_emprunt - b.prix_emprunt);
+            console.log('Livres triés par prix:', sortedBooks);
+
+            // Appeler les fonctions d'affichage après le chargement
+            displayBooks("popularBooks", books);
+            displayBooks("bestSellerBooks", books.filter(book => book.isBestSeller));
+        })
+        .catch(err => console.error("Erreur lors du chargement des articles :", err));
+
+    // Fonction pour afficher les livres avec animation
+    function displayBooks(containerId, booksToDisplay) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        
+        booksToDisplay.forEach((book, index) => {
+            const bookCard = document.createElement('div');
+            bookCard.className = 'book-card fade-in';
+            bookCard.dataset.category = book.category;
+            bookCard.style.animationDelay = `${index * 0.05}s`;
             
-            if (searchTerm === '') {
-                // Si la recherche est vide, afficher tous les livres
-                displayBooks('popularBooks', books);
-                displayBooks('bestSellerBooks', books.filter(book => book.isBestSeller));
-                return;
+            const bestSellerBadge = book.isBestSeller ? `<span class="book-badge">Best Seller</span>` : '';
+            
+            bookCard.innerHTML = `
+                <img src="${book.cover}" alt="${book.title}" class="book-cover">
+                <h3 class="book-title">${book.title}</h3>
+                <span class="author-name">${book.author}</span>
+                ${bestSellerBadge}
+            `;
+            
+            // Ajouter un effet de clic
+            bookCard.addEventListener('click', function() {
+                showToast(`You selected "${book.title}" by ${book.author}`);
+            });
+            
+            container.appendChild(bookCard);
+        });
+    }
+
+    // Filtrage par catégorie avec animation
+    const categoryItems = document.querySelectorAll('.category-item');
+    categoryItems.forEach(item => {
+        if (!item.dataset.category) return; // Ignorer l'élément "category"
+        
+        item.addEventListener('click', () => {
+            // Retirer la classe active de tous les éléments
+            categoryItems.forEach(cat => cat.classList.remove('active'));
+            
+            // Ajouter la classe active à l'élément cliqué
+            item.classList.add('active');
+            
+            const category = item.dataset.category;
+            
+            // Ajouter une animation au clic
+            item.classList.add('animate-click');
+            setTimeout(() => {
+                item.classList.remove('animate-click');
+            }, 300);
+            
+            // Filtrer les livres
+            let filteredBooks;
+            if (category === 'all') {
+                filteredBooks = books;
+            } else {
+                filteredBooks = books.filter(book => book.category === category);
             }
             
-            // Filtrer les livres par titre ou auteur
-            const filteredBooks = books.filter(book => 
-                book.title.toLowerCase().includes(searchTerm) || 
-                book.author.toLowerCase().includes(searchTerm)
-            );
-            
-            // Afficher les résultats
+            // Afficher les livres filtrés dans la section Popular
             displayBooks('popularBooks', filteredBooks);
             
-            // Filtrer également les best-sellers
-            const filteredBestSellers = filteredBooks.filter(book => book.isBestSeller);
+            // Filtrer les best-sellers également
+            const filteredBestSellers = category === 'all'
+                ? books.filter(book => book.isBestSeller)
+                : books.filter(book => book.category === category && book.isBestSeller);
             
             displayBooks('bestSellerBooks', filteredBestSellers);
             
+            // Mettre à jour la visibilité de la bannière
+            updateBannerVisibility();
+            
             // Afficher un message de confirmation
-            showToast(`Found ${filteredBooks.length} books matching "${searchTerm}"`);
+            showToast(`Showing ${category} books`);
+        });
+    });
+
+    // Recherche de livres avec animation
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    
+    function searchBooks() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        
+        if (searchTerm === '') {
+            // Si la recherche est vide, afficher tous les livres
+            displayBooks('popularBooks', books);
+            displayBooks('bestSellerBooks', books.filter(book => book.isBestSeller));
+            
+            // Mettre à jour la visibilité de la bannière
+            updateBannerVisibility();
+            return;
         }
         
-        // Événement de clic sur le bouton de recherche
-        searchButton.addEventListener('click', searchBooks);
+        // Filtrer les livres par titre ou auteur
+        const filteredBooks = books.filter(book => 
+            book.title.toLowerCase().includes(searchTerm) || 
+            book.author.toLowerCase().includes(searchTerm)
+        );
         
-        // Événement de pression de la touche Entrée dans le champ de recherche
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                searchBooks();
-            }
-        });
+        // Afficher les résultats
+        displayBooks('popularBooks', filteredBooks);
         
-        // Fonction pour afficher un toast de notification
-        function showToast(message) {
-            // Créer l'élément toast s'il n'existe pas déjà
-            let toast = document.getElementById('toast');
-            if (!toast) {
-                toast = document.createElement('div');
-                toast.id = 'toast';
-                toast.className = 'fixed bottom-4 right-4 bg-sidebar text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-500 z-50';
-                document.body.appendChild(toast);
-                
-                // Ajouter du CSS pour l'animation
-                document.head.insertAdjacentHTML('beforeend', `
-                    <style>
-                        @keyframes shake {
-                            0%, 100% { transform: translateX(0); }
-                            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-                            20%, 40%, 60%, 80% { transform: translateX(5px); }
-                        }
-                        .shake {
-                            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-                        }
-                        .animate-click {
-                            animation: click 0.3s ease;
-                        }
-                        @keyframes click {
-                            0% { transform: scale(1); }
-                            50% { transform: scale(0.9); }
-                            100% { transform: scale(1); }
-                        }
-                    </style>
-                `);
-            }
+        // Filtrer également les best-sellers
+        const filteredBestSellers = filteredBooks.filter(book => book.isBestSeller);
+        
+        displayBooks('bestSellerBooks', filteredBestSellers);
+        
+        // Mettre à jour la visibilité de la bannière
+        updateBannerVisibility();
+        
+        // Afficher un message de confirmation
+        showToast(`Found ${filteredBooks.length} books matching "${searchTerm}"`);
+    }
+    
+    // Événement de clic sur le bouton de recherche
+    searchButton.addEventListener('click', searchBooks);
+    
+    // Événement de pression de la touche Entrée dans le champ de recherche
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            searchBooks();
+        }
+    });
+    
+    // Événement d'entrée de texte dans le champ de recherche
+    searchInput.addEventListener('input', updateBannerVisibility);
+    
+    // Fonction pour afficher un toast de notification
+    function showToast(message) {
+        // Créer l'élément toast s'il n'existe pas déjà
+        let toast = document.getElementById('toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = 'fixed bottom-4 right-4 bg-sidebar text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-500 z-50';
+            document.body.appendChild(toast);
             
-            // Mettre à jour le message et afficher le toast
-            toast.textContent = message;
-            toast.style.transform = 'translateY(0)';
-            toast.style.opacity = '1';
-            
-            // Masquer le toast après 3 secondes
-            setTimeout(() => {
-                toast.style.transform = 'translateY(20px)';
-                toast.style.opacity = '0';
-            }, 3000);
+            // Ajouter du CSS pour l'animation
+            document.head.insertAdjacentHTML('beforeend', `
+                <style>
+                    @keyframes shake {
+                        0%, 100% { transform: translateX(0); }
+                        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                        20%, 40%, 60%, 80% { transform: translateX(5px); }
+                    }
+                    .shake {
+                        animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+                    }
+                    .animate-click {
+                        animation: click 0.3s ease;
+                    }
+                    @keyframes click {
+                        0% { transform: scale(1); }
+                        50% { transform: scale(0.9); }
+                        100% { transform: scale(1); }
+                    }
+                </style>
+            `);
         }
         
-        // Ajouter des effets de survol aux boutons "view all"
-        document.querySelectorAll('.view-all-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                // Ajouter une animation au clic
-                this.classList.add('animate-click');
-                setTimeout(() => {
-                    this.classList.remove('animate-click');
-                    showToast('Viewing all books in this category');
-                }, 300);
-            });
-        });
+        // Mettre à jour le message et afficher le toast
+        toast.textContent = message;
+        toast.style.transform = 'translateY(0)';
+        toast.style.opacity = '1';
         
-        // Ajouter un effet de clic au bouton de la bannière
-        document.querySelector('.banner-btn').addEventListener('click', function(e) {
-            e.preventDefault();
+        // Masquer le toast après 3 secondes
+        setTimeout(() => {
+            toast.style.transform = 'translateY(20px)';
+            toast.style.opacity = '0';
+        }, 3000);
+    }
+    
+    // Ajouter des effets de survol aux boutons "view all"
+    document.querySelectorAll('.view-all-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
             // Ajouter une animation au clic
             this.classList.add('animate-click');
             setTimeout(() => {
                 this.classList.remove('animate-click');
-                showToast('Exploring the Best of Today collection');
+                showToast('Viewing all books in this category');
             }, 300);
         });
-    </script>
+    });
+    
+    // Ajouter un effet de clic au bouton de la bannière
+    document.querySelector('.banner-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        // Ajouter une animation au clic
+        this.classList.add('animate-click');
+        setTimeout(() => {
+            this.classList.remove('animate-click');
+            showToast('Exploring the Best of Today collection');
+        }, 300);
+    });
+</script>
 </body>
 </html>
