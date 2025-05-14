@@ -31,5 +31,24 @@ class Utilisateur extends Authenticatable
     {
         return $this->hasMany(UserToken::class, 'id_user', 'id_utilisateur');
     }
-}
 
+    public function isLivreur()
+    {
+        return $this->role->guard_name === 'livreur';
+    }
+
+    public function isEmploye()
+    {
+        return $this->role->guard_name === 'employe';
+    }
+
+    public function isBibliothecaire()
+    {
+        return $this->role->guard_name === 'bibliothecaire';
+    }
+
+    public function isClient()
+    {
+        return $this->role->guard_name === 'client';
+    }
+}

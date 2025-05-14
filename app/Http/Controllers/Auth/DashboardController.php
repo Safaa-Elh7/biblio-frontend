@@ -25,6 +25,6 @@ class DashboardController extends Controller
             return redirect()->route('employe.retours');
         }
         // Par défaut client
-        return redirect()->route('client.index');
+        return redirect()->route('home');
     }
 }

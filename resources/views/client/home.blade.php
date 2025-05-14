@@ -6,6 +6,6 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Client sans Registration</h1>
+    <h1>Client home page</h1>
 </body>
 </html>

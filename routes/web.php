@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\DashboardController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\LivreurController;
 use App\Http\Controllers\EmployeController;
+use App\Http\Controllers\BibliothecaireController;
 use App\Http\Controllers\CatalogueController;
 use App\Http\Controllers\EmpruntController;
 use App\Http\Controllers\FacturationController;
@@ -32,38 +33,41 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Routes pour le bibliothécaire
+Route::middleware(['auth','role:bibliothecaire'])
+     ->prefix('bibliothecaire')
+     ->name('bibliothecaire.')
+     ->group(function(){
+         Route::get('dashboard', [BibliothecaireController::class,'index'])
+              ->name('dashboard');
+     });
+
+Route::middleware(['auth','role:livreur'])
+     ->prefix('livreur')
+     ->name('livreur.')
+     ->group(function(){
+         Route::get('dashboard', [LivreurController::class,'index'])
+              ->name('dashboard');
+     });
+
+Route::middleware(['auth','role:employe'])
+     ->prefix('employe')
+     ->name('employe.')
+     ->group(function(){
+         Route::get('dashboard', [EmployeController::class,'index'])
+              ->name('dashboard');
+     });
+
+Route::middleware(['auth','role:client'])
+     ->prefix('client')
+     ->name('client.')
+     ->group(function(){
+         Route::get('home', [ClientController::class,'index'])
+              ->name('home');
+     });
+
 Route::get('/home', [HomeController::class,'index'])
      ->middleware('auth')
      ->name('home');
-
-    
-     
-     // Tableau de bord Livreur
-     Route::middleware(['auth','role:livreur'])
-          ->prefix('livreur')
-          ->name('livreur.')
-          ->group(function(){
-              Route::get('dashboard', [LivreurController::class,'index'])
-                   ->name('dashboard');
-          });
-     
-     // Tableau de bord Employé
-     Route::middleware(['auth','role:employe'])
-          ->prefix('employe')
-          ->name('employe.')
-          ->group(function(){
-              Route::get('dashboard', [EmployeController::class,'index'])
-                   ->name('dashboard');
-          });
-     
-     // Tableau de bord Client
-     Route::middleware(['auth','role:client'])
-          ->prefix('client')
-          ->name('client.')
-          ->group(function(){
-              Route::get('dashboard', [ClientController::class,'index'])
-                   ->name('dashboard');
-          });
-     
 
 require __DIR__.'/auth.php';

@@ -11,17 +11,28 @@ class CheckRole
     /**
      * @param Request  $request
      * @param \Closure $next
-     * @param string[] ...$allowedCodes  ex. 'livreur','employe','client'
+     * @param string[] ...$roles  ex. 'livreur','employe','client','bibliothecaire'
      */
-    public function handle(Request $request, Closure $next, ...$allowedCodes)
+    public function handle(Request $request, Closure $next, ...$roles)
     {
-        $user = Auth::user();
-        $code = $user->utilisateur->role->code;  // lit le code stocké en BDD
-
-        if (! in_array($code, $allowedCodes)) {
-            abort(403, "Accès interdit pour le rôle “{$code}”.");
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Vous devez être connecté pour accéder à cette page.');
         }
 
-        return $next($request);
+        $user = Auth::user();
+        $utilisateur = $user->utilisateur;
+        
+        if (!$utilisateur || !$utilisateur->role) {
+            return redirect()->route('login')->with('error', 'Votre compte ne possède pas de rôle. Veuillez contacter l\'administrateur.');
+        }
+        
+        $userRole = $utilisateur->role->guard_name;
+        
+        // Vérifier si le rôle de l'utilisateur est dans la liste des rôles autorisés
+        if (in_array($userRole, $roles)) {
+            return $next($request);
+        }
+        
+        return redirect()->route('home')->with('error', 'Vous n\'avez pas les permissions nécessaires pour accéder à cette page.');
     }
 }

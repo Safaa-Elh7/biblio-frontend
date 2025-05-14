@@ -29,7 +29,25 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        $user = Auth::user();
+        $utilisateur = $user->utilisateur;
+        
+        if (!$utilisateur || !$utilisateur->role) {
+            return redirect()->route('home');
+        }
+        
+        switch ($utilisateur->role->guard_name) {
+            case 'bibliothecaire':
+                return redirect()->route('bibliothecaire.dashboard');
+            case 'livreur':
+                return redirect()->route('livreur.dashboard');
+            case 'employe':
+                return redirect()->route('employe.dashboard');
+            case 'client':
+                return redirect()->route('client.home');
+            default:
+                return redirect()->route('login')->with('error', 'Rôle non reconnu. Veuillez contacter l\'administrateur.');
+        }
     }
 
     /**
