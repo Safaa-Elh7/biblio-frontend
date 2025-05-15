@@ -812,24 +812,16 @@ function updateBannerVisibility() {
     }
 }
 
-// Données des livres par défaut au cas où l'API échoue
-let books = [
-    {
-        id: 1,
-        title: "Chargement...",
-        author: "Chargement...",
-        category: "all",
-        cover: "https://images.unsplash.com/photo-1598618253208-d75408cee680?q=80&w=1000&auto=format&fit=crop",
-        prix_emprunt: 0,
-        isBestSeller: false
-    }
-];
+// Supprimer le tableau books statique
+let books = [];
 
 // Fonction pour sécuriser l'accès aux propriétés
 function getBookProperty(book, property, defaultValue = "Non disponible") {
-    return book && book[property] !== undefined && book[property] !== null 
-        ? book[property] 
-        : defaultValue;
+    if (book && book[property] !== undefined && book[property] !== null) {
+        return book[property];
+    } else {
+        return defaultValue;
+    }
 }
 
 // Fonction pour charger les livres depuis l'API
@@ -846,12 +838,11 @@ function loadBooks() {
                 // Remplir books avec les données récupérées
                 books = data.map(book => ({
                     id: getBookProperty(book, 'id', Math.random().toString(36).substr(2, 9)),
-                    title: getBookProperty(book, 'title', 'Titre inconnu'),
-                    author: getBookProperty(book, 'author', 'Auteur inconnu'),
+                    title: getBookProperty(book, 'titre', 'Titre inconnu'),
+                    author: getBookProperty(book, 'auteur', 'Auteur inconnu'),
                     category: getBookProperty(book, 'category', 'all'),
                     cover: getBookProperty(book, 'cover', 'https://images.unsplash.com/photo-1598618253208-d75408cee680?q=80&w=1000&auto=format&fit=crop'),
                     prix_emprunt: getBookProperty(book, 'prix_emprunt', 0),
-                    // Déterminer si c'est un best-seller en fonction du prix ou d'une autre propriété
                     isBestSeller: book.prix_emprunt > 100 || getBookProperty(book, 'isBestSeller', false)
                 }));
 
@@ -960,48 +951,48 @@ function initCategoryFilters() {
     const categoryItems = document.querySelectorAll('.category-item');
     categoryItems.forEach(item => {
         if (!item.dataset.category) return; // Ignorer l'élément "category"
-        
+
         item.addEventListener('click', () => {
             // Retirer la classe active de tous les éléments
             categoryItems.forEach(cat => cat.classList.remove('active'));
-            
+
             // Ajouter la classe active à l'élément cliqué
             item.classList.add('active');
-            
+
             const category = item.dataset.category;
-            
+
             // Ajouter une animation au clic
             item.classList.add('animate-click');
             setTimeout(() => {
                 item.classList.remove('animate-click');
             }, 300);
-            
+
             // Filtrer les livres
             let filteredBooks;
             if (category === 'all') {
                 filteredBooks = books;
             } else {
                 filteredBooks = books.filter(book => 
-                    getBookProperty(book, 'category', '') === category
+                    getBookProperty(book, 'categorie', '').toLowerCase() === category.toLowerCase()
                 );
             }
-            
+
             // Afficher les livres filtrés dans la section Popular
             displayBooks('popularBooks', filteredBooks);
-            
+
             // Filtrer les best-sellers également
             const filteredBestSellers = category === 'all'
                 ? books.filter(book => getBookProperty(book, 'isBestSeller', false))
                 : books.filter(book => 
-                    getBookProperty(book, 'category', '') === category && 
+                    getBookProperty(book, 'categorie', '').toLowerCase() === category.toLowerCase() && 
                     getBookProperty(book, 'isBestSeller', false)
                 );
-            
+
             displayBooks('bestSellerBooks', filteredBestSellers);
-            
+
             // Mettre à jour la visibilité de la bannière
             updateBannerVisibility();
-            
+
             // Afficher un message de confirmation
             showToast(`Affichage des livres de la catégorie: ${category}`);
         });
