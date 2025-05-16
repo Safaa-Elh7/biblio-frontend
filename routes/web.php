@@ -11,7 +11,9 @@ use App\Http\Controllers\FacturationController;
 use App\Http\Controllers\ReclamationController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\HomeController;
-
+use App\Http\Controllers\bookController;
+use App\Http\Controllers\CardController;
+use App\Http\Controllers\PanierController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -66,8 +68,15 @@ Route::middleware(['auth','role:client'])
               ->name('home');
      });
 
-Route::get('/home', [HomeController::class,'index'])
-     ->middleware('auth')
-     ->name('home');
+// Route::get('/home', [HomeController::class,'index'])
+//      ->middleware('auth')
+//      ->name('home');
+Route::get('/home', [BookController::class, 'index'])->name('client.book.index');
 
+Route::get('/client/book/{id}', [BookController::class, 'show'])->name('client.book.show');
+Route::get('/client/panier', [PanierController::class, 'index'])->name('client.panier.index');
+Route::post('/client/panier/add', [PanierController::class, 'addToCart'])->name('client.panier.add');
+Route::post('/client/panier/update', [PanierController::class, 'update'])->name('client.panier.update');
+
+Route::get('/client/card', [CardController::class, 'index'])->name('client.card.index');
 require __DIR__.'/auth.php';

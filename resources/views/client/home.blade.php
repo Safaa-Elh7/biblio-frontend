@@ -162,6 +162,7 @@
 
         .category-item {
             display: flex;
+
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -605,11 +606,11 @@
         </div>
 
         <div class="sidebar-icon active">
-            <i class="fas fa-home"></i>
+           <a href=""> <i class="fas fa-home"></i></a>
         </div>
 
         <div class="sidebar-icon">
-            <i class="fas fa-shopping-cart"></i>
+           <a href="{{route('client.panier.index')}}"> <i class="fas fa-shopping-cart"></i></a>
         </div>
 
         <div class="sidebar-icon">
@@ -760,6 +761,7 @@
 
             <div class="book-grid" id="popularBooks">
                 <!-- Les livres seront ajoutés dynamiquement par JavaScript -->
+                 
             </div>
         </div>
 
@@ -795,6 +797,12 @@
             </div>
         </div>
     </div>
+
+    @if(session('success'))
+        <script>
+            alert("{{ session('success') }}");
+        </script>
+    @endif
 
    <script>
     // Fonction pour gérer la visibilité de la bannière "Best of Today"
@@ -837,7 +845,7 @@ function loadBooks() {
             if (Array.isArray(data) && data.length > 0) {
                 // Remplir books avec les données récupérées
                 books = data.map(book => ({
-                    id: getBookProperty(book, 'id', Math.random().toString(36).substr(2, 9)),
+                    id: getBookProperty(book, 'id_article', Math.random().toString(36).substr(2, 9)),
                     title: getBookProperty(book, 'titre', 'Titre inconnu'),
                     author: getBookProperty(book, 'auteur', 'Auteur inconnu'),
                     category: getBookProperty(book, 'category', 'all'),
@@ -939,7 +947,8 @@ function displayBooks(containerId, booksToDisplay) {
         
         // Ajouter un effet de clic
         bookCard.addEventListener('click', function() {
-            showToast(`Vous avez sélectionné "${title}" de ${author}`);
+            // Rediriger vers la page du livre avec l'ID
+            window.location.href = `/client/book/${book.id}`;
         });
         
         container.appendChild(bookCard);

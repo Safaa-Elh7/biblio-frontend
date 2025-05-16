@@ -690,7 +690,38 @@
         <div class="cart-container">
             <!-- Left Side - Cart Items -->
             <div class="cart-items" id="cartItems">
-                <!-- Les éléments du panier seront générés dynamiquement ici -->
+                @if(session('success'))
+                    <div class="p-4 mb-4 text-green-800 rounded bg-green-200">{{ session('success') }}</div>
+                @endif
+                @php
+                    $cart = session('cart', []);
+                @endphp
+                @if(empty($cart))
+                    <div class="empty-cart-message">
+                        <div class="empty-cart-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <p>Your cart is empty</p>
+                        <p class="text-sm mt-2 text-gray-500">Browse our collection to find your next favorite book!</p>
+                    </div>
+                @else
+                    @foreach($cart as $id => $item)
+                        <div class="cart-item">
+                            <img src="{{ $item['image'] ?? 'https://via.placeholder.com/80x100?text=Livre' }}" alt="{{ $item['name'] }}" class="item-image">
+                            <div class="item-details">
+                                <h3 class="item-title">{{ $item['name'] }}</h3>
+                            </div>
+                            <form method="POST" action="{{ route('client.panier.update') }}" class="quantity-control flex items-center">
+                                @csrf
+                                <input type="hidden" name="id" value="{{ $id }}">
+                                <button type="submit" name="action" value="decrement" class="quantity-btn">-</button>
+                                <input type="text" value="{{ $item['quantity'] }}" class="quantity-input" readonly style="width:40px;">
+                                <button type="submit" name="action" value="increment" class="quantity-btn">+</button>
+                            </form>
+                            <div class="item-price">{{ $item['price'] * $item['quantity'] }} Dh</div>
+                        </div>
+                    @endforeach
+                @endif
             </div>
             
             <!-- Right Side - Order Summary -->
@@ -700,24 +731,30 @@
                     
                     <div class="summary-row">
                         <span class="summary-label">Subtotal</span>
-                        <span class="summary-value" id="subtotalValue">0 Dh</span>
+                        <span class="summary-value" id="subtotalValue">
+                            {{ array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)) }} Dh
+                        </span>
                     </div>
                     
                     <div class="summary-row">
                         <span class="summary-label">Estimated tax (4%)</span>
-                        <span class="summary-value" id="taxValue">0 Dh</span>
+                        <span class="summary-value" id="taxValue">
+                            {{ round(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)) * 0.04) }} Dh
+                        </span>
                     </div>
                     
                     <div class="summary-divider"></div>
                     
                     <div class="total-row">
                         <span class="total-label">Total</span>
-                        <span class="total-value" id="totalValue">0 Dh</span>
+                        <span class="total-value" id="totalValue">
+                            {{ round(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)) * 1.04) }} Dh
+                        </span>
                     </div>
                     
-                    <button class="checkout-btn" id="checkoutBtn">
+                    <a href="{{route('client.card.index')}}" class="checkout-btn" id="checkoutBtn">
                         Proceed to Checkout
-                    </button>
+                    </a>
                     
                     <div class="secure-badge">
                         <i class="fas fa-lock"></i> Secure checkout
@@ -733,327 +770,8 @@
     </div>
 
     <script>
-        // Données des livres dans le panier
-        let cartBooks = [
-            {
-                id: 1,
-                title: "Pride and Prejudice",
-                author: "Jane Austen",
-                price: 500,
-                quantity: 1,
-                image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000&auto=format&fit=crop"
-            },
-            {
-                id: 2,
-                title: "To Kill a Mockingbird",
-                author: "Harper Lee",
-                price: 450,
-                quantity: 1,
-                image: "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=1000&auto=format&fit=crop"
-            },
-            {
-                id: 3,
-                title: "The Great Gatsby",
-                author: "F. Scott Fitzgerald",
-                price: 380,
-                quantity: 1,
-                image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=1000&auto=format&fit=crop"
-            }
-        ];
-        
-        // Fonction pour rendre les livres dans le panier
-        function renderCart() {
-            const cartItemsContainer = document.getElementById('cartItems');
-            cartItemsContainer.innerHTML = '';
-            
-            if (cartBooks.length === 0) {
-                cartItemsContainer.innerHTML = `
-                    <div class="empty-cart-message">
-                        <div class="empty-cart-icon">
-                            <i class="fas fa-shopping-cart"></i>
-                        </div>
-                        <p>Your cart is empty</p>
-                        <p class="text-sm mt-2 text-gray-500">Browse our collection to find your next favorite book!</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            cartBooks.forEach(book => {
-                const cartItem = document.createElement('div');
-                cartItem.className = 'cart-item';
-                cartItem.innerHTML = `
-                    <img src="${book.image}" alt="${book.title}" class="item-image">
-                    
-                    <div class="item-details">
-                        <h3 class="item-title">${book.title}</h3>
-                        <p class="item-author">${book.author}</p>
-                    </div>
-                    
-                    <div class="quantity-control">
-                        <button class="quantity-btn decrease-btn" data-id="${book.id}">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <input type="text" value="${book.quantity}" class="quantity-input" readonly>
-                        <button class="quantity-btn increase-btn" data-id="${book.id}">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                    
-                    <div class="item-price">${book.price * book.quantity} Dh</div>
-                    
-                    <button class="remove-btn" data-id="${book.id}" title="Remove item">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `;
-                
-                cartItemsContainer.appendChild(cartItem);
-            });
-            
-            // Ajouter les écouteurs d'événements après avoir rendu les éléments
-            addCartEventListeners();
-            
-            // Mettre à jour le résumé de la commande
-            updateOrderSummary();
-        }
-        
-        // Fonction pour ajouter les écouteurs d'événements aux boutons du panier
-        function addCartEventListeners() {
-            // Boutons d'augmentation de quantité
-            document.querySelectorAll('.increase-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const bookId = parseInt(this.getAttribute('data-id'));
-                    increaseQuantity(bookId);
-                    
-                    // Ajouter une animation au bouton
-                    this.classList.add('animate-click');
-                    setTimeout(() => {
-                        this.classList.remove('animate-click');
-                    }, 300);
-                });
-            });
-            
-            // Boutons de diminution de quantité
-            document.querySelectorAll('.decrease-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const bookId = parseInt(this.getAttribute('data-id'));
-                    decreaseQuantity(bookId);
-                    
-                    // Ajouter une animation au bouton
-                    this.classList.add('animate-click');
-                    setTimeout(() => {
-                        this.classList.remove('animate-click');
-                    }, 300);
-                });
-            });
-            
-            // Boutons de suppression
-            document.querySelectorAll('.remove-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const bookId = parseInt(this.getAttribute('data-id'));
-                    
-                    // Ajouter une animation de suppression
-                    const cartItem = this.closest('.cart-item');
-                    cartItem.style.opacity = '0';
-                    cartItem.style.transform = 'translateX(50px)';
-                    
-                    setTimeout(() => {
-                        removeBook(bookId);
-                    }, 300);
-                });
-            });
-        }
-        
-        // Fonction pour augmenter la quantité d'un livre
-        function increaseQuantity(bookId) {
-            const book = cartBooks.find(book => book.id === bookId);
-            if (book) {
-                book.quantity += 1;
-                renderCart();
-            }
-        }
-        
-        // Fonction pour diminuer la quantité d'un livre
-        function decreaseQuantity(bookId) {
-            const book = cartBooks.find(book => book.id === bookId);
-            if (book && book.quantity > 1) {
-                book.quantity -= 1;
-                renderCart();
-            }
-        }
-        
-        // Fonction pour supprimer un livre du panier
-        function removeBook(bookId) {
-            cartBooks = cartBooks.filter(book => book.id !== bookId);
-            renderCart();
-        }
-        
-        // Fonction pour mettre à jour le résumé de la commande
-        function updateOrderSummary() {
-            const subtotal = cartBooks.reduce((total, book) => total + (book.price * book.quantity), 0);
-            const taxRate = 0.04; // 4% de taxe
-            const tax = subtotal * taxRate;
-            const total = subtotal + tax;
-            
-            document.getElementById('subtotalValue').textContent = `${subtotal} Dh`;
-            document.getElementById('taxValue').textContent = `${Math.round(tax)} Dh`;
-            document.getElementById('totalValue').textContent = `${Math.round(total)} Dh`;
-        }
-        
-        // Fonction pour ajouter un nouveau livre au panier
-        function addNewBook() {
-            const title = document.getElementById('bookTitle').value.trim();
-            const author = document.getElementById('bookAuthor').value.trim();
-            const price = parseInt(document.getElementById('bookPrice').value);
-            
-            if (!title || !author || isNaN(price) || price <= 0) {
-                // Animation de secousse pour les champs invalides
-                const inputs = document.querySelectorAll('.form-input');
-                inputs.forEach(input => {
-                    if (!input.value.trim() || (input.id === 'bookPrice' && (isNaN(parseInt(input.value)) || parseInt(input.value) <= 0))) {
-                        input.classList.add('shake', 'border-red-500');
-                        setTimeout(() => {
-                            input.classList.remove('shake');
-                        }, 500);
-                    } else {
-                        input.classList.remove('border-red-500');
-                    }
-                });
-                
-                return;
-            }
-            
-            // Générer un ID unique pour le nouveau livre
-            const newId = cartBooks.length > 0 ? Math.max(...cartBooks.map(book => book.id)) + 1 : 1;
-            
-            // Images aléatoires pour les nouveaux livres
-            const randomImages = [
-                "https://images.unsplash.com/photo-1589998059171-988d887df646?q=80&w=1000&auto=format&fit=crop",
-                "https://images.unsplash.com/photo-1476275466078-4007374efbbe?q=80&w=1000&auto=format&fit=crop",
-                "https://images.unsplash.com/photo-1495640452828-3df6795cf69b?q=80&w=1000&auto=format&fit=crop",
-                "https://images.unsplash.com/photo-1531928351158-2f736078e0a1?q=80&w=1000&auto=format&fit=crop"
-            ];
-            
-            const randomImage = randomImages[Math.floor(Math.random() * randomImages.length)];
-            
-            // Ajouter le nouveau livre au panier
-            cartBooks.push({
-                id: newId,
-                title: title,
-                author: author,
-                price: price,
-                quantity: 1,
-                image: randomImage
-            });
-            
-            // Réinitialiser le formulaire
-            document.getElementById('bookTitle').value = '';
-            document.getElementById('bookAuthor').value = '';
-            document.getElementById('bookPrice').value = '';
-            
-            // Mettre à jour l'affichage du panier
-            renderCart();
-            
-            // Afficher un message de confirmation
-            showToast(`"${title}" has been added to your cart!`);
-        }
-        
-        // Fonction pour afficher un toast de notification
-        function showToast(message) {
-            // Créer l'élément toast s'il n'existe pas déjà
-            let toast = document.getElementById('toast');
-            if (!toast) {
-                toast = document.createElement('div');
-                toast.id = 'toast';
-                toast.className = 'fixed bottom-4 right-4 bg-sidebar text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-500 z-50';
-                document.body.appendChild(toast);
-                
-                // Ajouter du CSS pour l'animation
-                document.head.insertAdjacentHTML('beforeend', `
-                    <style>
-                        @keyframes shake {
-                            0%, 100% { transform: translateX(0); }
-                            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-                            20%, 40%, 60%, 80% { transform: translateX(5px); }
-                        }
-                        .shake {
-                            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-                        }
-                        .animate-click {
-                            animation: click 0.3s ease;
-                        }
-                        @keyframes click {
-                            0% { transform: scale(1); }
-                            50% { transform: scale(0.9); }
-                            100% { transform: scale(1); }
-                        }
-                        .border-red-500 {
-                            border-color: #ef4444 !important;
-                        }
-                    </style>
-                `);
-            }
-            
-            // Mettre à jour le message et afficher le toast
-            toast.textContent = message;
-            toast.style.transform = 'translateY(0)';
-            toast.style.opacity = '1';
-            
-            // Masquer le toast après 3 secondes
-            setTimeout(() => {
-                toast.style.transform = 'translateY(20px)';
-                toast.style.opacity = '0';
-            }, 3000);
-        }
-        
-        // Fonction de recherche
-        function searchBooks() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            if (searchTerm) {
-                showToast(`Searching for: "${searchTerm}"`);
-                // Dans une application réelle, cela redirigerait vers une page de résultats
-            }
-        }
-        
-        // Initialisation des écouteurs d'événements
-        document.addEventListener('DOMContentLoaded', function() {
-            // Rendre le panier initial
-            renderCart();
-            
-            // Écouteur pour le bouton d'ajout de livre
-            const addBookBtn = document.getElementById('addBookBtn');
-            if (addBookBtn) {
-                addBookBtn.addEventListener('click', addNewBook);
-            }
-            
-            // Écouteur pour le bouton de recherche
-            document.getElementById('searchButton').addEventListener('click', searchBooks);
-            
-            // Écouteur pour la touche Entrée dans le champ de recherche
-            document.getElementById('searchInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    searchBooks();
-                }
-            });
-            
-            // Écouteur pour le bouton de paiement
-            document.getElementById('checkoutBtn').addEventListener('click', function() {
-                if (cartBooks.length > 0) {
-                    const total = document.getElementById('totalValue').textContent;
-                    
-                    // Ajouter une animation au bouton
-                    this.classList.add('animate-click');
-                    setTimeout(() => {
-                        this.classList.remove('animate-click');
-                        // Rediriger vers la page de checkout
-                        showToast(`Proceeding to checkout with total: ${total}`);
-                        // Dans une application réelle, cela redirigerait vers la page de checkout
-                    }, 300);
-                } else {
-                    showToast('Your cart is empty. Add some books first!');
-                }
-            });
-        });
+        // Supprimer tout le code JavaScript lié aux livres statiques et à cartBooks
+        // Les livres du panier sont désormais affichés dynamiquement côté serveur avec Laravel
     </script>
 </body>
 </html>
