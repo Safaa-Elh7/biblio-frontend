@@ -31,6 +31,52 @@ class CardController extends Controller
         }
         
         session()->put('card', $card);
+        
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'card' => $card]);
+        }
+        
         return redirect()->route('client.home')->with('success', 'Livre ajouté au card');
+    }
+    
+    public function update(Request $request)
+    {
+        $card = session()->get('card', []);
+        $id = $request->id;
+        if (isset($card[$id])) {
+            if ($request->action === 'increment') {
+                $card[$id]['quantity'] += 1;
+            } elseif ($request->action === 'decrement' && $card[$id]['quantity'] > 1) {
+                $card[$id]['quantity'] -= 1;
+            }
+            session()->put('card', $card);
+        }
+        
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'card' => $card]);
+        }
+        
+        return redirect()->route('client.card.index');
+    }
+
+    public function removeFromCard(Request $request)
+    {
+        if (session()->has('card')) {
+            $card = session()->get('card');
+            unset($card[$request->id]);
+            session()->put('card', $card);
+        }
+        
+        if ($request->ajax()) {
+            return response()->json(['success' => true]);
+        }
+        
+        return redirect()->route('client.card.index');
+    }
+    
+    public function getCard()
+    {
+        $card = session()->get('card', []);
+        return response()->json(['card' => $card]);
     }
 }
