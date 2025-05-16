@@ -49,6 +49,11 @@ class PanierController extends Controller
             }
             session()->put('cart', $cart);
         }
+        
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'cart' => $cart]);
+        }
+        
         return redirect()->route('client.panier.index');
     }
 

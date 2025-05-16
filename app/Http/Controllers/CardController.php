@@ -14,13 +14,69 @@ class CardController extends Controller
     public function addToCard(Request $request)
     {
         $card = session()->get('card', []);
-        $card[$request->id] = [
-            "name" => $request->name,
-            "quantity" => isset($card[$request->id]) ? $card[$request->id]['quantity'] + 1 : $request->quantity,
-            "price" => $request->price,
-            "image" => $request->image ?? 'https://via.placeholder.com/80x100?text=Livre',
-        ];
+        
+        // Vérifier si le livre existe déjà dans le card
+        if (isset($card[$request->id])) {
+            // Si le livre existe déjà, augmenter juste sa quantité
+            $card[$request->id]['quantity']++;
+        } else {
+            // Si le livre n'existe pas encore, l'ajouter comme nouveau livre
+            $card[$request->id] = [
+                "name" => $request->name,
+                "quantity" => $request->quantity,
+                "price" => $request->price,
+                "image" => $request->image ?? 'https://via.placeholder.com/80x100?text=Livre',
+                "author" => $request->author ?? 'Non spécifié',
+            ];
+        }
+        
         session()->put('card', $card);
+        
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'card' => $card]);
+        }
+        
         return redirect()->route('client.home')->with('success', 'Livre ajouté au card');
+    }
+    
+    public function update(Request $request)
+    {
+        $card = session()->get('card', []);
+        $id = $request->id;
+        if (isset($card[$id])) {
+            if ($request->action === 'increment') {
+                $card[$id]['quantity'] += 1;
+            } elseif ($request->action === 'decrement' && $card[$id]['quantity'] > 1) {
+                $card[$id]['quantity'] -= 1;
+            }
+            session()->put('card', $card);
+        }
+        
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'card' => $card]);
+        }
+        
+        return redirect()->route('client.card.index');
+    }
+
+    public function removeFromCard(Request $request)
+    {
+        if (session()->has('card')) {
+            $card = session()->get('card');
+            unset($card[$request->id]);
+            session()->put('card', $card);
+        }
+        
+        if ($request->ajax()) {
+            return response()->json(['success' => true]);
+        }
+        
+        return redirect()->route('client.card.index');
+    }
+    
+    public function getCard()
+    {
+        $card = session()->get('card', []);
+        return response()->json(['card' => $card]);
     }
 }
