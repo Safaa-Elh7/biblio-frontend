@@ -21,6 +21,11 @@ class PanierController extends Controller
             "image" => $request->image ?? 'https://via.placeholder.com/80x100?text=Livre',
         ];
         session()->put('cart', $cart);
+        
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'cart' => $cart]);
+        }
+        
         return redirect()->route('client.home')->with('success', 'Livre ajouté au panier');
     }
 
@@ -36,17 +41,32 @@ class PanierController extends Controller
             }
             session()->put('cart', $cart);
         }
+        
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'cart' => $cart]);
+        }
+        
         return redirect()->route('client.panier.index');
     }
 
     public function removeFromCart(Request $request)
     {
-        // Logique pour retirer un livre du panier
         if (session()->has('cart')) {
             $cart = session()->get('cart');
             unset($cart[$request->id]);
             session()->put('cart', $cart);
         }
-        return response()->json(['success' => 'Livre retiré du panier']);
+        
+        if ($request->ajax()) {
+            return response()->json(['success' => true]);
+        }
+        
+        return redirect()->route('client.panier.index');
+    }
+    
+    public function getCart()
+    {
+        $cart = session()->get('cart', []);
+        return response()->json(['cart' => $cart]);
     }
 }
