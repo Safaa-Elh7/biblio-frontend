@@ -719,6 +719,13 @@
                                 <button type="submit" name="action" value="increment" class="quantity-btn">+</button>
                             </form>
                             <div class="item-price">{{ $item['price'] * $item['quantity'] }} Dh</div>
+                            <form method="POST" action="" style="margin-left: 10px;">
+                                @csrf
+                                <input type="hidden" name="id" value="{{ $id }}">
+                                <button type="submit" class="remove-btn" title="Supprimer">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     @endforeach
                 @endif
