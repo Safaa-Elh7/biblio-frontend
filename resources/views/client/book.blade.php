@@ -239,117 +239,130 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        // Variables globales pour le panier
-        let cart = {};
-        let cartCount = 0;
-        let cartTotal = 0;
+        var cart = {};
+        var cartCount = 0;
+        var cartTotal = 0;
         
-        // Charger le panier existant depuis la session
+        // Load cart data
         loadCartFromSession();
         
-        // Gestion de l'affichage du panier
-        $('#cart-toggle').click(function() {
-            $('#cart-container').toggle();
-        });
-        
-        $('#close-cart').click(function() {
-            $('#cart-container').hide();
-        });
-        
-        // Ajouter au panier avec le bouton Emprunter
-        $('#add-to-cart-btn').click(function() {
-            const bookData = {
-                id: $(this).data('id'),
-                name: $(this).data('name'),
-                price: $(this).data('price'),
-                image: $(this).data('image'),
-                quantity: 1
-            };
+        // Événement pour ajouter au panier
+        $(document).on('click', '.add-to-cart', function(e) {
+            e.preventDefault();
+            const button = $(this);
+            const form = button.closest('form');
+            const formData = form.serialize();
             
-            addToCart(bookData);
-        });
-        
-        // Ajouter au panier avec le bouton Télécharger
-        $('#download-btn').click(function() {
-            const bookData = {
-                id: $(this).data('id'),
-                name: $(this).data('name'),
-                price: $(this).data('price'),
-                image: $(this).data('image'),
-                quantity: 1
-            };
-            
-            addToCart(bookData);
-        });
-        
-        // Fonction pour ajouter un livre au panier
-        function addToCart(bookData) {
-            // Appel AJAX pour ajouter au panier côté serveur
             $.ajax({
-                url: '{{ route("client.panier.add") }}',
+                url: form.attr('action'),
                 method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id: bookData.id,
-                    name: bookData.name,
-                    quantity: bookData.quantity,
-                    price: bookData.price,
-                    image: bookData.image
-                },
+                data: formData,
                 success: function(response) {
-                    // Mettre à jour le panier côté client
-                    if (cart[bookData.id]) {
-                        cart[bookData.id].quantity++;
-                    } else {
-                        cart[bookData.id] = bookData;
+                    if (response.success) {
+                        cart = response.cart;
+                        updateCartUI();
+                        showNotification('Livre ajouté au panier!', 'success');
+                        animateCartIcon();
                     }
-                    
-                    updateCartUI();
-                    
-                    // Afficher le panier s'il n'est pas déjà visible
-                    $('#cart-container').show();
-                    
-                    // Animation de feedback
-                    animateCartIcon();
-                    
-                    // Afficher une notification
-                    showNotification(`${bookData.name} a été ajouté à votre panier`);
                 },
                 error: function(error) {
                     console.error('Erreur lors de l\'ajout au panier:', error);
-                    alert('Une erreur est survenue lors de l\'ajout au panier');
+                    showNotification('Erreur lors de l\'ajout au panier', 'error');
+                }
+            });
+        });
+
+        // Event handlers for quantity controls
+        $(document).on('click', '.increment-btn', function() {
+            const id = $(this).data('id');
+            updateCartItemQuantity(id, 'increment');
+        });
+        
+        $(document).on('click', '.decrement-btn', function() {
+            const id = $(this).data('id');
+            updateCartItemQuantity(id, 'decrement');
+        });
+        
+        // Event handler for remove button
+        $(document).on('click', '.remove-item-btn', function() {
+            const id = $(this).data('id');
+            removeCartItem(id);
+        });
+        
+        // Function to update cart item quantity
+        function updateCartItemQuantity(id, action) {
+            $.ajax({
+                url: '{{ route("client.panier.update") }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: id,
+                    action: action
+                },
+                success: function(response) {
+                    if (response.success) {
+                        cart = response.cart;
+                        updateCartUI();
+                        showNotification('Panier mis à jour', 'success');
+                    }
+                },
+                error: function(error) {
+                    console.error('Erreur lors de la mise à jour du panier:', error);
+                    showNotification('Erreur lors de la mise à jour', 'error');
                 }
             });
         }
         
-        // Fonction pour afficher une notification
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            const notificationMessage = document.getElementById('notification-message');
-            const notificationClose = document.getElementById('notification-close');
-            
-            // Mettre à jour le message
-            notificationMessage.textContent = message;
-            
-            // Afficher la notification
-            notification.classList.add('show');
-            
-            // Configurer un timer pour faire disparaître la notification
-            const notificationTimeout = setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-            
-            // Fermer la notification lorsqu'on clique sur le bouton de fermeture
-            notificationClose.addEventListener('click', () => {
-                clearTimeout(notificationTimeout);
-                notification.classList.remove('show');
+        // Function to remove item from cart
+        function removeCartItem(id) {
+            $.ajax({
+                url: '{{ route("client.panier.remove") }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: id
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // If remove is successful, reload cart from session
+                        loadCartFromSession();
+                        showNotification('Livre retiré du panier', 'success');
+                    }
+                },
+                error: function(error) {
+                    console.error('Erreur lors de la suppression:', error);
+                    showNotification('Erreur lors de la suppression', 'error');
+                }
             });
         }
         
-        // Fonction pour charger le panier depuis la session
+        // Function to display notification
+        function showNotification(message, type) {
+            const notification = $(`
+                <div class="notification notification-${type}">
+                    <div class="notification-content">
+                        <div class="notification-message">${message}</div>
+                    </div>
+                </div>
+            `);
+            
+            $('#notification-container').append(notification);
+            
+            setTimeout(function() {
+                notification.addClass('show');
+                
+                setTimeout(function() {
+                    notification.removeClass('show');
+                    setTimeout(function() {
+                        notification.remove();
+                    }, 300);
+                }, 3000);
+            }, 100);
+        }
+        
         function loadCartFromSession() {
             $.ajax({
-                url: '{{ route("client.panier.getCart") }}', // Nous allons créer cette route
+                url: '{{ route("client.panier.getCart") }}',
                 method: 'GET',
                 success: function(response) {
                     if (response.cart) {
@@ -380,20 +393,29 @@
                     </div>
                 `);
             } else {
-                // Ajouter chaque article au panier
+                // Ajouter chaque article au panier individuellement
                 for (const id in cart) {
                     const item = cart[id];
+                    item.id = id; // Store the id in the item for reference in the UI
                     cartCount += item.quantity;
                     cartTotal += item.quantity * item.price;
                     
                     $('#cart-items').append(`
-                        <div class="cart-item" data-id="${item.id}">
-                            <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                        <div class="cart-item" data-id="${id}">
+                            <img src="${item.image || 'https://via.placeholder.com/80x100?text=Livre'}" alt="${item.name}" class="cart-item-image">
                             <div class="cart-item-details">
                                 <div class="cart-item-title">${item.name}</div>
+                                <div class="cart-item-author">${item.author || ''}</div>
                                 <div class="cart-item-price">${item.price} Dh</div>
-                                <div class="cart-item-quantity">
-                                    Quantité: ${item.quantity}
+                                <div class="cart-item-quantity flex justify-between items-center mt-2">
+                                    <div class="flex items-center">
+                                        <button class="decrement-btn px-2 bg-[#7c2d2d] text-white rounded-l-md hover:bg-[#6a2424]" data-id="${id}">-</button>
+                                        <span class="px-3 py-1 bg-gray-100 text-center text-sm font-medium min-w-[30px]">${item.quantity}</span>
+                                        <button class="increment-btn px-2 bg-[#7c2d2d] text-white rounded-r-md hover:bg-[#6a2424]" data-id="${id}">+</button>
+                                    </div>
+                                    <button class="remove-item-btn text-[#7c2d2d] hover:text-red-700" data-id="${id}">
+                                        <i class="fas fa-times"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
