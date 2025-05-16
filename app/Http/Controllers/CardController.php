@@ -30,7 +30,6 @@ class CardController extends Controller
         
         // Total général
         $total = $subtotal + $tax;
-        dd($cart);
         
         return view('client.card', compact('cart', 'subtotal', 'tax', 'shipping', 'total'));
     }
