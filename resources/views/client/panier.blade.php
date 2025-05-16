@@ -489,7 +489,7 @@
                 @else
                     @foreach($cart as $id => $item)
                         <div class="cart-item">
-                            <img src="{{ $item['image'] ?? 'https://via.placeholder.com/80x100?text=Livre' }}" alt="{{ $item['name'] }}" class="item-image">
+                            <img src="{{ !empty($item['image']) ? $item['image'] : 'https://via.placeholder.com/80x100?text=Livre' }}" alt="{{ $item['name'] }}" class="item-image">
                             <div class="item-details">
                                 <h3 class="item-title">{{ $item['name'] }}</h3>
                                 <p class="item-author">{{ $item['author'] }}</p>

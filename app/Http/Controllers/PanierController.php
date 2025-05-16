@@ -15,11 +15,10 @@ class PanierController extends Controller
     {
         // Récupérer le panier actuel de la session
         $cart = session()->get('cart', []);
-        
+
         // Générer une clé unique pour chaque livre ajouté
         // Utiliser l'ID du livre et un timestamp unique
         $uniqueKey = $request->id;
-
         // Vérifier si le livre existe déjà dans le panier
         if (isset($cart[$uniqueKey])) {
             // Si le livre existe déjà, augmenter juste sa quantité
@@ -114,6 +113,7 @@ class PanierController extends Controller
     public function getCart()
     {
         $cart = session()->get('cart', []);
+
         return response()->json(['cart' => $cart]);
     }
 }

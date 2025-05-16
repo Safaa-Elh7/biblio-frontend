@@ -153,7 +153,7 @@
                 <div class="flex gap-4">
                     <form method="POST" action="{{ route('client.panier.add') }}" id="emprunt-form">
                         @csrf
-                        <input type="hidden" name="id" value="{{ $book['id'] ?? '' }}">
+                        <input type="hidden" name="id" value="{{ $book['id_article'] ?? '' }}">
                         <input type="hidden" name="name" value="{{ $book['titre'] ?? '' }}">
                         <input type="hidden" name="quantity" value="1">
                         <input type="hidden" name="price" value="{{ $book['prix_emprunt'] ?? '' }}">
@@ -165,7 +165,7 @@
                     </form>
                     <form method="POST" action="{{ route('client.panier.add') }}" id="download-form">
                         @csrf
-                        <input type="hidden" name="id" value="{{ $book['id'] ?? '' }}">
+                        <input type="hidden" name="id" value="{{ $book['id_article'] ?? '' }}">
                         <input type="hidden" name="name" value="{{ $book['titre'] ?? '' }}">
                         <input type="hidden" name="quantity" value="1">
                         <input type="hidden" name="price" value="{{ $book['prix_emprunt'] ?? '' }}">
