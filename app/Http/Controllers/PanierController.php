@@ -23,7 +23,7 @@ class PanierController extends Controller
             // Si le livre n'existe pas encore, l'ajouter comme nouveau livre
             $cart[$request->id] = [
                 "name" => $request->name,
-                "quantity" => $request->quantity,
+                "quantity" => 1,  // Initialiser à 1, ne pas utiliser $request->quantity qui pourrait être null
                 "price" => $request->price,
                 "image" => $request->image ?? 'https://via.placeholder.com/80x100?text=Livre',
                 "author" => $request->author ?? 'Non spécifié',
