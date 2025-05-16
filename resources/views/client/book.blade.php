@@ -131,7 +131,7 @@
 
         <div class="flex gap-8">
             <div class="w-1/3">
-                <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f"
+                <img src="{{ !empty($book['image']) ? asset('storage/' . $book['image']) : 'https://via.placeholder.com/200x300?text=Livre' }}"
                     alt="{{ $book['titre'] ?? 'Livre' }}" class="w-full rounded shadow">
             </div>
             <div class="flex-1">
@@ -158,7 +158,7 @@
                         <input type="hidden" name="quantity" value="1">
                         <input type="hidden" name="price" value="{{ $book['prix_emprunt'] ?? '' }}">
                         <input type="hidden" name="image"
-                            value="{{ $book['image'] ?? 'https://via.placeholder.com/80x100?text=Livre' }}">
+                            value="{{ !empty($book['image']) ? $book['image'] : '' }}">
                         <input type="hidden" name="author" value="{{ $book['auteur'] ?? 'Non spécifié' }}">
                         <button type="submit"
                             class="bg-[#7c2d2d] text-white rounded-full px-6 py-2 text-lg font-semibold">Emprunter</button>
@@ -170,7 +170,7 @@
                         <input type="hidden" name="quantity" value="1">
                         <input type="hidden" name="price" value="{{ $book['prix_emprunt'] ?? '' }}">
                         <input type="hidden" name="image"
-                            value="{{ $book['image'] ?? 'https://via.placeholder.com/80x100?text=Livre' }}">
+                            value="{{ !empty($book['image']) ? $book['image'] : '' }}">
                         <input type="hidden" name="author" value="{{ $book['auteur'] ?? 'Non spécifié' }}">
                         <button type="submit"
                             class="bg-gray-700 text-white rounded-full px-6 py-2 text-lg font-semibold"><i

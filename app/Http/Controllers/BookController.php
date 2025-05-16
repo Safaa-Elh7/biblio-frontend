@@ -18,7 +18,7 @@ class BookController extends Controller
         $book = $response->json();
         return view('client.book', compact('book'));
     }
-
+    
     abort(404);
 }
 

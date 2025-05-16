@@ -13,6 +13,7 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\bookController;
 use App\Http\Controllers\CardController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PanierController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,44 +29,44 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+     return view('welcome');
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Routes pour le bibliothécaire
-Route::middleware(['auth','role:bibliothecaire'])
+Route::middleware(['auth', 'role:bibliothecaire'])
      ->prefix('bibliothecaire')
      ->name('bibliothecaire.')
-     ->group(function(){
-         Route::get('dashboard', [BibliothecaireController::class,'index'])
-              ->name('dashboard');
+     ->group(function () {
+          Route::get('dashboard', [BibliothecaireController::class, 'index'])
+               ->name('dashboard');
      });
 
-Route::middleware(['auth','role:livreur'])
+Route::middleware(['auth', 'role:livreur'])
      ->prefix('livreur')
      ->name('livreur.')
-     ->group(function(){
-         Route::get('dashboard', [LivreurController::class,'index'])
-              ->name('dashboard');
+     ->group(function () {
+          Route::get('dashboard', [LivreurController::class, 'index'])
+               ->name('dashboard');
      });
 
-Route::middleware(['auth','role:employe'])
+Route::middleware(['auth', 'role:employe'])
      ->prefix('employe')
      ->name('employe.')
-     ->group(function(){
-         Route::get('dashboard', [EmployeController::class,'index'])
-              ->name('dashboard');
+     ->group(function () {
+          Route::get('dashboard', [EmployeController::class, 'index'])
+               ->name('dashboard');
      });
 
-Route::middleware(['auth','role:client'])
+Route::middleware(['auth', 'role:client'])
      ->prefix('client')
      ->name('client.')
-     ->group(function(){
-         Route::get('home', [ClientController::class,'index'])
-              ->name('home');
+     ->group(function () {
+          Route::get('home', [ClientController::class, 'index'])
+               ->name('home');
      });
 
 // Route::get('/home', [HomeController::class,'index'])
@@ -80,5 +81,21 @@ Route::post('/client/panier/update', [PanierController::class, 'update'])->name(
 Route::post('/client/panier/remove', [PanierController::class, 'removeFromCart'])->name('client.panier.remove');
 Route::get('/client/panier/get', [PanierController::class, 'getCart'])->name('client.panier.getCart');
 
+// Affichage du formulaire de paiement
 Route::get('/client/card', [CardController::class, 'index'])->name('client.card.index');
-require __DIR__.'/auth.php';
+// Traitement du paiement (formulaire POST)
+Route::post('/client/card/process-payment', [CardController::class, 'processPayment'])->name('client.card.processPayment');
+// Page de confirmation de commande
+Route::get('/client/order/confirmation/{order_number}', [OrderController::class, 'confirmation'])->name('client.order.confirmation');
+
+// Historique et détails des commandes (protégé par auth)
+Route::middleware(['auth'])
+    ->prefix('client')
+    ->name('client.')
+    ->group(function () {
+        Route::get('/orders', [OrderController::class, 'history'])->name('order.history');
+        Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order.show');
+        Route::get('/orders/search', [OrderController::class, 'search'])->name('order.search');
+    });
+
+require __DIR__ . '/auth.php';

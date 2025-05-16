@@ -850,7 +850,7 @@ function loadBooks() {
                     title: getBookProperty(book, 'titre', 'Titre inconnu'),
                     author: getBookProperty(book, 'auteur', 'Auteur inconnu'),
                     category: getBookProperty(book, 'category', 'all'),
-                    cover: getBookProperty(book, 'cover', 'https://images.unsplash.com/photo-1598618253208-d75408cee680?q=80&w=1000&auto=format&fit=crop'),
+                    image: book.image ? `/storage/${book.image}` : 'https://via.placeholder.com/150x200?text=Livre',
                     prix_emprunt: getBookProperty(book, 'prix_emprunt', 0),
                     isBestSeller: book.prix_emprunt > 100 || getBookProperty(book, 'isBestSeller', false)
                 }));
@@ -897,7 +897,7 @@ function generateDemoBooks() {
             title: `Livre de démonstration ${i}`,
             author: `Auteur ${i}`,
             category: category,
-            cover: `https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000&auto=format&fit=crop`,
+            image: `image${i}.jpg`,
             prix_emprunt: Math.floor(Math.random() * 200) + 50,
             isBestSeller: isBestSeller
         });
@@ -933,13 +933,13 @@ function displayBooks(containerId, booksToDisplay) {
         
         const title = getBookProperty(book, 'title', 'Titre inconnu');
         const author = getBookProperty(book, 'author', 'Auteur inconnu');
-        const cover = getBookProperty(book, 'cover', 'https://images.unsplash.com/photo-1598618253208-d75408cee680?q=80&w=1000&auto=format&fit=crop');
+        const image = getBookProperty(book, 'image', 'https://images.unsplash.com/photo-1598618253208-d75408cee680?q=80&w=1000&auto=format&fit=crop');
         const isBestSeller = getBookProperty(book, 'isBestSeller', false);
         
         const bestSellerBadge = isBestSeller ? `<span class="book-badge">Best Seller</span>` : '';
         
         bookCard.innerHTML = `
-            <img src="${cover}" alt="${title}" class="book-cover" 
+            <img src="${image}" alt="${title}" class="book-cover" 
                  onerror="this.src='https://images.unsplash.com/photo-1598618253208-d75408cee680?q=80&w=1000&auto=format&fit=crop'; this.onerror=null;">
             <h3 class="book-title">${title}</h3>
             <span class="author-name">${author}</span>

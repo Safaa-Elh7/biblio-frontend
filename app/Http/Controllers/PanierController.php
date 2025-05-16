@@ -30,7 +30,7 @@ class PanierController extends Controller
                 "name" => $request->name,
                 "quantity" => 1, // Initialiser à 1, ignorer $request->quantity
                 "price" => $request->price,
-                "image" => $request->image ?? 'https://via.placeholder.com/80x100?text=Livre',
+                "image" => $request->image ,
                 "author" => $request->author ?? 'Non spécifié',
             ];
             $message = "Le livre \"" . $request->name . "\" a été ajouté à votre panier";

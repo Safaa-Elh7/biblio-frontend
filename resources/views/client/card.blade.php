@@ -516,6 +516,31 @@
             visibility: visible;
             opacity: 1;
         }
+
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        .focused {
+            position: relative;
+        }
+        .focused::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 100%;
+            height: 2px;
+            background: #7c2d2d;
+            border-radius: 1px;
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+        .focused.active::after {
+            transform: scaleX(1);
+        }
+        .border-red-500 {
+            border-color: #ef4444 !important;
+        }
     </style>
 </head>
 <body>
@@ -553,131 +578,121 @@
         <h1 class="checkout-title">Checkout</h1>
         
         <!-- Checkout Content -->
-        <div class="checkout-container">
-            <!-- Left Side - Shipping Address -->
-            <div class="checkout-section">
-                <h2 class="section-title">
-                    <i class="fas fa-shipping-fast"></i>
-                    Shipping address
-                </h2>
-                
-                <div class="input-group">
-                    <label class="input-label">Full name</label>
-                    <input type="text" placeholder="Enter your full name" class="input-field" id="fullName">
-                    <i class="fas fa-user input-icon"></i>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">Address</label>
-                    <input type="text" placeholder="Enter your address" class="input-field" id="address">
-                    <i class="fas fa-home input-icon"></i>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">City</label>
-                    <input type="text" placeholder="Enter your city" class="input-field" id="city">
-                    <i class="fas fa-city input-icon"></i>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">Zip code</label>
-                    <input type="text" placeholder="Enter your zip code" class="input-field" id="zipCode">
-                    <i class="fas fa-map-marker-alt input-icon"></i>
-                </div>
-            </div>
-            
-            <!-- Right Side - Payment Information -->
-            <div class="checkout-section">
-                <h2 class="section-title">
-                    <i class="fas fa-credit-card"></i>
-                    Payment
-                </h2>
-                
-                <div class="card-icons">
-                    <div class="card-icon active" data-card="visa">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa" class="h-full">
-                    </div>
-                    <div class="card-icon" data-card="mastercard">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard" class="h-full">
-                    </div>
-                </div>
-                
-                <div class="card-details">
+        <form id="checkoutForm" method="POST" action="{{ route('client.card.processPayment') }}">
+            @csrf
+            <div class="checkout-container">
+                <!-- Left Side - Shipping Address -->
+                <div class="checkout-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-shipping-fast"></i>
+                        Shipping address
+                    </h2>
                     <div class="input-group">
-                        <label class="input-label">Card number</label>
-                        <input type="text" placeholder="1234 5678 9565 5555" class="input-field" id="cardNumber">
-                        <i class="fas fa-credit-card input-icon"></i>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label class="input-label">Card holder</label>
-                        <input type="text" placeholder="Enter card holder name" class="input-field" id="cardHolder">
+                        <label class="input-label">Full name</label>
+                        <input type="text" placeholder="Enter your full name" class="input-field" id="fullName" name="fullName">
                         <i class="fas fa-user input-icon"></i>
                     </div>
-                    
-                    <div class="card-row">
-                        <div class="input-group w-1/2 pr-2">
-                            <label class="input-label">Expiry date</label>
-                            <input type="text" placeholder="MM/YY" class="input-field" id="expiryDate">
-                            <i class="fas fa-calendar input-icon"></i>
+                    <div class="input-group">
+                        <label class="input-label">Address</label>
+                        <input type="text" placeholder="Enter your address" class="input-field" id="address" name="address">
+                        <i class="fas fa-home input-icon"></i>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">City</label>
+                        <input type="text" placeholder="Enter your city" class="input-field" id="city" name="city">
+                        <i class="fas fa-city input-icon"></i>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Zip code</label>
+                        <input type="text" placeholder="Enter your zip code" class="input-field" id="zipCode" name="zipCode">
+                        <i class="fas fa-map-marker-alt input-icon"></i>
+                    </div>
+                </div>
+                <!-- Right Side - Payment Information -->
+                <div class="checkout-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-credit-card"></i>
+                        Payment
+                    </h2>
+                    <div class="card-icons">
+                        <div class="card-icon active" data-card="visa">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa" class="h-full">
                         </div>
-                        <div class="input-group w-1/2 pl-2">
-                            <label class="input-label">CVV 
-                                <span class="tooltip">
-                                    <i class="fas fa-question-circle text-xs"></i>
-                                    <span class="tooltip-text">The 3-digit security code on the back of your card</span>
-                                </span>
-                            </label>
-                            <input type="password" placeholder="***" class="input-field" id="cvv">
-                            <i class="fas fa-lock input-icon"></i>
+                        <div class="card-icon" data-card="mastercard">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard" class="h-full">
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <div class="input-group">
+                            <label class="input-label">Card number</label>
+                            <input type="text" placeholder="1234 5678 9565 5555" class="input-field" id="cardNumber" name="cardNumber">
+                            <i class="fas fa-credit-card input-icon"></i>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Card holder</label>
+                            <input type="text" placeholder="Enter card holder name" class="input-field" id="cardHolder" name="cardHolder">
+                            <i class="fas fa-user input-icon"></i>
+                        </div>
+                        <div class="card-row">
+                            <div class="input-group w-1/2 pr-2">
+                                <label class="input-label">Expiry date</label>
+                                <input type="text" placeholder="MM/YY" class="input-field" id="expiryDate" name="expiryDate" maxlength="5">
+                                <i class="fas fa-calendar input-icon"></i>
+                            </div>
+                            <div class="input-group w-1/2 pl-2">
+                                <label class="input-label">CVV</label>
+                                <input type="text" placeholder="CVV" class="input-field" id="cvv" name="cvv" maxlength="4">
+                                <i class="fas fa-lock input-icon"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Order Summary -->
-        <div class="order-summary">
-            <h2 class="summary-title">Order Summary</h2>
-            
-            <div class="order-items">
-                <div class="order-item">
-                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000&auto=format&fit=crop" alt="Pride and Prejudice" class="item-image">
-                    <div class="item-details">
-                        <div class="item-title">Pride and Prejudice</div>
-                        <div class="item-author">Jane Austen</div>
-                    </div>
-                    <div class="item-price">500 Dh</div>
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h2 class="summary-title">Order Summary</h2>
+                <div class="order-items">
+                    @if(empty($cart))
+                        <div class="text-center text-gray-500">Your cart is empty.</div>
+                    @else
+                        @foreach($cart as $item)
+                        <div class="order-item">
+                            <img src="{{ !empty($item['image']) ? asset('storage/' . $item['image']) : 'https://via.placeholder.com/80x100?text=Livre' }}" alt="{{ $item['name'] }}" class="item-image">
+                            <div class="item-details">
+                                <div class="item-title">{{ $item['name'] }}</div>
+                                <div class="item-author">{{ $item['author'] }}</div>
+                            </div>
+                            <div class="item-price">{{ $item['price'] * $item['quantity'] }} Dh</div>
+                        </div>
+                        @endforeach
+                    @endif
+                </div>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>{{ $subtotal }} Dh</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>{{ $shipping }} Dh</span>
+                </div>
+                <div class="summary-row">
+                    <span>Estimated tax (4%)</span>
+                    <span>{{ $tax }} Dh</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="total-row">
+                    <span>Total</span>
+                    <span>{{ $total + $shipping }} Dh</span>
+                </div>
+                <button type="button" class="place-order-btn" id="placeOrderBtn">
+                    Place Order
+                </button>
+                <div class="secure-badge">
+                    <i class="fas fa-lock"></i> Secure checkout
                 </div>
             </div>
-            
-            <div class="summary-row">
-                <span>Subtotal</span>
-                <span>500 Dh</span>
-            </div>
-            
-            <div class="summary-row">
-                <span>Shipping</span>
-                <span>20 Dh</span>
-            </div>
-            
-            <div class="summary-divider"></div>
-            
-            <div class="total-row">
-                <span>Total</span>
-                <span>520 Dh</span>
-            </div>
-            
-            <button class="place-order-btn" id="placeOrderBtn">
-                Place Order
-            </button>
-            
-            <div class="secure-badge">
-                <i class="fas fa-lock"></i> Secure checkout
-            </div>
-        </div>
+        </form>
     </div>
-    
     <!-- Loading Overlay -->
     <div class="loading" id="loadingOverlay">
         <div class="loading-spinner"></div>
@@ -765,55 +780,13 @@
                 return isValid;
             }
             
-            // Animation de secousse pour les champs invalides
-            document.head.insertAdjacentHTML('beforeend', `
-                <style>
-                    @keyframes shake {
-                        0%, 100% { transform: translateX(0); }
-                        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-                        20%, 40%, 60%, 80% { transform: translateX(5px); }
-                    }
-                    .shake {
-                        animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-                    }
-                    .focused {
-                        position: relative;
-                    }
-                    .focused::after {
-                        content: '';
-                        position: absolute;
-                        bottom: -2px;
-                        left: 0;
-                        width: 100%;
-                        height: 2px;
-                        background-color: #7c2d2d;
-                        transform: scaleX(0);
-                        transition: transform 0.3s ease;
-                    }
-                    .focused.active::after {
-                        transform: scaleX(1);
-                    }
-                    .border-red-500 {
-                        border-color: #ef4444 !important;
-                    }
-                </style>
-            `);
-            
             // Traitement de la commande
             placeOrderBtn.addEventListener('click', function() {
                 if (validateFields()) {
                     // Afficher l'animation de chargement
                     loadingOverlay.classList.add('active');
-                    
-                    // Simuler un traitement de paiement
-                    setTimeout(() => {
-                        loadingOverlay.classList.remove('active');
-                        
-                        // Afficher un message de succès
-                        alert('Votre commande a été traitée avec succès! Merci pour votre achat.');
-                        
-                        // Dans une application réelle, rediriger vers une page de confirmation
-                    }, 2000);
+                    // Soumettre le formulaire
+                    document.getElementById('checkoutForm').submit();
                 } else {
                     alert('Veuillez remplir tous les champs obligatoires.');
                 }

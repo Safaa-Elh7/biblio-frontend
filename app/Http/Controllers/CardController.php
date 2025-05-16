@@ -3,80 +3,110 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Models\OrderItem;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class CardController extends Controller
 {
     public function index()
     {
-        return view('client.card');
+        // Récupérer le panier de la session
+        $cart = session()->get('cart', []);
+        
+        // Calculer les totaux
+        $subtotal = 0;
+
+        foreach ($cart as $item) {
+            $subtotal += $item['price'] * $item['quantity'];
+        }
+        
+        // Calculer la TVA (4%)
+        $tax = round($subtotal * 0.04);
+        
+        // Frais de livraison fixes
+        $shipping = 20;
+        
+        // Total général
+        $total = $subtotal + $tax;
+        dd($cart);
+        
+        return view('client.card', compact('cart', 'subtotal', 'tax', 'shipping', 'total'));
     }
 
-    public function addToCard(Request $request)
+    public function processPayment(Request $request)
     {
-        $card = session()->get('card', []);
+        // Valider les données du formulaire
+        $validatedData = $request->validate([
+            'fullName' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'zipCode' => 'required|string|max:20',
+            'cardNumber' => 'required|string|max:19', // Format: XXXX XXXX XXXX XXXX
+            'cardHolder' => 'required|string|max:255',
+            'expiryDate' => 'required|string|max:5', // Format: MM/YY
+            'cvv' => 'required|string|max:4',
+        ]);
         
-        // Vérifier si le livre existe déjà dans le card
-        if (isset($card[$request->id])) {
-            // Si le livre existe déjà, augmenter juste sa quantité
-            $card[$request->id]['quantity']++;
-        } else {
-            // Si le livre n'existe pas encore, l'ajouter comme nouveau livre
-            $card[$request->id] = [
-                "name" => $request->name,
-                "quantity" => $request->quantity,
-                "price" => $request->price,
-                "image" => $request->image ?? 'https://via.placeholder.com/80x100?text=Livre',
-                "author" => $request->author ?? 'Non spécifié',
-            ];
+        // Récupérer le panier
+        $cart = session()->get('cart', []);
+        
+        // Vérifier si le panier est vide
+        if (empty($cart)) {
+            return redirect()->back()->with('error', 'Votre panier est vide.');
         }
         
-        session()->put('card', $card);
-        
-        if ($request->ajax()) {
-            return response()->json(['success' => true, 'card' => $card]);
+        // Calculer les totaux
+        $subtotal = 0;
+        foreach ($cart as $item) {
+            $subtotal += $item['price'] * $item['quantity'];
         }
         
-        return redirect()->route('client.home')->with('success', 'Livre ajouté au card');
-    }
-    
-    public function update(Request $request)
-    {
-        $card = session()->get('card', []);
-        $id = $request->id;
-        if (isset($card[$id])) {
-            if ($request->action === 'increment') {
-                $card[$id]['quantity'] += 1;
-            } elseif ($request->action === 'decrement' && $card[$id]['quantity'] > 1) {
-                $card[$id]['quantity'] -= 1;
+        $tax = round($subtotal * 0.04);
+        $total = $subtotal + $tax;
+        
+        try {
+            // Créer une nouvelle commande en base de données
+            $order = new Order();
+            $order->user_id = Auth::id() ?? null; // Si l'utilisateur est connecté
+            $order->order_number = 'ORD-' . uniqid();
+            $order->subtotal = $subtotal;
+            $order->tax = $tax;
+            $order->total = $total;
+            $order->full_name = $validatedData['fullName'];
+            $order->address = $validatedData['address'];
+            $order->city = $validatedData['city'];
+            $order->zip_code = $validatedData['zipCode'];
+            // Masquer les informations de carte sensibles
+            $order->payment_method = 'card';
+            $order->card_last_four = substr(str_replace(' ', '', $validatedData['cardNumber']), -4);
+            $order->status = 'completed';
+            $order->save();
+            
+            // Enregistrer les éléments de la commande
+            foreach ($cart as $id => $item) {
+                $orderItem = new OrderItem();
+                $orderItem->order_id = $order->id;
+                $orderItem->book_id = $id;
+                $orderItem->name = $item['name'];
+                $orderItem->price = $item['price'];
+                $orderItem->quantity = $item['quantity'];
+                
+                $orderItem->save();
             }
-            session()->put('card', $card);
+            
+            // Vider le panier après la commande
+            session()->forget('cart');
+            
+            // Rediriger vers une page de confirmation
+            return redirect()->route('client.order.confirmation', ['order_number' => $order->order_number])
+                ->with('success', 'Votre commande a été traitée avec succès!');
+                
+        } catch (\Exception $e) {
+            // En cas d'erreur
+            return redirect()->back()
+                ->with('error', 'Une erreur est survenue lors du traitement de votre commande: ' . $e->getMessage());
         }
-        
-        if ($request->ajax()) {
-            return response()->json(['success' => true, 'card' => $card]);
-        }
-        
-        return redirect()->route('client.card.index');
-    }
-
-    public function removeFromCard(Request $request)
-    {
-        if (session()->has('card')) {
-            $card = session()->get('card');
-            unset($card[$request->id]);
-            session()->put('card', $card);
-        }
-        
-        if ($request->ajax()) {
-            return response()->json(['success' => true]);
-        }
-        
-        return redirect()->route('client.card.index');
-    }
-    
-    public function getCard()
-    {
-        $card = session()->get('card', []);
-        return response()->json(['card' => $card]);
     }
 }
