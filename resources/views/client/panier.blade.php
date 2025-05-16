@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyBookSpace - Panier d'achat Premium</title>
+    <title>MyBookSpace - Panier d'achat</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -27,11 +24,6 @@
                         'text-dark': '#2d2d2d',
                         'text-medium': '#4a4a4a',
                         'text-light': '#6e6e6e',
-                    },
-                    boxShadow: {
-                        'custom': '0 4px 20px rgba(0, 0, 0, 0.08)',
-                        'input': '0 2px 5px rgba(0, 0, 0, 0.05)',
-                        'card': '0 8px 30px rgba(0, 0, 0, 0.12)',
                     }
                 }
             }
@@ -39,22 +31,20 @@
     </script>
     <style>
         body {
-            font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #000;
+            font-family: 'Poppins', system-ui, sans-serif;
+            background-color: #e6c998;
             color: #2d2d2d;
+            margin: 0;
+            padding: 0;
         }
-
-        h1,
-        h2,
-        h3 {
+        
+        h1, h2, h3 {
             font-family: 'Playfair Display', serif;
         }
-
-        /* Styles de la sidebar */
+        
         .sidebar {
             width: 80px;
             background-color: #7c2d2d;
-            background-image: linear-gradient(to bottom, #8e3a3a, #7c2d2d, #6a2424);
             position: fixed;
             height: 100%;
             display: flex;
@@ -63,272 +53,106 @@
             padding-top: 1.5rem;
             padding-bottom: 1.5rem;
             z-index: 10;
-            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
         }
-
+        
         .profile-icon {
-            width: 64px;
-            height: 64px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             overflow: hidden;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             border: 2px solid #e6c998;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        .profile-icon:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
-        }
-
+        
         .sidebar-icon {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             margin-bottom: 1.5rem;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             cursor: pointer;
-            transition: all 0.2s ease;
-            border-radius: 12px;
         }
-
-        .sidebar-icon:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-3px);
-        }
-
+        
         .sidebar-icon.active {
             background-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
         }
-
-        .subscribe-text {
-            color: white;
-            transform: rotate(90deg);
-            transform-origin: center;
-            white-space: nowrap;
-            margin-top: auto;
-            font-size: 0.875rem;
-            letter-spacing: 1px;
-            background-color: #4ade80;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .subscribe-text:hover {
-            transform: rotate(90deg) scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Style du contenu principal */
-        .main-container {
+        
+        .cart-container {
             margin-left: 80px;
-            min-height: 100vh;
-            background-color: #e6c998;
-            background-image: linear-gradient(to bottom right, #e9d0a3, #e6c998, #d4b785);
+            padding: 2rem;
         }
-
-        .header {
-            padding: 1.5rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: transparent;
-            border-bottom: 1px solid rgba(124, 45, 45, 0.1);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
-        }
-
-        .logo-text {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            color: #7c2d2d;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-container {
-            position: relative;
-            width: 28rem;
-            transition: all 0.3s ease;
-        }
-
-        .search-container:focus-within {
-            transform: translateY(-2px);
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 0.75rem 1rem 0.75rem 3rem;
-            border-radius: 9999px;
-            border: none;
-            background-color: #f8e7c9;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .search-input:focus {
-            outline: none;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            background-color: white;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 1.25rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #7c2d2d;
-            font-size: 1rem;
-            pointer-events: none;
-        }
-
-        .search-btn {
-            background-color: #7c2d2d;
-            color: white;
-            padding: 0.75rem 1.75rem;
-            border-radius: 9999px;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-            box-shadow: 0 4px 10px rgba(124, 45, 45, 0.3);
-            transition: all 0.3s ease;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .search-btn:hover {
-            background-color: #6a2424;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(124, 45, 45, 0.4);
-        }
-
-        .search-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(124, 45, 45, 0.3);
-        }
-
-        /* Styles pour le panier */
+        
         .cart-title {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 700;
             color: #2d2d2d;
-            margin: 2rem 0;
-            padding-left: 2rem;
-            position: relative;
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 4px solid #7c2d2d;
             display: inline-block;
         }
-
-        .cart-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 2rem;
-            width: 80px;
-            height: 4px;
-            background-color: #7c2d2d;
-            border-radius: 2px;
-        }
-
-        .cart-container {
-            padding: 1rem 2rem 3rem;
-            display: flex;
-            gap: 2rem;
-        }
-
+        
         .cart-items {
             background-color: #f8e7c9;
             border-radius: 1rem;
-            padding: 1.5rem;
-            flex: 1;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
         }
-
-        .cart-items:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-        }
-
+        
         .cart-item {
             display: flex;
             align-items: center;
             padding: 1.5rem;
             border-bottom: 1px solid #e2d3af;
             position: relative;
-            transition: all 0.3s ease;
         }
-
-        .cart-item:hover {
-            background-color: rgba(255, 255, 255, 0.5);
-            border-radius: 0.5rem;
-            transform: translateX(5px);
-        }
-
+        
         .cart-item:last-child {
             border-bottom: none;
         }
-
+        
         .item-image {
-            width: 80px;
-            height: 100px;
+            width: 100px;
+            height: 130px;
             object-fit: cover;
             margin-right: 1.5rem;
             border-radius: 0.5rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
-        .cart-item:hover .item-image {
-            transform: scale(1.05) rotate(2deg);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
+        
         .item-details {
             flex: 1;
         }
-
+        
         .item-title {
             font-size: 1.25rem;
             font-weight: 600;
             color: #2d2d2d;
             margin-bottom: 0.25rem;
-            transition: color 0.3s ease;
         }
-
-        .cart-item:hover .item-title {
-            color: #7c2d2d;
-        }
-
+        
         .item-author {
             font-size: 0.875rem;
             color: #6e6e6e;
+            margin-bottom: 0.5rem;
         }
-
+        
         .quantity-control {
             display: flex;
             align-items: center;
-            margin-right: 1.5rem;
             background-color: white;
             border-radius: 0.5rem;
             padding: 0.25rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-right: 2rem;
         }
-
+        
         .quantity-btn {
             background-color: #e2d3af;
             border: none;
@@ -340,15 +164,14 @@
             justify-content: center;
             cursor: pointer;
             border-radius: 0.25rem;
-            transition: all 0.2s ease;
             color: #7c2d2d;
         }
-
+        
         .quantity-btn:hover {
             background-color: #7c2d2d;
             color: white;
         }
-
+        
         .quantity-input {
             width: 40px;
             height: 30px;
@@ -359,68 +182,59 @@
             font-weight: 600;
             color: #2d2d2d;
         }
-
+        
         .item-price {
             font-size: 1.25rem;
             font-weight: 700;
             color: #7c2d2d;
+            width: 120px;
             text-align: right;
-            width: 100px;
         }
-
+        
         .remove-btn {
-            color: #8b2121;
+            color: #7c2d2d;
             background: none;
             border: none;
             font-size: 1.25rem;
             cursor: pointer;
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 30px;
-            height: 30px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-            opacity: 0.5;
+            margin-left: 1rem;
+            opacity: 0.7;
         }
-
+        
         .remove-btn:hover {
-            background-color: rgba(139, 33, 33, 0.1);
-            transform: rotate(90deg);
+            background-color: rgba(124, 45, 45, 0.1);
             opacity: 1;
         }
-
-        /* Styles pour le résumé de commande */
+        
         .order-summary {
             background-color: #f8e7c9;
             border-radius: 1rem;
-            padding: 2rem;
-            width: 300px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 1.5rem;
+            max-width: 400px;
+            margin-left: auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
-
-        .order-summary:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-        }
-
+        
         .summary-title {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 600;
             color: #7c2d2d;
             margin-bottom: 1.5rem;
             text-align: center;
             position: relative;
+            padding-bottom: 0.5rem;
         }
-
+        
         .summary-title::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 60px;
@@ -428,51 +242,36 @@
             background-color: #7c2d2d;
             border-radius: 1.5px;
         }
-
+        
         .summary-row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 1rem;
             font-size: 1rem;
+            padding: 0.5rem 0;
         }
-
-        .summary-label {
-            color: #4a4a4a;
-        }
-
-        .summary-value {
-            font-weight: 600;
-            color: #2d2d2d;
-        }
-
+        
         .summary-divider {
             height: 1px;
             background-color: #e2d3af;
-            margin: 1.5rem 0;
+            margin: 1rem 0;
         }
-
+        
         .total-row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 1.5rem;
-            font-size: 1.25rem;
-        }
-
-        .total-label {
-            font-weight: 600;
-            color: #2d2d2d;
-        }
-
-        .total-value {
+            font-size: 1.5rem;
             font-weight: 700;
-            color: #7c2d2d;
+            color: #2d2d2d;
+            padding: 0.5rem 0;
         }
-
+        
         .checkout-btn {
             background-color: #7c2d2d;
             color: white;
             width: 100%;
-            padding: 1rem;
+            padding: 0.75rem;
             border-radius: 9999px;
             font-weight: 600;
             font-size: 1.125rem;
@@ -480,57 +279,14 @@
             cursor: pointer;
             text-align: center;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(124, 45, 45, 0.3);
-            position: relative;
-            overflow: hidden;
         }
-
+        
         .checkout-btn:hover {
             background-color: #6a2424;
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(124, 45, 45, 0.4);
+            box-shadow: 0 4px 12px rgba(124, 45, 45, 0.3);
         }
-
-        .checkout-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(124, 45, 45, 0.3);
-        }
-
-        .checkout-btn::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.5);
-            opacity: 0;
-            border-radius: 100%;
-            transform: scale(1, 1) translate(-50%);
-            transform-origin: 50% 50%;
-        }
-
-        .checkout-btn:focus:not(:active)::after {
-            animation: ripple 1s ease-out;
-        }
-
-        @keyframes ripple {
-            0% {
-                transform: scale(0, 0);
-                opacity: 0.5;
-            }
-
-            20% {
-                transform: scale(25, 25);
-                opacity: 0.5;
-            }
-
-            100% {
-                opacity: 0;
-                transform: scale(40, 40);
-            }
-        }
-
+        
         .secure-badge {
             display: flex;
             align-items: center;
@@ -539,165 +295,181 @@
             color: #6e6e6e;
             font-size: 0.875rem;
         }
-
+        
         .secure-badge i {
             margin-right: 0.5rem;
             color: #7c2d2d;
         }
-
+        
         .empty-cart-message {
             text-align: center;
-            padding: 3rem;
+            padding: 4rem 2rem;
             font-size: 1.25rem;
             color: #6e6e6e;
         }
-
+        
         .empty-cart-icon {
             font-size: 4rem;
             color: #d4b785;
             margin-bottom: 1rem;
         }
-
-        .add-book-form {
-            background-color: #f8e7c9;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            width: 300px;
-            margin-top: 1rem;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .add-book-form:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-        }
-
-        .form-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #7c2d2d;
-            margin-bottom: 1rem;
-            text-align: center;
-            position: relative;
-        }
-
-        .form-title::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 2px;
-            background-color: #7c2d2d;
-            border-radius: 1px;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            border: 1px solid #e2d3af;
-            background-color: white;
-            margin-bottom: 0.75rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #7c2d2d;
-            box-shadow: 0 0 0 3px rgba(124, 45, 45, 0.15);
-        }
-
-        .add-book-btn {
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
             background-color: #7c2d2d;
             color: white;
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(124, 45, 45, 0.3);
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
-
-        .add-book-btn:hover {
-            background-color: #6a2424;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(124, 45, 45, 0.4);
-        }
-
-        .add-book-btn:active {
+        
+        .notification.show {
+            opacity: 1;
             transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(124, 45, 45, 0.3);
+        }
+        
+        .notification-icon {
+            margin-right: 12px;
+            font-size: 24px;
+            color: #e6c998;
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+        
+        .notification-message {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .notification-close {
+            background: none;
+            border: none;
+            color: white;
+            margin-left: 15px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+        
+        .notification-close:hover {
+            opacity: 1;
+        }
+        
+        .notification-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .notification-progress-bar {
+            height: 100%;
+            background-color: #e6c998;
+            width: 100%;
+            transform-origin: left;
+            animation: progress 3s linear forwards;
+        }
+        
+        @keyframes progress {
+            from { transform: scaleX(1); }
+            to { transform: scaleX(0); }
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .order-summary {
+                margin-left: 0;
+                max-width: none;
+            }
         }
     </style>
 </head>
-
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="profile-icon">
-            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80"
-                alt="Profile" class="w-full h-full object-cover">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80" alt="Profile" class="w-full h-full object-cover">
         </div>
-
+        
         <div class="sidebar-icon">
             <i class="fas fa-bars"></i>
         </div>
-
-        <div class="sidebar-icon">
+        
+        <a href="{{ route('client.home') }}" class="sidebar-icon">
             <i class="fas fa-home"></i>
-        </div>
-
-        <div class="sidebar-icon active">
+        </a>
+        
+        <a href="{{ route('client.panier.index') }}" class="sidebar-icon active">
             <i class="fas fa-shopping-cart"></i>
-        </div>
-
+        </a>
+        
         <div class="sidebar-icon">
             <i class="fas fa-camera"></i>
         </div>
-
+        
         <div class="sidebar-icon">
             <i class="fas fa-envelope"></i>
         </div>
-
-        <div class="subscribe-text">
-            Subscribe
+        
+        <div class="sidebar-icon mt-auto bg-green-500 rounded">
+            <span class="rotate-90 whitespace-nowrap text-xs font-medium">Subscribe</span>
         </div>
     </div>
-
+    
     <!-- Main Content -->
-    <div class="main-container">
-        <!-- Header -->
-        <header class="header">
-            <div class="logo">
-                <div class="mr-3 text-sidebar text-3xl">
-                    <i class="fas fa-book-open"></i>
-                </div>
-                <h1 class="text-2xl font-bold logo-text">MyBookSpace</h1>
-            </div>
-
+    <div class="cart-container">
+        <header class="flex justify-between items-center mb-6">
             <div class="flex items-center">
-                <div class="search-container mr-4">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" id="searchInput" placeholder="Search for books, authors, genres..."
-                        class="search-input">
+                <i class="fas fa-book text-2xl text-sidebar mr-2"></i>
+                <h1 class="text-2xl font-bold text-sidebar">MyBookSpace</h1>
+            </div>
+            
+            <div class="flex items-center">
+                <div class="relative mr-4">
+                    <input type="text" placeholder="Search for books, authors, genres..." class="px-4 py-2 pl-10 rounded-full bg-beige-light border-none w-80 focus:outline-none">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-sidebar"></i>
                 </div>
-                <button id="searchButton" class="search-btn">
+                <button class="bg-sidebar text-white px-4 py-2 rounded-full font-medium hover:bg-sidebar-dark transition-colors">
                     Search
                 </button>
             </div>
         </header>
-
+        
         <!-- Shopping Cart Title -->
         <h1 class="cart-title">Shopping Cart</h1>
-
+        
         <!-- Shopping Cart Content -->
-        <div class="cart-container">
+        <div class="grid-container">
             <!-- Left Side - Cart Items -->
             <div class="cart-items" id="cartItems">
                 @if(session('success'))
@@ -717,84 +489,130 @@
                 @else
                     @foreach($cart as $id => $item)
                         <div class="cart-item">
-                            <img src="{{ $item['image'] ?? 'https://via.placeholder.com/80x100?text=Livre' }}"
-                                alt="{{ $item['name'] }}" class="item-image">
+                            <img src="{{ $item['image'] ?? 'https://via.placeholder.com/80x100?text=Livre' }}" alt="{{ $item['name'] }}" class="item-image">
                             <div class="item-details">
                                 <h3 class="item-title">{{ $item['name'] }}</h3>
+                                <p class="item-author">{{ $item['author'] }}</p>
                             </div>
-                            <form method="POST" action="{{ route('client.panier.update') }}"
-                                class="quantity-control flex items-center">
+                            <form method="POST" action="{{ route('client.panier.update') }}" class="quantity-control flex items-center">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $id }}">
                                 <button type="submit" name="action" value="decrement" class="quantity-btn">-</button>
-                                <input type="text" value="{{ $item['quantity'] }}" class="quantity-input" readonly
-                                    style="width:40px;">
+                                <input type="text" value="{{ $item['quantity'] }}" class="quantity-input" readonly style="width:40px;">
                                 <button type="submit" name="action" value="increment" class="quantity-btn">+</button>
                             </form>
                             <div class="item-price">{{ $item['price'] * $item['quantity'] }} Dh</div>
-                            <form method="POST" action="{{ route('client.panier.remove') }}" style="margin-left: 10px;">
+                            <form method="POST" action="{{ route('client.panier.remove') }}">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $id }}">
                                 <button type="submit" class="remove-btn" title="Supprimer">
-                                    <i class="fas fa-trash"></i>
+                                    <i class="fas fa-times"></i>
                                 </button>
                             </form>
                         </div>
                     @endforeach
                 @endif
             </div>
-
+            
             <!-- Right Side - Order Summary -->
-            <div class="right-column">
-                <div class="order-summary">
-                    <h2 class="summary-title">Order Summary</h2>
-
-                    <div class="summary-row">
-                        <span class="summary-label">Subtotal</span>
-                        <span class="summary-value" id="subtotalValue">
-                            {{ array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)) }} Dh
-                        </span>
-                    </div>
-
-                    <div class="summary-row">
-                        <span class="summary-label">Estimated tax (4%)</span>
-                        <span class="summary-value" id="taxValue">
-                            {{ round(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)) * 0.04) }}
-                            Dh
-                        </span>
-                    </div>
-
-                    <div class="summary-divider"></div>
-
-                    <div class="total-row">
-                        <span class="total-label">Total</span>
-                        <span class="total-value" id="totalValue">
-                            {{ round(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)) * 1.04) }}
-                            Dh
-                        </span>
-                    </div>
-
-                    <a href="{{route('client.card.index')}}" class="checkout-btn" id="checkoutBtn">
-                        Proceed to Checkout
-                    </a>
-
-                    <div class="secure-badge">
-                        <i class="fas fa-lock"></i> Secure checkout
-                    </div>
+            <div class="order-summary">
+                <h2 class="summary-title">Order Summary</h2>
+                
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="subtotalValue">
+                        {{ array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)) }} Dh
+                    </span>
                 </div>
-
-                <!-- Add Book Form -->
-                <div class="add-book-form mt-4">
-
+                
+                <div class="summary-row">
+                    <span>Estimated tax (4%)</span>
+                    <span id="taxValue">
+                        {{ round(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)) * 0.04) }} Dh
+                    </span>
+                </div>
+                
+                <div class="summary-divider"></div>
+                
+                <div class="total-row">
+                    <span>Total</span>
+                    <span id="totalValue">
+                        {{ round(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)) * 1.04) }} Dh
+                    </span>
+                </div>
+                
+                <a href="{{ route('client.card.index') }}" class="checkout-btn block text-center no-underline">
+                    Proceed to Checkout
+                </a>
+                
+                <div class="secure-badge">
+                    <i class="fas fa-lock"></i> Secure checkout
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="notification-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title">Action réussie</div>
+            <div class="notification-message" id="notification-message">
+                @if(session('success'))
+                    {{ session('success') }}
+                @endif
+            </div>
+        </div>
+        <button class="notification-close" id="notification-close"><i class="fas fa-times"></i></button>
+        <div class="notification-progress">
+            <div class="notification-progress-bar"></div>
+        </div>
+    </div>
+
     <script>
-        // Supprimer tout le code JavaScript lié aux livres statiques et à cartBooks
-        // Les livres du panier sont désormais affichés dynamiquement côté serveur avec Laravel
+        document.addEventListener('DOMContentLoaded', function() {
+            // Afficher la notification si un message de succès existe
+            @if(session('success'))
+                showNotification("{{ session('success') }}");
+            @endif
+            
+            // Fonction pour afficher une notification
+            function showNotification(message) {
+                const notification = document.getElementById('notification');
+                const notificationMessage = document.getElementById('notification-message');
+                const notificationClose = document.getElementById('notification-close');
+                
+                // Mettre à jour le message
+                notificationMessage.textContent = message;
+                
+                // Afficher la notification
+                notification.classList.add('show');
+                
+                // Configurer un timer pour faire disparaître la notification
+                const notificationTimeout = setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+                
+                // Fermer la notification lorsqu'on clique sur le bouton de fermeture
+                notificationClose.addEventListener('click', () => {
+                    clearTimeout(notificationTimeout);
+                    notification.classList.remove('show');
+                });
+            }
+            
+            // Ajouter des effets aux boutons de quantité
+            const quantityBtns = document.querySelectorAll('.quantity-btn');
+            quantityBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.classList.add('animated');
+                    setTimeout(() => {
+                        this.classList.remove('animated');
+                    }, 300);
+                });
+            });
+        });
     </script>
 </body>
-
 </html>

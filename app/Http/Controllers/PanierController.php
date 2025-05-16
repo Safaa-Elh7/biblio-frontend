@@ -16,14 +16,18 @@ class PanierController extends Controller
         // Récupérer le panier actuel de la session
         $cart = session()->get('cart', []);
         
+        // Générer une clé unique pour chaque livre ajouté
+        // Utiliser l'ID du livre et un timestamp unique
+        $uniqueKey = $request->id;
+
         // Vérifier si le livre existe déjà dans le panier
-        if (isset($cart[$request->id])) {
+        if (isset($cart[$uniqueKey])) {
             // Si le livre existe déjà, augmenter juste sa quantité
-            $cart[$request->id]['quantity']++;
-            $message = "La quantité du livre \"" . $cart[$request->id]['name'] . "\" a été augmentée dans votre panier";
+            $cart[$uniqueKey]['quantity']++;
+            $message = "La quantité du livre \"" . $cart[$uniqueKey]['name'] . "\" a été augmentée dans votre panier";
         } else {
             // Si le livre n'existe pas encore, l'ajouter comme nouveau livre
-            $cart[$request->id] = [
+            $cart[$uniqueKey] = [
                 "name" => $request->name,
                 "quantity" => 1, // Initialiser à 1, ignorer $request->quantity
                 "price" => $request->price,
