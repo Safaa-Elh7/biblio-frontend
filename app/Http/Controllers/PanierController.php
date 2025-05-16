@@ -14,12 +14,22 @@ class PanierController extends Controller
     public function addToCart(Request $request)
     {
         $cart = session()->get('cart', []);
-        $cart[$request->id] = [
-            "name" => $request->name,
-            "quantity" => isset($cart[$request->id]) ? $cart[$request->id]['quantity'] + 1 : $request->quantity,
-            "price" => $request->price,
-            "image" => $request->image ?? 'https://via.placeholder.com/80x100?text=Livre',
-        ];
+        
+        // Vérifier si le livre existe déjà dans le panier
+        if (isset($cart[$request->id])) {
+            // Si le livre existe déjà, augmenter juste sa quantité
+            $cart[$request->id]['quantity']++;
+        } else {
+            // Si le livre n'existe pas encore, l'ajouter comme nouveau livre
+            $cart[$request->id] = [
+                "name" => $request->name,
+                "quantity" => $request->quantity,
+                "price" => $request->price,
+                "image" => $request->image ?? 'https://via.placeholder.com/80x100?text=Livre',
+                "author" => $request->author ?? 'Non spécifié',
+            ];
+        }
+        
         session()->put('cart', $cart);
         
         if ($request->ajax()) {
