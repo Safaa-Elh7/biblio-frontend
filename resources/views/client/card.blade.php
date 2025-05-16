@@ -657,7 +657,7 @@
                     @else
                         @foreach($cart as $item)
                         <div class="order-item">
-                            <img src="{{ !empty($item['image']) ? asset('storage/' . $item['image']) : 'https://via.placeholder.com/80x100?text=Livre' }}" alt="{{ $item['name'] }}" class="item-image">
+                            <img src="{{ !empty($item['image']) ? (filter_var($item['image'], FILTER_VALIDATE_URL) ? $item['image'] : asset('storage/' . $item['image'])) : 'https://via.placeholder.com/80x100?text=Livre' }}" alt="{{ $item['name'] }}" class="item-image">
                             <div class="item-details">
                                 <div class="item-title">{{ $item['name'] }}</div>
                                 <div class="item-author">{{ $item['author'] }}</div>
