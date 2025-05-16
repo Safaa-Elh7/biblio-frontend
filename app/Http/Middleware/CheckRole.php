@@ -33,6 +33,6 @@ class CheckRole
             return $next($request);
         }
         
-        return redirect()->route('home')->with('error', 'Vous n\'avez pas les permissions nécessaires pour accéder à cette page.');
+        return redirect()->route('welcome')->with('error', 'Vous n\'avez pas les permissions nécessaires pour accéder à cette page.');
     }
 }

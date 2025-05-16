@@ -572,47 +572,46 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Afficher la notification si un message de succès existe
-            @if(session('success'))
-                showNotification("{{ session('success') }}");
-            @endif
-            
-            // Fonction pour afficher une notification
-            function showNotification(message) {
-                const notification = document.getElementById('notification');
-                const notificationMessage = document.getElementById('notification-message');
-                const notificationClose = document.getElementById('notification-close');
-                
-                // Mettre à jour le message
-                notificationMessage.textContent = message;
-                
-                // Afficher la notification
-                notification.classList.add('show');
-                
-                // Configurer un timer pour faire disparaître la notification
-                const notificationTimeout = setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
-                
-                // Fermer la notification lorsqu'on clique sur le bouton de fermeture
-                notificationClose.addEventListener('click', () => {
-                    clearTimeout(notificationTimeout);
-                    notification.classList.remove('show');
-                });
-            }
-            
-            // Ajouter des effets aux boutons de quantité
-            const quantityBtns = document.querySelectorAll('.quantity-btn');
-            quantityBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    this.classList.add('animated');
-                    setTimeout(() => {
-                        this.classList.remove('animated');
-                    }, 300);
-                });
+         document.addEventListener("DOMContentLoaded", function() {
+        fetch("http://localhost:8080/api/articles") // Ton API Spring Boot
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById("cartItems");
+                container.innerHTML = ''; // Clear current items
+
+                if (data.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-cart-message">
+                            <div class="empty-cart-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <p>Your cart is empty</p>
+                            <p class="text-sm mt-2 text-gray-500">Browse our collection to find your next favorite book!</p>
+                        </div>
+                    `;
+                } else {
+                    data.forEach(item => {
+                        const imageUrl = item.image
+                            ? `http://localhost:8080/api/articles/images/${item.image}`
+                            : 'https://via.placeholder.com/100x130?text=Image';
+
+                        container.innerHTML += `
+                            <div class="cart-item">
+                                <img src="${imageUrl}" alt="${item.titre}" class="item-image">
+                                <div class="item-details">
+                                    <h3 class="item-title">${item.titre}</h3>
+                                    <p class="item-author">${item.auteur}</p>
+                                </div>
+                                <div class="item-price">${item.prix_emprunt ?? '0'} Dh</div>
+                            </div>
+                        `;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Erreur lors du chargement des articles :", error);
             });
-        });
+    });
     </script>
 </body>
 </html>

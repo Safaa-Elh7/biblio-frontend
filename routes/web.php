@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Auth\DashboardController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\LivreurController;
@@ -30,7 +31,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
      return view('welcome');
-});
+})->name('welcome');
 
 Route::get('/dashboard', function () {
      return view('dashboard');
@@ -97,5 +98,7 @@ Route::middleware(['auth'])
         Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order.show');
         Route::get('/orders/search', [OrderController::class, 'search'])->name('order.search');
     });
+Route::get('/articles', [ArticleController::class, 'show'])->name('bibliothecaire.article.index');
+
 
 require __DIR__ . '/auth.php';
