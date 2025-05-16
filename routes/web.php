@@ -77,6 +77,8 @@ Route::get('/client/book/{id}', [BookController::class, 'show'])->name('client.b
 Route::get('/client/panier', [PanierController::class, 'index'])->name('client.panier.index');
 Route::post('/client/panier/add', [PanierController::class, 'addToCart'])->name('client.panier.add');
 Route::post('/client/panier/update', [PanierController::class, 'update'])->name('client.panier.update');
+Route::post('/client/panier/remove', [PanierController::class, 'removeFromCart'])->name('client.panier.remove');
+Route::get('/client/panier/get', [PanierController::class, 'getCart'])->name('client.panier.getCart');
 
 Route::get('/client/card', [CardController::class, 'index'])->name('client.card.index');
 require __DIR__.'/auth.php';
