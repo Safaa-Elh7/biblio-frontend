@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
-    protected $apiUrl = 'http://localhost:8080/api/articles';
+    protected $apiUrl = 'http://localhost:8081/api/articles';
 
     public function show()
     {
@@ -160,6 +160,78 @@ class ArticleController extends Controller
             return response()->json($article);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to fetch article: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Check if storage link is properly set up
+     */
+    public function checkStorageLink()
+    {
+        try {
+            $publicStoragePath = public_path('storage');
+            $storageAppPublicPath = storage_path('app/public');
+            
+            // Check if the symbolic link exists
+            $linkExists = file_exists($publicStoragePath) && is_link($publicStoragePath);
+            
+            // Check if the target is correct
+            $correctTarget = $linkExists && readlink($publicStoragePath) === $storageAppPublicPath;
+            
+            if ($linkExists && $correctTarget) {
+                return response()->json([
+                    'exists' => true,
+                    'message' => 'Storage link is properly set up.'
+                ]);
+            } else {
+                $message = !$linkExists 
+                    ? 'Storage link does not exist.' 
+                    : 'Storage link exists but points to incorrect location.';
+                
+                return response()->json([
+                    'exists' => false,
+                    'message' => $message,
+                    'command' => 'php artisan storage:link'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'exists' => false,
+                'message' => 'Error checking storage link: ' . $e->getMessage()
+            ]);
+        }
+    }
+    
+    /**
+     * Test API connectivity to ensure the correct API endpoint is working
+     */
+    public function testApiConnection()
+    {
+        try {
+            $response = Http::timeout(5)->get($this->apiUrl);
+            
+            if ($response->successful()) {
+                $articles = $response->json();
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Successfully connected to API',
+                    'status_code' => $response->status(),
+                    'article_count' => count($articles),
+                    'sample' => array_slice($articles, 0, 2)
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'API returned error status',
+                    'status_code' => $response->status()
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to connect to API: ' . $e->getMessage()
+            ]);
         }
     }
 }

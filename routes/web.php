@@ -121,4 +121,11 @@ Route::get('/payment', [PaymentBiblioController::class, 'show'])->name('biblioth
 
 Route::get('/orders', [OrderController::class, 'history'])->name('order.history');
 
+// API testing routes
+Route::get('/test/api-connection', function() {
+    return view('test.api-connection');
+})->name('test.api-connection');
+Route::get('/check-storage-link', [ArticleController::class, 'checkStorageLink'])->name('check-storage-link');
+Route::get('/test-api-connection', [ArticleController::class, 'testApiConnection'])->name('test-api-connection');
+
 require __DIR__ . '/auth.php';

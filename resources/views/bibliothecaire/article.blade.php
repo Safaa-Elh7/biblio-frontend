@@ -261,7 +261,64 @@
 
       <!-- Articles content -->
       <main class="p-6 bg-secondary min-h-screen">
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          <div class="bg-white rounded-lg shadow-md p-4 flex items-center transition-transform transform hover:scale-105">
+            <div class="bg-blue-100 p-3 rounded-full">
+              <i class="fas fa-book text-blue-600 text-xl"></i>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-gray-500 text-sm">Total des livres</h3>
+              <p class="text-2xl font-semibold text-gray-800" id="totalBooks">...</p>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-lg shadow-md p-4 flex items-center transition-transform transform hover:scale-105">
+            <div class="bg-green-100 p-3 rounded-full">
+              <i class="fas fa-hand-holding-heart text-green-600 text-xl"></i>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-gray-500 text-sm">Livres empruntés</h3>
+              <p class="text-2xl font-semibold text-gray-800" id="totalLoans">...</p>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-lg shadow-md p-4 flex items-center transition-transform transform hover:scale-105">
+            <div class="bg-yellow-100 p-3 rounded-full">
+              <i class="fas fa-users text-yellow-600 text-xl"></i>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-gray-500 text-sm">Auteurs uniques</h3>
+              <p class="text-2xl font-semibold text-gray-800" id="uniqueAuthors">...</p>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-lg shadow-md p-4 flex items-center transition-transform transform hover:scale-105">
+            <div class="bg-purple-100 p-3 rounded-full">
+              <i class="fas fa-tags text-purple-600 text-xl"></i>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-gray-500 text-sm">Genres uniques</h3>
+              <p class="text-2xl font-semibold text-gray-800" id="uniqueGenres">...</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- View Toggle Buttons -->
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-semibold text-gray-800">Gestion de la Bibliothèque</h2>
+          <div class="flex space-x-2">
+            <button id="tableViewBtn" class="px-3 py-1 bg-primary text-white rounded-md flex items-center">
+              <i class="fas fa-table mr-1"></i> Tableau
+            </button>
+            <button id="gridViewBtn" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md flex items-center">
+              <i class="fas fa-th-large mr-1"></i> Grille
+            </button>
+          </div>
+        </div>
+
+        <!-- Table View -->
+        <div id="tableView" class="bg-white rounded-lg shadow-md p-6 mb-6">
           <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-semibold text-gray-800">Liste des Articles</h2>
             <button id="addArticleBtn"
@@ -275,6 +332,7 @@
             <table class="min-w-full bg-white">
               <thead>
                 <tr class="bg-gray-50 border-b">
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Auteur</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Genre</th>
@@ -318,6 +376,52 @@
               <button
                 class="pagination-button px-3 py-1.5 bg-gray-200 text-gray-700 rounded-r-md hover:bg-gray-300 transition-colors"
                 id="nextPage">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Grid View (hidden by default) -->
+        <div id="gridView" class="bg-white rounded-lg shadow-md p-6 mb-6 hidden">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-semibold text-gray-800">Galerie des Livres</h2>
+            <button id="addArticleGridBtn"
+              class="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-md flex items-center transition duration-200">
+              <i class="fas fa-plus mr-2"></i>
+              <span>Ajouter un livre</span>
+            </button>
+          </div>
+          
+          <div id="articlesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Grid items will be populated by JavaScript -->
+          </div>
+          
+          <div class="flex justify-between items-center mt-6">
+            <div class="text-sm text-gray-600">
+              Affichage de <span id="startEntryGrid">1</span> à <span id="endEntryGrid">8</span> sur <span
+                id="totalEntriesGrid">50</span> entrées
+            </div>
+            <div class="flex items-center space-x-1" id="paginationGrid">
+              <button
+                class="pagination-button px-3 py-1.5 bg-gray-200 text-gray-700 rounded-l-md hover:bg-gray-300 transition-colors"
+                id="prevPageGrid">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+
+              <button
+                class="pagination-button min-w-[40px] px-3 py-1.5 bg-primary text-white font-medium hover:bg-primary-dark transition-colors"
+                data-page="1">1</button>
+              <button
+                class="pagination-button min-w-[40px] px-3 py-1.5 bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+                data-page="2">2</button>
+              <button
+                class="pagination-button min-w-[40px] px-3 py-1.5 bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+                data-page="3">3</button>
+
+              <button
+                class="pagination-button px-3 py-1.5 bg-gray-200 text-gray-700 rounded-r-md hover:bg-gray-300 transition-colors"
+                id="nextPageGrid">
                 <i class="fas fa-chevron-right"></i>
               </button>
             </div>
@@ -442,6 +546,9 @@
     const itemsPerPage = 5;
     let totalPages = 0;
 
+    let currentPageGrid = 1;
+    const itemsPerPageGrid = 8;
+
     // CSRF token for AJAX requests
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -492,6 +599,7 @@
           currentPage--;
           updateTable();
           updatePagination();
+          updateStatistics();
         }
       });
 
@@ -500,6 +608,7 @@
           currentPage++;
           updateTable();
           updatePagination();
+          updateStatistics();
         }
       });
 
@@ -509,6 +618,7 @@
           currentPage = Number.parseInt(this.getAttribute("data-page"));
           updateTable();
           updatePagination();
+          updateStatistics();
         });
       });
 
@@ -546,6 +656,8 @@
         currentPage = 1;
         updateTable();
         updatePagination();
+        updateStatistics();
+        updateGrid();
       });
 
       // Form submission for adding a new article
@@ -611,7 +723,19 @@
         const row = document.createElement("tr");
         row.className = "table-row border-b hover:bg-gray-50";
 
+        // Function to get image URL
+        function getImageUrl(imagePath) {
+          if (!imagePath) return 'https://via.placeholder.com/50x70?text=No+Image';
+          if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+            return imagePath;
+          }
+          return `/storage/${imagePath.replace(/^\/+/, '')}`;
+        }
+
         row.innerHTML = `
+      <td class="px-6 py-4 whitespace-nowrap text-sm">
+        <img src="${getImageUrl(article.image)}" alt="${article.titre || 'Livre'}" class="h-16 w-12 object-cover rounded-md shadow-sm">
+      </td>
       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${article.titre || ''}</td>
       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.auteur || ''}</td>
       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.genre || ''}</td>
@@ -634,6 +758,86 @@
     `;
 
         tableBody.appendChild(row);
+      }
+    }
+
+    // Function to update the grid view
+    function updateGrid() {
+      const gridContainer = document.getElementById("articlesGrid");
+      gridContainer.innerHTML = "";
+
+      const searchTerm = document.querySelector(".search-input").value.toLowerCase();
+      const filteredArticles = articles.filter(
+        (article) =>
+          (article.titre && article.titre.toLowerCase().includes(searchTerm)) ||
+          (article.auteur && article.auteur.toLowerCase().includes(searchTerm)) ||
+          (article.genre && article.genre.toLowerCase().includes(searchTerm)) ||
+          (article.isbn && article.isbn.includes(searchTerm)) ||
+          (article.contenu && article.contenu.toLowerCase().includes(searchTerm)) ||
+          (article.langue && article.langue.toLowerCase().includes(searchTerm))
+      );
+
+      const startIndex = (currentPageGrid - 1) * itemsPerPageGrid;
+      const endIndex = Math.min(startIndex + itemsPerPageGrid, filteredArticles.length);
+
+      // Update pagination info for grid
+      document.getElementById("startEntryGrid").textContent = filteredArticles.length > 0 ? startIndex + 1 : 0;
+      document.getElementById("endEntryGrid").textContent = endIndex;
+      document.getElementById("totalEntriesGrid").textContent = filteredArticles.length;
+
+      // Function to get image URL
+      function getImageUrl(imagePath) {
+        if (!imagePath) return 'https://via.placeholder.com/200x300?text=No+Image';
+        if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+          return imagePath;
+        }
+        return `/storage/${imagePath.replace(/^\/+/, '')}`;
+      }
+
+      // Create grid cards
+      for (let i = startIndex; i < endIndex; i++) {
+        const article = filteredArticles[i];
+        const card = document.createElement("div");
+        card.className = "bg-white rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105";
+
+        card.innerHTML = `
+          <div class="relative pb-48 overflow-hidden">
+            <img class="absolute inset-0 h-full w-full object-cover" src="${getImageUrl(article.image)}" alt="${article.titre || 'Livre'}">
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-lg mb-1 text-gray-900 truncate">${article.titre || 'Sans titre'}</h3>
+            <p class="text-sm text-gray-600 mb-2">
+              <i class="fas fa-user mr-1 text-primary"></i> ${article.auteur || 'Auteur inconnu'}
+            </p>
+            <p class="text-sm text-gray-500 mb-2">
+              <i class="fas fa-tag mr-1 text-primary"></i> ${article.genre || 'Genre non spécifié'}
+            </p>
+            <p class="text-sm text-gray-500 mb-2">
+              <i class="fas fa-language mr-1 text-primary"></i> ${article.langue || 'Langue non spécifiée'}
+            </p>
+            <p class="text-sm text-gray-500">
+              <i class="fas fa-box mr-1 text-primary"></i> Stock: ${article.qte || 0}
+            </p>
+          </div>
+          <div class="p-4 border-t border-gray-200 bg-gray-50">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-semibold text-gray-500">ISBN: ${article.isbn || 'N/A'}</span>
+              <div class="flex space-x-1">
+                <button onclick="editArticle(${article.id})" class="text-blue-500 hover:text-blue-700">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button onclick="deleteArticle(${article.id})" class="text-red-500 hover:text-red-700">
+                  <i class="fas fa-trash"></i>
+                </button>
+                <button onclick="viewArticleDetails(${article.id})" class="text-gray-500 hover:text-gray-700">
+                  <i class="fas fa-info-circle"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        gridContainer.appendChild(card);
       }
     }
 
@@ -683,6 +887,89 @@
       } else {
         nextButton.classList.remove("opacity-50", "cursor-not-allowed");
       }
+    }
+
+    // Function to update pagination buttons for grid view
+    function updatePaginationGrid() {
+      const searchTerm = document.querySelector(".search-input").value.toLowerCase();
+      const filteredArticles = articles.filter(
+        (article) =>
+          (article.titre && article.titre.toLowerCase().includes(searchTerm)) ||
+          (article.auteur && article.auteur.toLowerCase().includes(searchTerm)) ||
+          (article.genre && article.genre.toLowerCase().includes(searchTerm)) ||
+          (article.isbn && article.isbn.includes(searchTerm)) ||
+          (article.contenu && article.contenu.toLowerCase().includes(searchTerm)) ||
+          (article.langue && article.langue.toLowerCase().includes(searchTerm))
+      );
+
+      const totalFilteredPages = Math.ceil(filteredArticles.length / itemsPerPageGrid);
+
+      // Update pagination buttons
+      const paginationContainer = document.getElementById("paginationGrid");
+      const pageButtons = paginationContainer.querySelectorAll("[data-page]");
+
+      // Update active state
+      pageButtons.forEach((button) => {
+        const page = Number.parseInt(button.getAttribute("data-page"));
+        if (page === currentPageGrid) {
+          button.classList.add("bg-primary", "text-white");
+          button.classList.remove("bg-gray-200", "text-gray-700");
+        } else {
+          button.classList.remove("bg-primary", "text-white");
+          button.classList.add("bg-gray-200", "text-gray-700");
+        }
+      });
+
+      // Disable/enable prev/next buttons
+      const prevButton = document.getElementById("prevPageGrid");
+      const nextButton = document.getElementById("nextPageGrid");
+
+      if (currentPageGrid === 1) {
+        prevButton.classList.add("opacity-50", "cursor-not-allowed");
+      } else {
+        prevButton.classList.remove("opacity-50", "cursor-not-allowed");
+      }
+
+      if (currentPageGrid === totalFilteredPages || totalFilteredPages === 0) {
+        nextButton.classList.add("opacity-50", "cursor-not-allowed");
+      } else {
+        nextButton.classList.remove("opacity-50", "cursor-not-allowed");
+      }
+    }
+
+    // Function to update statistics
+    function updateStatistics() {
+      const searchTerm = document.querySelector(".search-input").value.toLowerCase();
+      const filteredArticles = articles.filter(
+        (article) =>
+          (article.titre && article.titre.toLowerCase().includes(searchTerm)) ||
+          (article.auteur && article.auteur.toLowerCase().includes(searchTerm)) ||
+          (article.genre && article.genre.toLowerCase().includes(searchTerm)) ||
+          (article.isbn && article.isbn.includes(searchTerm)) ||
+          (article.contenu && article.contenu.toLowerCase().includes(searchTerm)) ||
+          (article.langue && article.langue.toLowerCase().includes(searchTerm))
+      );
+      
+      // Total books
+      document.getElementById("totalBooks").textContent = filteredArticles.length;
+      
+      // Total loans
+      const totalLoans = filteredArticles.reduce((sum, article) => sum + (article.loans || 0), 0);
+      document.getElementById("totalLoans").textContent = totalLoans;
+      
+      // Unique authors
+      const uniqueAuthors = new Set();
+      filteredArticles.forEach(article => {
+        if (article.auteur) uniqueAuthors.add(article.auteur);
+      });
+      document.getElementById("uniqueAuthors").textContent = uniqueAuthors.size;
+      
+      // Unique genres
+      const uniqueGenres = new Set();
+      filteredArticles.forEach(article => {
+        if (article.genre) uniqueGenres.add(article.genre);
+      });
+      document.getElementById("uniqueGenres").textContent = uniqueGenres.size;
     }
 
     // Create logo
@@ -751,6 +1038,8 @@
           totalPages = Math.ceil(articles.length / itemsPerPage);
           updateTable();
           updatePagination();
+          updateStatistics();
+          updateGrid();
         })
         .catch(error => {
           console.error('Error fetching articles:', error);
@@ -1103,7 +1392,76 @@
     }
 
     // Function to show notifications
-    function show
+    function showNotification(message, type = "success") {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type === "success" ? "bg-green-500" : "bg-red-500"}`;
+      notification.innerHTML = `
+        <div class="flex items-center">
+          <i class="fas ${type === "success" ? "fa-check-circle" : "fa-exclamation-circle"} mr-2"></i>
+          <span>${message}</span>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Auto hide after 3 seconds
+      setTimeout(() => {
+        notification.classList.add('hiding');
+        
+        // Remove from DOM after animation completes
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 300);
+      }, 3000);
+    }
+
+    // Initialize pagination event handlers for grid view
+    document.addEventListener('DOMContentLoaded', function() {
+      // Existing event listeners...
+      
+      // Grid pagination event handlers
+      document.getElementById('paginationGrid').addEventListener('click', (e) => {
+        const target = e.target.closest('[data-page]');
+        if (target) {
+          const page = Number.parseInt(target.getAttribute('data-page'));
+          if (!isNaN(page)) {
+            currentPageGrid = page;
+            updateGrid();
+            updatePaginationGrid();
+          }
+        }
+      });
+      
+      document.getElementById('prevPageGrid').addEventListener('click', () => {
+        if (currentPageGrid > 1) {
+          currentPageGrid--;
+          updateGrid();
+          updatePaginationGrid();
+        }
+      });
+      
+      document.getElementById('nextPageGrid').addEventListener('click', () => {
+        const searchTerm = document.querySelector(".search-input").value.toLowerCase();
+        const filteredArticles = articles.filter(
+          (article) =>
+            (article.titre && article.titre.toLowerCase().includes(searchTerm)) ||
+            (article.auteur && article.auteur.toLowerCase().includes(searchTerm)) ||
+            (article.genre && article.genre.toLowerCase().includes(searchTerm)) ||
+            (article.isbn && article.isbn.includes(searchTerm)) ||
+            (article.contenu && article.contenu.toLowerCase().includes(searchTerm)) ||
+            (article.langue && article.langue.toLowerCase().includes(searchTerm))
+        );
+        const totalFilteredPages = Math.ceil(filteredArticles.length / itemsPerPageGrid);
+        
+        if (currentPageGrid < totalFilteredPages) {
+          currentPageGrid++;
+          updateGrid();
+          updatePaginationGrid();
+        }
+      });
+    });
   </script>
 </body>
 
