@@ -307,14 +307,7 @@
         <!-- View Toggle Buttons -->
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-2xl font-semibold text-gray-800">Gestion de la Bibliothèque</h2>
-          <div class="flex space-x-2">
-            <button id="tableViewBtn" class="px-3 py-1 bg-primary text-white rounded-md flex items-center">
-              <i class="fas fa-table mr-1"></i> Tableau
-            </button>
-            <button id="gridViewBtn" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md flex items-center">
-              <i class="fas fa-th-large mr-1"></i> Grille
-            </button>
-          </div>
+          
         </div>
 
         <!-- Table View -->
@@ -516,7 +509,7 @@
           </div>
           <div class="md:col-span-2">
             <label for="contenu" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea id="contenu" name="contenu" rows="3"
+            <textarea id="contenu" name="description" rows="3"
               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
               required></textarea>
           </div>
@@ -705,7 +698,7 @@
           (article.auteur && article.auteur.toLowerCase().includes(searchTerm)) ||
           (article.genre && article.genre.toLowerCase().includes(searchTerm)) ||
           (article.isbn && article.isbn.includes(searchTerm)) ||
-          (article.contenu && article.contenu.toLowerCase().includes(searchTerm)) ||
+          (article.description && article.description.toLowerCase().includes(searchTerm)) ||
           (article.langue && article.langue.toLowerCase().includes(searchTerm))
       );
 
@@ -773,7 +766,7 @@
           (article.auteur && article.auteur.toLowerCase().includes(searchTerm)) ||
           (article.genre && article.genre.toLowerCase().includes(searchTerm)) ||
           (article.isbn && article.isbn.includes(searchTerm)) ||
-          (article.contenu && article.contenu.toLowerCase().includes(searchTerm)) ||
+          (article.description && article.description.toLowerCase().includes(searchTerm)) ||
           (article.langue && article.langue.toLowerCase().includes(searchTerm))
       );
 
@@ -850,7 +843,7 @@
           (article.auteur && article.auteur.toLowerCase().includes(searchTerm)) ||
           (article.genre && article.genre.toLowerCase().includes(searchTerm)) ||
           (article.isbn && article.isbn.includes(searchTerm)) ||
-          (article.contenu && article.contenu.toLowerCase().includes(searchTerm)) ||
+          (article.description && article.description.toLowerCase().includes(searchTerm)) ||
           (article.langue && article.langue.toLowerCase().includes(searchTerm))
       );
 
@@ -898,7 +891,7 @@
           (article.auteur && article.auteur.toLowerCase().includes(searchTerm)) ||
           (article.genre && article.genre.toLowerCase().includes(searchTerm)) ||
           (article.isbn && article.isbn.includes(searchTerm)) ||
-          (article.contenu && article.contenu.toLowerCase().includes(searchTerm)) ||
+          (article.description && article.description.toLowerCase().includes(searchTerm)) ||
           (article.langue && article.langue.toLowerCase().includes(searchTerm))
       );
 
@@ -946,7 +939,7 @@
           (article.auteur && article.auteur.toLowerCase().includes(searchTerm)) ||
           (article.genre && article.genre.toLowerCase().includes(searchTerm)) ||
           (article.isbn && article.isbn.includes(searchTerm)) ||
-          (article.contenu && article.contenu.toLowerCase().includes(searchTerm)) ||
+          (article.description && article.description.toLowerCase().includes(searchTerm)) ||
           (article.langue && article.langue.toLowerCase().includes(searchTerm))
       );
       
@@ -1127,7 +1120,7 @@
                   
                   <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <textarea id="edit-contenu" name="contenu" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="5">${article.contenu || ''}</textarea>
+                    <textarea id="edit-contenu" name="description" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="5">${article.description || ''}</textarea>
                   </div>
                 </div>
                 
@@ -1357,7 +1350,7 @@
                 
                 <div class="mb-6">
                   <p class="text-sm text-gray-600 mb-1">Description</p>
-                  <p class="bg-gray-50 p-3 rounded-md">${article.contenu || 'Aucune description disponible.'}</p>
+                  <p class="bg-gray-50 p-3 rounded-md">${article.description || 'Aucune description disponible.'}</p>
                 </div>
               </div>
             </div>
@@ -1450,7 +1443,7 @@
             (article.auteur && article.auteur.toLowerCase().includes(searchTerm)) ||
             (article.genre && article.genre.toLowerCase().includes(searchTerm)) ||
             (article.isbn && article.isbn.includes(searchTerm)) ||
-            (article.contenu && article.contenu.toLowerCase().includes(searchTerm)) ||
+            (article.description && article.description.toLowerCase().includes(searchTerm)) ||
             (article.langue && article.langue.toLowerCase().includes(searchTerm))
         );
         const totalFilteredPages = Math.ceil(filteredArticles.length / itemsPerPageGrid);
