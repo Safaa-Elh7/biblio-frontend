@@ -83,6 +83,14 @@ class ArticleController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            // Vérification de l'ID
+            if (!$id || !is_numeric($id)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ID d\'article invalide'
+                ], 400);
+            }
+
             // Handle file upload if there's an image
             $imagePath = null;
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -102,9 +110,15 @@ class ArticleController extends Controller
             $response = Http::put($this->apiUrl . '/' . $id, $data);
 
             if (!$response->successful()) {
+                $errorMessage = 'API returned error: ' . $response->status();
+                // Essayer d'extraire un message d'erreur plus précis si disponible
+                if ($response->json() && isset($response->json()['message'])) {
+                    $errorMessage = $response->json()['message'];
+                }
+                
                 return response()->json([
                     'success' => false,
-                    'message' => 'API returned error: ' . $response->status()
+                    'message' => $errorMessage
                 ], $response->status());
             }
 
@@ -125,12 +139,35 @@ class ArticleController extends Controller
     public function destroy($id)
     {
         try {
+            // Vérification de l'ID
+            if (!$id || !is_numeric($id)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ID d\'article invalide'
+                ], 400);
+            }
+
+            // Vérifier si l'article existe avant de le supprimer
+            $checkResponse = Http::get($this->apiUrl . '/' . $id);
+            if (!$checkResponse->successful()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Article introuvable avec cet ID'
+                ], 404);
+            }
+
             $response = Http::delete($this->apiUrl . '/' . $id);
 
             if (!$response->successful()) {
+                $errorMessage = 'API returned error: ' . $response->status();
+                // Essayer d'extraire un message d'erreur plus précis si disponible
+                if ($response->json() && isset($response->json()['message'])) {
+                    $errorMessage = $response->json()['message'];
+                }
+                
                 return response()->json([
                     'success' => false,
-                    'message' => 'API returned error: ' . $response->status()
+                    'message' => $errorMessage
                 ], $response->status());
             }
 

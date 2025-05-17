@@ -1206,19 +1206,22 @@
             e.preventDefault();
 
             const formData = new FormData(this);
+            // Ajouter le champ _method pour simuler une requête PUT
+            formData.append('_method', 'PUT');
 
             fetch(`/articles/${id}`, {
               method: 'POST',
               body: formData,
               headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'X-HTTP-Method-Override': 'PUT' // Add this for Laravel to properly handle PUT
+                'X-CSRF-TOKEN': csrfToken
                 // Ne pas définir Content-Type avec FormData, le navigateur le fait automatiquement
               }
             })
               .then(response => {
                 if (!response.ok) {
-                  throw new Error('Network response was not ok');
+                  return response.json().then(data => {
+                    throw new Error(data.message || 'Network response was not ok');
+                  });
                 }
                 return response.json();
               })
@@ -1230,7 +1233,7 @@
               })
               .catch(error => {
                 console.error('Error:', error);
-                showNotification("Erreur lors de la modification de l'article", "error");
+                showNotification("Erreur lors de la modification de l'article: " + error.message, "error");
               });
           });
         })
@@ -1243,16 +1246,38 @@
     // Function to delete an article
     function deleteArticle(id) {
       if (confirm("Êtes-vous sûr de vouloir supprimer cet article?")) {
+        // Créer un formulaire temporaire pour gérer correctement le CSRF token
+        const form = document.createElement('form');
+        form.style.display = 'none';
+        
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = csrfToken;
+        
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'DELETE';
+        
+        form.appendChild(csrfInput);
+        form.appendChild(methodInput);
+        
+        // Créer FormData à partir du formulaire
+        const formData = new FormData(form);
+        
         fetch(`/articles/${id}`, {
-          method: 'DELETE',
+          method: 'POST',
           headers: {
-            'X-CSRF-TOKEN': csrfToken,
-            'Content-Type': 'application/json'
+            'X-CSRF-TOKEN': csrfToken
           },
+          body: formData
         })
           .then(response => {
             if (!response.ok) {
-              throw new Error('Network response was not ok');
+              return response.json().then(data => {
+                throw new Error(data.message || 'Network response was not ok');
+              });
             }
             return response.json();
           })
@@ -1263,7 +1288,7 @@
           })
           .catch(error => {
             console.error('Error:', error);
-            showNotification("Erreur lors de la suppression de l'article", "error");
+            showNotification("Erreur lors de la suppression de l'article: " + error.message, "error");
           });
       }
     }
