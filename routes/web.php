@@ -111,7 +111,7 @@ Route::get('/dashboard', [DashboardBiblioController::class, 'index'])->name('bib
 Route::get('/bibliothecaire/article', [App\Http\Controllers\ArticleController::class, 'show'])->name('bibliothecaire.article.index');
 Route::get('/articles', [App\Http\Controllers\ArticleController::class, 'index'])->name('articles.index');
 Route::post('/articles', [App\Http\Controllers\ArticleController::class, 'store'])->name('articles.store');
-Route::put('/articles/{id}', [App\Http\Controllers\ArticleController::class, 'update'])->name('articles.update');
+Route::match(['put', 'post'], '/articles/{id}', [App\Http\Controllers\ArticleController::class, 'update'])->name('articles.update');
 Route::delete('/articles/{id}', [App\Http\Controllers\ArticleController::class, 'destroy'])->name('articles.destroy');
 Route::get('/api/articles/{id}', [App\Http\Controllers\ArticleController::class, 'getArticle'])->name('api.articles.show');
 Route::get('/livreurs', [LivreurController::class, 'show'])->name('bibliothecaire.livreur.index');

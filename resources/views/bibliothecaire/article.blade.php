@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,52 +29,52 @@
   </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-    
+
     body {
       font-family: 'Poppins', sans-serif;
     }
-    
+
     .sidebar {
       transition: all 0.3s ease;
     }
-    
+
     .sidebar-item {
       transition: all 0.2s ease;
     }
-    
+
     .sidebar-item:hover {
       background-color: rgba(255, 255, 255, 0.1);
     }
-    
+
     .sidebar-item.active {
       background-color: rgba(255, 255, 255, 0.15);
       border-left: 4px solid white;
     }
-    
+
     .action-button {
       transition: all 0.2s ease;
     }
-    
+
     .action-button:hover {
       transform: translateY(-2px);
     }
-    
+
     .table-row {
       transition: background-color 0.2s ease;
     }
-    
+
     .table-row:hover {
       background-color: rgba(0, 0, 0, 0.02);
     }
-    
+
     .pagination-button {
       transition: all 0.2s ease;
     }
-    
+
     .pagination-button:hover:not(.active) {
       background-color: #e2e8f0;
     }
-    
+
     .search-input:focus {
       box-shadow: 0 0 0 3px rgba(139, 38, 53, 0.3);
     }
@@ -100,6 +100,7 @@
     }
   </style>
 </head>
+
 <body class="bg-gray-100">
   <div class="flex h-screen overflow-hidden">
     <!-- Sidebar -->
@@ -113,7 +114,8 @@
       <div class="py-4">
         <ul>
           <li class="px-4 py-2">
-            <a href="{{ route('bibliothecaire.dashboard.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.dashboard.index') }}"
+              class="sidebar-item flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-home mr-3"></i>
               <span>Accueil</span>
             </a>
@@ -125,7 +127,8 @@
             </a>
           </li>
           <li class="px-4 py-2">
-            <a href="{{ route('bibliothecaire.livreur.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.livreur.index') }}"
+              class="sidebar-item flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-truck mr-3"></i>
               <span>Livreurs</span>
             </a>
@@ -137,7 +140,8 @@
             </a>
           </li>
           <li class="px-4 py-2">
-            <a href="{{ route('bibliothecaire.article.index') }}" class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.article.index') }}"
+              class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-book mr-3"></i>
               <span>Articles</span>
             </a>
@@ -168,7 +172,8 @@
 
     <!-- Mobile sidebar -->
     <div id="mobileSidebar" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-40 hidden">
-      <div class="sidebar bg-primary w-64 h-full transform -translate-x-full transition-transform duration-300 ease-in-out">
+      <div
+        class="sidebar bg-primary w-64 h-full transform -translate-x-full transition-transform duration-300 ease-in-out">
         <div class="flex items-center justify-between h-16 border-b border-primary-dark px-4">
           <div class="flex items-center">
             <img id="mobileLogo" alt="Logo" class="w-10 h-10 rounded-full bg-white">
@@ -181,7 +186,8 @@
         <div class="py-4">
           <ul>
             <li class="px-4 py-2">
-              <a href="{{ route('bibliothecaire.dashboard.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+              <a href="{{ route('bibliothecaire.dashboard.index') }}"
+                class="sidebar-item flex items-center text-white py-2 px-4 rounded">
                 <i class="fas fa-home mr-3"></i>
                 <span>Accueil</span>
               </a>
@@ -193,7 +199,8 @@
               </a>
             </li>
             <li class="px-4 py-2">
-              <a href="{{ route('bibliothecaire.livreur.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+              <a href="{{ route('bibliothecaire.livreur.index') }}"
+                class="sidebar-item flex items-center text-white py-2 px-4 rounded">
                 <i class="fas fa-truck mr-3"></i>
                 <span>Livreurs</span>
               </a>
@@ -205,7 +212,8 @@
               </a>
             </li>
             <li class="px-4 py-2">
-              <a href="{{ route('bibliothecaire.article.index') }}" class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
+              <a href="{{ route('bibliothecaire.article.index') }}"
+                class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
                 <i class="fas fa-book mr-3"></i>
                 <span>Articles</span>
               </a>
@@ -236,13 +244,15 @@
           <h1 class="text-2xl font-semibold text-gray-800">Gestion des Articles</h1>
           <div class="flex items-center">
             <div class="relative mr-4">
-              <input type="text" placeholder="Rechercher..." class="search-input bg-gray-100 rounded-full py-2 px-4 pl-10 focus:outline-none transition duration-200 w-64">
+              <input type="text" placeholder="Rechercher..."
+                class="search-input bg-gray-100 rounded-full py-2 px-4 pl-10 focus:outline-none transition duration-200 w-64">
               <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
             </div>
             <div class="relative">
               <button class="relative p-2 text-gray-600 hover:text-primary focus:outline-none">
                 <i class="fas fa-bell text-xl"></i>
-                <span class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">3</span>
+                <span
+                  class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">3</span>
               </button>
             </div>
           </div>
@@ -254,12 +264,13 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
           <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-semibold text-gray-800">Liste des Articles</h2>
-            <button id="addArticleBtn" class="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-md flex items-center transition duration-200 action-button">
+            <button id="addArticleBtn"
+              class="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-md flex items-center transition duration-200 action-button">
               <i class="fas fa-plus mr-2"></i>
               <span>Ajouter un article</span>
             </button>
           </div>
-          
+
           <div class="overflow-x-auto">
             <table class="min-w-full bg-white">
               <thead>
@@ -268,9 +279,12 @@
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Auteur</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Genre</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ISBN</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock disponible</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre d'emprunts</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock
+                    disponible</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre
+                    d'emprunts</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions
+                  </th>
                 </tr>
               </thead>
               <tbody id="articlesTableBody">
@@ -278,21 +292,32 @@
               </tbody>
             </table>
           </div>
-          
+
           <div class="flex justify-between items-center mt-6">
             <div class="text-sm text-gray-600">
-              Affichage de <span id="startEntry">1</span> à <span id="endEntry">5</span> sur <span id="totalEntries">50</span> entrées
+              Affichage de <span id="startEntry">1</span> à <span id="endEntry">5</span> sur <span
+                id="totalEntries">50</span> entrées
             </div>
             <div class="flex items-center space-x-1" id="pagination">
-              <button class="pagination-button px-3 py-1.5 bg-gray-200 text-gray-700 rounded-l-md hover:bg-gray-300 transition-colors" id="prevPage">
+              <button
+                class="pagination-button px-3 py-1.5 bg-gray-200 text-gray-700 rounded-l-md hover:bg-gray-300 transition-colors"
+                id="prevPage">
                 <i class="fas fa-chevron-left"></i>
               </button>
-              
-              <button class="pagination-button min-w-[40px] px-3 py-1.5 bg-primary text-white font-medium hover:bg-primary-dark transition-colors" data-page="1">1</button>
-              <button class="pagination-button min-w-[40px] px-3 py-1.5 bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors" data-page="2">2</button>
-              <button class="pagination-button min-w-[40px] px-3 py-1.5 bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors" data-page="3">3</button>
-              
-              <button class="pagination-button px-3 py-1.5 bg-gray-200 text-gray-700 rounded-r-md hover:bg-gray-300 transition-colors" id="nextPage">
+
+              <button
+                class="pagination-button min-w-[40px] px-3 py-1.5 bg-primary text-white font-medium hover:bg-primary-dark transition-colors"
+                data-page="1">1</button>
+              <button
+                class="pagination-button min-w-[40px] px-3 py-1.5 bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+                data-page="2">2</button>
+              <button
+                class="pagination-button min-w-[40px] px-3 py-1.5 bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+                data-page="3">3</button>
+
+              <button
+                class="pagination-button px-3 py-1.5 bg-gray-200 text-gray-700 rounded-r-md hover:bg-gray-300 transition-colors"
+                id="nextPage">
                 <i class="fas fa-chevron-right"></i>
               </button>
             </div>
@@ -309,21 +334,28 @@
         <i class="fas fa-times"></i>
       </button>
       <h2 class="text-2xl font-semibold text-gray-800 mb-6">Ajouter un article</h2>
-      
-      <form id="addArticleForm" action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+
+      <form id="addArticleForm" action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data"
+        class="space-y-4">
         @csrf
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label for="titre" class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
-            <input type="text" id="titre" name="titre" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+            <input type="text" id="titre" name="titre"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              required>
           </div>
           <div>
             <label for="auteur" class="block text-sm font-medium text-gray-700 mb-1">Auteur</label>
-            <input type="text" id="auteur" name="auteur" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+            <input type="text" id="auteur" name="auteur"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              required>
           </div>
           <div>
             <label for="id_categorie" class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
-            <select id="id_categorie" name="id_categorie" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+            <select id="id_categorie" name="id_categorie"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              required>
               <option value="">Sélectionner une catégorie</option>
               <option value="1">Fiction</option>
               <option value="2">Science-fiction</option>
@@ -336,15 +368,21 @@
           </div>
           <div>
             <label for="annee_pub" class="block text-sm font-medium text-gray-700 mb-1">Année de publication</label>
-            <input type="number" id="annee_pub" name="annee_pub" min="1000" max="2099" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+            <input type="number" id="annee_pub" name="annee_pub" min="1000" max="2099"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              required>
           </div>
           <div>
             <label for="isbn" class="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
-            <input type="text" id="isbn" name="isbn" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+            <input type="text" id="isbn" name="isbn"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              required>
           </div>
           <div>
             <label for="langue" class="block text-sm font-medium text-gray-700 mb-1">Langue</label>
-            <select id="langue" name="langue" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+            <select id="langue" name="langue"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              required>
               <option value="">Sélectionner une langue</option>
               <option value="Français">Français</option>
               <option value="Anglais">Anglais</option>
@@ -356,27 +394,37 @@
           </div>
           <div>
             <label for="qte" class="block text-sm font-medium text-gray-700 mb-1">Quantité en stock</label>
-            <input type="number" id="qte" name="qte" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+            <input type="number" id="qte" name="qte" min="0"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              required>
           </div>
           <div>
             <label for="prix_emprunt" class="block text-sm font-medium text-gray-700 mb-1">Prix d'emprunt</label>
-            <input type="number" id="prix_emprunt" name="prix_emprunt" min="0" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+            <input type="number" id="prix_emprunt" name="prix_emprunt" min="0" step="0.01"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              required>
           </div>
           <div class="md:col-span-2">
             <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Image</label>
-            <input type="file" id="image" name="image" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" accept="image/*">
+            <input type="file" id="image" name="image"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              accept="image/*">
           </div>
           <div class="md:col-span-2">
             <label for="contenu" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea id="contenu" name="contenu" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required></textarea>
+            <textarea id="contenu" name="contenu" rows="3"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              required></textarea>
           </div>
         </div>
-        
+
         <div class="flex justify-end space-x-3 pt-4">
-          <button type="button" id="cancelAddArticle" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-200">
+          <button type="button" id="cancelAddArticle"
+            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-200">
             Annuler
           </button>
-          <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition duration-200">
+          <button type="submit"
+            class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition duration-200">
             Enregistrer
           </button>
         </div>
@@ -388,6 +436,15 @@
 
   <!-- JavaScript -->
   <script>
+    // Global variables for article management
+    let articles = [];
+    let currentPage = 1;
+    const itemsPerPage = 5;
+    let totalPages = 0;
+
+    // CSRF token for AJAX requests
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
     // Wait for DOM to be fully loaded
     document.addEventListener("DOMContentLoaded", () => {
       // Create logo
@@ -428,12 +485,6 @@
           }, 300);
         }
       });
-
-      // Pagination variables
-      let currentPage = 1;
-      const itemsPerPage = 5;
-      let articles = [];
-      let totalPages = 0;
 
       // Pagination event listeners
       document.getElementById("prevPage").addEventListener("click", () => {
@@ -497,193 +548,231 @@
         updatePagination();
       });
 
-      // Fetch articles from API
-      async function fetchArticles() {
-        try {
-          const response = await fetch('{{ route("articles.index") }}');
+      // Form submission for adding a new article
+      addArticleForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        fetch('/articles', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRF-TOKEN': csrfToken
+            // Ne pas définir Content-Type avec FormData, le navigateur le fait automatiquement
+          }
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            closeModalFunction();
+            showNotification("Article créé avec succès!");
+            // Refresh the articles list
+            fetchArticles();
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showNotification("Erreur lors de la création de l'article", "error");
+          });
+      });
+    });
+
+    // Function to update the table based on current page and search
+    function updateTable() {
+      const tableBody = document.getElementById("articlesTableBody");
+      tableBody.innerHTML = "";
+
+      const searchTerm = document.querySelector(".search-input").value.toLowerCase();
+      const filteredArticles = articles.filter(
+        (article) =>
+          (article.titre && article.titre.toLowerCase().includes(searchTerm)) ||
+          (article.auteur && article.auteur.toLowerCase().includes(searchTerm)) ||
+          (article.genre && article.genre.toLowerCase().includes(searchTerm)) ||
+          (article.isbn && article.isbn.includes(searchTerm)) ||
+          (article.contenu && article.contenu.toLowerCase().includes(searchTerm)) ||
+          (article.langue && article.langue.toLowerCase().includes(searchTerm))
+      );
+
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = Math.min(startIndex + itemsPerPage, filteredArticles.length);
+
+      // Update pagination info
+      document.getElementById("startEntry").textContent = filteredArticles.length > 0 ? startIndex + 1 : 0;
+      document.getElementById("endEntry").textContent = endIndex;
+      document.getElementById("totalEntries").textContent = filteredArticles.length;
+
+      // Create table rows
+      for (let i = startIndex; i < endIndex; i++) {
+        const article = filteredArticles[i];
+        const row = document.createElement("tr");
+        row.className = "table-row border-b hover:bg-gray-50";
+
+        row.innerHTML = `
+      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${article.titre || ''}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.auteur || ''}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.genre || ''}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.isbn || ''}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.qte || 0}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.loans || 0}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        <div class="flex space-x-2">
+          <button class="action-button bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="editArticle(${article.id})">
+            <i class="fas fa-edit mr-1"></i> Modifier
+          </button>
+          <button class="action-button bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="deleteArticle(${article.id})">
+            <i class="fas fa-trash mr-1"></i> Supprimer
+          </button>
+          <button class="action-button bg-gray-600 hover:bg-gray-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="viewArticleDetails(${article.id})">
+            <i class="fas fa-info-circle mr-1"></i> Détail
+          </button>
+        </div>
+      </td>
+    `;
+
+        tableBody.appendChild(row);
+      }
+    }
+
+    // Function to update pagination buttons
+    function updatePagination() {
+      const searchTerm = document.querySelector(".search-input").value.toLowerCase();
+      const filteredArticles = articles.filter(
+        (article) =>
+          (article.titre && article.titre.toLowerCase().includes(searchTerm)) ||
+          (article.auteur && article.auteur.toLowerCase().includes(searchTerm)) ||
+          (article.genre && article.genre.toLowerCase().includes(searchTerm)) ||
+          (article.isbn && article.isbn.includes(searchTerm)) ||
+          (article.contenu && article.contenu.toLowerCase().includes(searchTerm)) ||
+          (article.langue && article.langue.toLowerCase().includes(searchTerm))
+      );
+
+      const totalFilteredPages = Math.ceil(filteredArticles.length / itemsPerPage);
+
+      // Update pagination buttons
+      const paginationContainer = document.getElementById("pagination");
+      const pageButtons = paginationContainer.querySelectorAll("[data-page]");
+
+      // Update active state
+      pageButtons.forEach((button) => {
+        const page = Number.parseInt(button.getAttribute("data-page"));
+        if (page === currentPage) {
+          button.classList.add("bg-primary", "text-white");
+          button.classList.remove("bg-gray-200", "text-gray-700");
+        } else {
+          button.classList.remove("bg-primary", "text-white");
+          button.classList.add("bg-gray-200", "text-gray-700");
+        }
+      });
+
+      // Disable/enable prev/next buttons
+      const prevButton = document.getElementById("prevPage");
+      const nextButton = document.getElementById("nextPage");
+
+      if (currentPage === 1) {
+        prevButton.classList.add("opacity-50", "cursor-not-allowed");
+      } else {
+        prevButton.classList.remove("opacity-50", "cursor-not-allowed");
+      }
+
+      if (currentPage === totalFilteredPages || totalFilteredPages === 0) {
+        nextButton.classList.add("opacity-50", "cursor-not-allowed");
+      } else {
+        nextButton.classList.remove("opacity-50", "cursor-not-allowed");
+      }
+    }
+
+    // Create logo
+    function createLogo() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 40;
+      canvas.height = 40;
+      const ctx = canvas.getContext("2d");
+
+      // Draw background
+      ctx.fillStyle = "#FFFFFF";
+      ctx.beginPath();
+      ctx.arc(20, 20, 20, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw book icon
+      ctx.fillStyle = "#8B2635";
+      ctx.beginPath();
+      ctx.moveTo(12, 10);
+      ctx.lineTo(28, 10);
+      ctx.lineTo(28, 30);
+      ctx.lineTo(12, 30);
+      ctx.closePath();
+      ctx.fill();
+
+      // Draw book pages
+      ctx.fillStyle = "#FFFFFF";
+      ctx.beginPath();
+      ctx.moveTo(14, 12);
+      ctx.lineTo(26, 12);
+      ctx.lineTo(26, 28);
+      ctx.lineTo(14, 28);
+      ctx.closePath();
+      ctx.fill();
+
+      // Draw book lines
+      ctx.strokeStyle = "#8B2635";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(16, 16);
+      ctx.lineTo(24, 16);
+      ctx.moveTo(16, 20);
+      ctx.lineTo(24, 20);
+      ctx.moveTo(16, 24);
+      ctx.lineTo(24, 24);
+      ctx.stroke();
+
+      // Set the logo
+      const logoImg = document.getElementById("logo");
+      const mobileLogoImg = document.getElementById("mobileLogo");
+      logoImg.src = canvas.toDataURL();
+      mobileLogoImg.src = canvas.toDataURL();
+    }
+
+    // Global function to fetch articles
+    function fetchArticles() {
+      fetch('/articles?json=true')
+        .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
-          articles = await response.json();
+          return response.json();
+        })
+        .then(data => {
+          articles = data;
           totalPages = Math.ceil(articles.length / itemsPerPage);
           updateTable();
           updatePagination();
-        } catch (error) {
+        })
+        .catch(error => {
           console.error('Error fetching articles:', error);
           showNotification("Erreur lors du chargement des articles", "error");
-        }
-      }
-
-      // Function to update the table based on current page and search
-      function updateTable() {
-        const tableBody = document.getElementById("articlesTableBody");
-        tableBody.innerHTML = "";
-
-        const searchTerm = searchInput.value.toLowerCase();
-        const filteredArticles = articles.filter(
-          (article) =>
-            (article.titre && article.titre.toLowerCase().includes(searchTerm)) ||
-            (article.auteur && article.auteur.toLowerCase().includes(searchTerm)) ||
-            (article.genre && article.genre.toLowerCase().includes(searchTerm)) ||
-            (article.isbn && article.isbn.includes(searchTerm)) ||
-            (article.description && article.description.toLowerCase().includes(searchTerm)) ||
-            (article.langue && article.langue.toLowerCase().includes(searchTerm))
-        );
-
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = Math.min(startIndex + itemsPerPage, filteredArticles.length);
-
-        // Update pagination info
-        document.getElementById("startEntry").textContent = filteredArticles.length > 0 ? startIndex + 1 : 0;
-        document.getElementById("endEntry").textContent = endIndex;
-        document.getElementById("totalEntries").textContent = filteredArticles.length;
-
-        // Create table rows
-        for (let i = startIndex; i < endIndex; i++) {
-          const article = filteredArticles[i];
-          const row = document.createElement("tr");
-          row.className = "table-row border-b hover:bg-gray-50";
-
-          row.innerHTML = `
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${article.titre || ''}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.auteur || ''}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.genre || ''}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.isbn || ''}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.qte || 0}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.loans || 0}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              <div class="flex space-x-2">
-                <button class="action-button bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="editArticle(${article.id})">
-                  <i class="fas fa-edit mr-1"></i> Modifier
-                </button>
-                <button class="action-button bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="deleteArticle(${article.id})">
-                  <i class="fas fa-trash mr-1"></i> Supprimer
-                </button>
-                <button class="action-button bg-gray-600 hover:bg-gray-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="viewArticleDetails(${article.id})">
-                  <i class="fas fa-info-circle mr-1"></i> Détail
-                </button>
-              </div>
-            </td>
-          `;
-
-          tableBody.appendChild(row);
-        }
-      }
-
-      // Function to update pagination buttons
-      function updatePagination() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const filteredArticles = articles.filter(
-          (article) =>
-            (article.titre && article.titre.toLowerCase().includes(searchTerm)) ||
-            (article.auteur && article.auteur.toLowerCase().includes(searchTerm)) ||
-            (article.genre && article.genre.toLowerCase().includes(searchTerm)) ||
-            (article.isbn && article.isbn.includes(searchTerm)) ||
-            (article.description && article.description.toLowerCase().includes(searchTerm)) ||
-            (article.langue && article.langue.toLowerCase().includes(searchTerm))
-        );
-
-        const totalFilteredPages = Math.ceil(filteredArticles.length / itemsPerPage);
-
-        // Update pagination buttons
-        const paginationContainer = document.getElementById("pagination");
-        const pageButtons = paginationContainer.querySelectorAll("[data-page]");
-
-        // Update active state
-        pageButtons.forEach((button) => {
-          const page = Number.parseInt(button.getAttribute("data-page"));
-          if (page === currentPage) {
-            button.classList.add("bg-primary", "text-white");
-            button.classList.remove("bg-gray-200", "text-gray-700");
-          } else {
-            button.classList.remove("bg-primary", "text-white");
-            button.classList.add("bg-gray-200", "text-gray-700");
-          }
         });
+    }
 
-        // Disable/enable prev/next buttons
-        const prevButton = document.getElementById("prevPage");
-        const nextButton = document.getElementById("nextPage");
-
-        if (currentPage === 1) {
-          prevButton.classList.add("opacity-50", "cursor-not-allowed");
-        } else {
-          prevButton.classList.remove("opacity-50", "cursor-not-allowed");
-        }
-
-        if (currentPage === totalFilteredPages || totalFilteredPages === 0) {
-          nextButton.classList.add("opacity-50", "cursor-not-allowed");
-        } else {
-          nextButton.classList.remove("opacity-50", "cursor-not-allowed");
-        }
-      }
-
-      // Create logo
-      function createLogo() {
-        const canvas = document.createElement("canvas");
-        canvas.width = 40;
-        canvas.height = 40;
-        const ctx = canvas.getContext("2d");
-
-        // Draw background
-        ctx.fillStyle = "#FFFFFF";
-        ctx.beginPath();
-        ctx.arc(20, 20, 20, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Draw book icon
-        ctx.fillStyle = "#8B2635";
-        ctx.beginPath();
-        ctx.moveTo(12, 10);
-        ctx.lineTo(28, 10);
-        ctx.lineTo(28, 30);
-        ctx.lineTo(12, 30);
-        ctx.closePath();
-        ctx.fill();
-
-        // Draw book pages
-        ctx.fillStyle = "#FFFFFF";
-        ctx.beginPath();
-        ctx.moveTo(14, 12);
-        ctx.lineTo(26, 12);
-        ctx.lineTo(26, 28);
-        ctx.lineTo(14, 28);
-        ctx.closePath();
-        ctx.fill();
-
-        // Draw book lines
-        ctx.strokeStyle = "#8B2635";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(16, 16);
-        ctx.lineTo(24, 16);
-        ctx.moveTo(16, 20);
-        ctx.lineTo(24, 20);
-        ctx.moveTo(16, 24);
-        ctx.lineTo(24, 24);
-        ctx.stroke();
-
-        // Set the logo
-        const logoImg = document.getElementById("logo");
-        const mobileLogoImg = document.getElementById("mobileLogo");
-        logoImg.src = canvas.toDataURL();
-        mobileLogoImg.src = canvas.toDataURL();
-      }
-    });
-
-    // CSRF token for AJAX requests
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    // Global functions for table actions
+    // Function to edit an article
     function editArticle(id) {
       // Fetch article details
       fetch(`/api/articles/${id}`)
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
         .then(article => {
           // Create edit modal
           const modal = document.createElement('div');
           modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
-          
+
           // Function to get image URL
           function getImageUrl(imagePath, defaultUrl = 'https://via.placeholder.com/300x400?text=Livre') {
             if (!imagePath) return defaultUrl;
@@ -692,132 +781,131 @@
             }
             return `/storage/${imagePath.replace(/^\/+/, '')}`;
           }
-          
+
           const imageUrl = getImageUrl(article.image);
-          
+
           modal.innerHTML = `
-            <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-screen overflow-y-auto">
-              <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
-                <h3 class="text-xl font-semibold text-gray-800">Modifier le livre</h3>
-                <button id="closeEditModalBtn" class="text-gray-400 hover:text-gray-500">
-                  <i class="fas fa-times"></i>
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-screen overflow-y-auto">
+          <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
+            <h3 class="text-xl font-semibold text-gray-800">Modifier le livre</h3>
+            <button id="closeEditModalBtn" class="text-gray-400 hover:text-gray-500">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <div class="p-6">
+            <form id="editArticleForm" class="space-y-4">
+              <input type="hidden" name="_token" value="${csrfToken}">
+              <input type="hidden" name="id" value="${id}">
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="col-span-1">
+                  <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+                    <input type="text" id="edit-titre" name="titre" value="${article.titre || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                  </div>
+                  
+                  <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Auteur</label>
+                    <input type="text" id="edit-auteur" name="auteur" value="${article.auteur || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                  </div>
+                  
+                  <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-1">Genre</label>
+                      <input type="text" id="edit-genre" name="genre" value="${article.genre || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
+                      <input type="text" id="edit-isbn" name="isbn" value="${article.isbn || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                  </div>
+                  
+                  <div class="grid grid-cols-3 gap-4 mb-4">
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                      <input type="number" id="edit-qte" name="qte" value="${article.qte || 0}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-1">Prix</label>
+                      <input type="number" step="0.01" id="edit-prix" name="prix_emprunt" value="${article.prix_emprunt || 0}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-1">Année</label>
+                      <input type="number" id="edit-annee" name="annee_pub" value="${article.annee_pub || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                  </div>
+                  
+                  <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea id="edit-contenu" name="contenu" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="5">${article.contenu || ''}</textarea>
+                  </div>
+                </div>
+                
+                <div class="col-span-1">
+                  <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
+                    <div class="mt-1 flex flex-col items-center justify-center">
+                      <img src="${imageUrl}" alt="${article.titre}" class="w-full max-h-60 object-cover rounded-lg mb-4">
+                      <input type="file" id="edit-image" name="image" class="hidden">
+                      <label for="edit-image" class="cursor-pointer bg-white text-primary hover:text-primary-dark py-2 px-4 border border-primary rounded-md transition duration-200">
+                        <i class="fas fa-upload mr-2"></i> Changer l'image
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Langue</label>
+                    <select id="edit-langue" name="langue" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                      <option value="Français" ${article.langue === 'Français' ? 'selected' : ''}>Français</option>
+                      <option value="Anglais" ${article.langue === 'Anglais' ? 'selected' : ''}>Anglais</option>
+                      <option value="Espagnol" ${article.langue === 'Espagnol' ? 'selected' : ''}>Espagnol</option>
+                      <option value="Allemand" ${article.langue === 'Allemand' ? 'selected' : ''}>Allemand</option>
+                      <option value="Italien" ${article.langue === 'Italien' ? 'selected' : ''}>Italien</option>
+                      <option value="Arabe" ${article.langue === 'Arabe' ? 'selected' : ''}>Arabe</option>
+                      <option value="Autre" ${!['Français', 'Anglais', 'Espagnol', 'Allemand', 'Italien', 'Arabe'].includes(article.langue) ? 'selected' : ''}>Autre</option>
+                    </select>
+                  </div>
+                  
+                  <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                    <select id="edit-categorie" name="id_categorie" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                      <option value="1" ${article.id_categorie == 1 ? 'selected' : ''}>Fiction</option>
+                      <option value="2" ${article.id_categorie == 2 ? 'selected' : ''}>Science-fiction</option>
+                      <option value="3" ${article.id_categorie == 3 ? 'selected' : ''}>Fantasy</option>
+                      <option value="4" ${article.id_categorie == 4 ? 'selected' : ''}>Roman</option>
+                      <option value="5" ${article.id_categorie == 5 ? 'selected' : ''}>Roman historique</option>
+                      <option value="6" ${article.id_categorie == 6 ? 'selected' : ''}>Biographie</option>
+                      <option value="7" ${article.id_categorie == 7 ? 'selected' : ''}>Poésie</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            
+              <div class="border-t border-gray-200 pt-4 mt-4 flex justify-end">
+                <button type="submit" id="saveArticleBtn" class="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded transition duration-200 mr-2">
+                  <i class="fas fa-save mr-2"></i> Enregistrer
+                </button>
+                <button type="button" id="closeEditFormBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded transition duration-200">
+                  Annuler
                 </button>
               </div>
-              
-              <div class="p-6">
-                <form id="editArticleForm" action="/articles/${id}" method="POST" enctype="multipart/form-data">
-                  <input type="hidden" name="_token" value="${csrfToken}">
-                  <input type="hidden" name="_method" value="PUT">
-                  <input type="hidden" name="id" value="${id}">
-                  
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="col-span-1">
-                      <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
-                        <input type="text" id="edit-titre" name="titre" value="${article.titre || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
-                      </div>
-                      
-                      <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Auteur</label>
-                        <input type="text" id="edit-auteur" name="auteur" value="${article.auteur || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
-                      </div>
-                      
-                      <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div>
-                          <label class="block text-sm font-medium text-gray-700 mb-1">Genre</label>
-                          <input type="text" id="edit-genre" name="genre" value="${article.genre || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        </div>
-                        <div>
-                          <label class="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
-                          <input type="text" id="edit-isbn" name="isbn" value="${article.isbn || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        </div>
-                      </div>
-                      
-                      <div class="grid grid-cols-3 gap-4 mb-4">
-                        <div>
-                          <label class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
-                          <input type="number" id="edit-qte" name="qte" value="${article.qte || 0}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        </div>
-                        <div>
-                          <label class="block text-sm font-medium text-gray-700 mb-1">Prix</label>
-                          <input type="number" step="0.01" id="edit-prix" name="prix_emprunt" value="${article.prix_emprunt || 0}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        </div>
-                        <div>
-                          <label class="block text-sm font-medium text-gray-700 mb-1">Année</label>
-                          <input type="number" id="edit-annee" name="annee_pub" value="${article.annee_pub || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        </div>
-                      </div>
-                      
-                      <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                        <textarea id="edit-contenu" name="contenu" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="5">${article.contenu || ''}</textarea>
-                      </div>
-                    </div>
-                    
-                    <div class="col-span-1">
-                      <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
-                        <div class="mt-1 flex flex-col items-center justify-center">
-                          <img src="${imageUrl}" alt="${article.titre}" class="w-full max-h-60 object-cover rounded-lg mb-4">
-                          <input type="file" id="edit-image" name="image" class="hidden">
-                          <label for="edit-image" class="cursor-pointer bg-white text-primary hover:text-primary-dark py-2 px-4 border border-primary rounded-md transition duration-200">
-                            <i class="fas fa-upload mr-2"></i> Changer l'image
-                          </label>
-                        </div>
-                      </div>
-                      
-                      <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Langue</label>
-                        <select id="edit-langue" name="langue" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                          <option value="Français" ${article.langue === 'Français' ? 'selected' : ''}>Français</option>
-                          <option value="Anglais" ${article.langue === 'Anglais' ? 'selected' : ''}>Anglais</option>
-                          <option value="Espagnol" ${article.langue === 'Espagnol' ? 'selected' : ''}>Espagnol</option>
-                          <option value="Allemand" ${article.langue === 'Allemand' ? 'selected' : ''}>Allemand</option>
-                          <option value="Italien" ${article.langue === 'Italien' ? 'selected' : ''}>Italien</option>
-                          <option value="Arabe" ${article.langue === 'Arabe' ? 'selected' : ''}>Arabe</option>
-                          <option value="Autre" ${!['Français', 'Anglais', 'Espagnol', 'Allemand', 'Italien', 'Arabe'].includes(article.langue) ? 'selected' : ''}>Autre</option>
-                        </select>
-                      </div>
-                      
-                      <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
-                        <select id="edit-categorie" name="id_categorie" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                          <option value="1" ${article.id_categorie == 1 ? 'selected' : ''}>Fiction</option>
-                          <option value="2" ${article.id_categorie == 2 ? 'selected' : ''}>Science-fiction</option>
-                          <option value="3" ${article.id_categorie == 3 ? 'selected' : ''}>Fantasy</option>
-                          <option value="4" ${article.id_categorie == 4 ? 'selected' : ''}>Roman</option>
-                          <option value="5" ${article.id_categorie == 5 ? 'selected' : ''}>Roman historique</option>
-                          <option value="6" ${article.id_categorie == 6 ? 'selected' : ''}>Biographie</option>
-                          <option value="7" ${article.id_categorie == 7 ? 'selected' : ''}>Poésie</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                
-                  <div class="border-t border-gray-200 pt-4 mt-4 flex justify-end">
-                    <button type="submit" id="saveArticleBtn" class="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded transition duration-200 mr-2">
-                      <i class="fas fa-save mr-2"></i> Enregistrer
-                    </button>
-                    <button type="button" id="closeEditFormBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded transition duration-200">
-                      Annuler
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          `;
-          
+            </form>
+          </div>
+        </div>
+      `;
+
           document.body.appendChild(modal);
-          
+
           // Event handlers
           document.getElementById('closeEditModalBtn').addEventListener('click', () => {
             document.body.removeChild(modal);
           });
-          
+
           document.getElementById('closeEditFormBtn').addEventListener('click', () => {
             document.body.removeChild(modal);
           });
-          
+
           // Image preview
           const imageInput = document.getElementById('edit-image');
           imageInput.addEventListener('change', (e) => {
@@ -830,36 +918,38 @@
               reader.readAsDataURL(e.target.files[0]);
             }
           });
-          
+
           // Form submission
-          document.getElementById('editArticleForm').addEventListener('submit', function(e) {
+          document.getElementById('editArticleForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             const formData = new FormData(this);
-            
-            fetch(this.action, {
+
+            fetch(`/articles/${id}`, {
               method: 'POST',
               body: formData,
               headers: {
                 'X-CSRF-TOKEN': csrfToken,
+                'X-HTTP-Method-Override': 'PUT' // Add this for Laravel to properly handle PUT
+                // Ne pas définir Content-Type avec FormData, le navigateur le fait automatiquement
               }
             })
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Network response was not ok');
-              }
-              return response.json();
-            })
-            .then(data => {
-              document.body.removeChild(modal);
-              showNotification("Article modifié avec succès!");
-              // Refresh the articles list
-              fetchArticles();
-            })
-            .catch(error => {
-              console.error('Error:', error);
-              showNotification("Erreur lors de la modification de l'article", "error");
-            });
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                }
+                return response.json();
+              })
+              .then(data => {
+                document.body.removeChild(modal);
+                showNotification("Article modifié avec succès!");
+                // Refresh the articles list
+                fetchArticles();
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                showNotification("Erreur lors de la modification de l'article", "error");
+              });
           });
         })
         .catch(error => {
@@ -868,6 +958,7 @@
         });
     }
 
+    // Function to delete an article
     function deleteArticle(id) {
       if (confirm("Êtes-vous sûr de vouloir supprimer cet article?")) {
         fetch(`/articles/${id}`, {
@@ -877,30 +968,39 @@
             'Content-Type': 'application/json'
           },
         })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            showNotification("Article supprimé avec succès!");
+            // Refresh the articles list
+            fetchArticles();
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showNotification("Erreur lors de la suppression de l'article", "error");
+          });
+      }
+    }
+
+    // Function to view article details
+    function viewArticleDetails(id) {
+      // Fetch article details
+      fetch(`/api/articles/${id}`)
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
-          showNotification("Article supprimé avec succès!");
-          // Refresh the articles list
-          fetchArticles();
+          return response.json();
         })
-        .catch(error => {
-          console.error('Error:', error);
-          showNotification("Erreur lors de la suppression de l'article", "error");
-        });
-      }
-    }
-
-    function viewArticleDetails(id) {
-      // Fetch article details
-      fetch(`/api/articles/${id}`)
-        .then(response => response.json())
         .then(article => {
           // Create details modal
           const modal = document.createElement('div');
           modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
-          
+
           // Function to get image URL
           function getImageUrl(imagePath, defaultUrl = 'https://via.placeholder.com/300x400?text=Livre') {
             if (!imagePath) return defaultUrl;
@@ -909,89 +1009,89 @@
             }
             return `/storage/${imagePath.replace(/^\/+/, '')}`;
           }
-          
+
           const imageUrl = getImageUrl(article.image);
-          
+
           // Modal content
           modal.innerHTML = `
-            <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-screen overflow-y-auto">
-              <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
-                <h3 class="text-xl font-semibold text-gray-800">Détails du livre</h3>
-                <button id="closeModalBtn" class="text-gray-400 hover:text-gray-500">
-                  <i class="fas fa-times"></i>
-                </button>
+        <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-screen overflow-y-auto">
+          <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
+            <h3 class="text-xl font-semibold text-gray-800">Détails du livre</h3>
+            <button id="closeModalBtn" class="text-gray-400 hover:text-gray-500">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <div class="p-6">
+            <div class="flex flex-col md:flex-row gap-6">
+              <div class="w-full md:w-1/3">
+                <img src="${imageUrl}" alt="${article.titre}" class="rounded-lg shadow-md w-full">
               </div>
               
-              <div class="p-6">
-                <div class="flex flex-col md:flex-row gap-6">
-                  <div class="w-full md:w-1/3">
-                    <img src="${imageUrl}" alt="${article.titre}" class="rounded-lg shadow-md w-full">
+              <div class="flex-1">
+                <h2 class="text-2xl font-semibold mb-4">${article.titre || ''}</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <div>
+                    <p class="text-sm text-gray-600">Auteur</p>
+                    <p class="font-medium">${article.auteur || ''}</p>
                   </div>
-                  
-                  <div class="flex-1">
-                    <h2 class="text-2xl font-semibold mb-4">${article.titre || ''}</h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                      <div>
-                        <p class="text-sm text-gray-600">Auteur</p>
-                        <p class="font-medium">${article.auteur || ''}</p>
-                      </div>
-                      <div>
-                        <p class="text-sm text-gray-600">Genre</p>
-                        <p class="font-medium">${article.genre || ''}</p>
-                      </div>
-                      <div>
-                        <p class="text-sm text-gray-600">Année de publication</p>
-                        <p class="font-medium">${article.annee_pub || ''}</p>
-                      </div>
-                      <div>
-                        <p class="text-sm text-gray-600">Langue</p>
-                        <p class="font-medium">${article.langue || ''}</p>
-                      </div>
-                      <div>
-                        <p class="text-sm text-gray-600">ISBN</p>
-                        <p class="font-medium">${article.isbn || ''}</p>
-                      </div>
-                      <div>
-                        <p class="text-sm text-gray-600">Stock disponible</p>
-                        <p class="font-medium">${article.qte || 0}</p>
-                      </div>
-                      <div>
-                        <p class="text-sm text-gray-600">Prix d'emprunt</p>
-                        <p class="font-medium">${article.prix_emprunt || 0} Dh</p>
-                      </div>
-                      <div>
-                        <p class="text-sm text-gray-600">Nombre d'emprunts</p>
-                        <p class="font-medium">${article.loans || 0}</p>
-                      </div>
-                    </div>
-                    
-                    <div class="mb-6">
-                      <p class="text-sm text-gray-600 mb-1">Description</p>
-                      <p class="bg-gray-50 p-3 rounded-md">${article.contenu || 'Aucune description disponible.'}</p>
-                    </div>
+                  <div>
+                    <p class="text-sm text-gray-600">Genre</p>
+                    <p class="font-medium">${article.genre || ''}</p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-600">Année de publication</p>
+                    <p class="font-medium">${article.annee_pub || ''}</p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-600">Langue</p>
+                    <p class="font-medium">${article.langue || ''}</p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-600">ISBN</p>
+                    <p class="font-medium">${article.isbn || ''}</p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-600">Stock disponible</p>
+                    <p class="font-medium">${article.qte || 0}</p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-600">Prix d'emprunt</p>
+                    <p class="font-medium">${article.prix_emprunt || 0} Dh</p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-600">Nombre d'emprunts</p>
+                    <p class="font-medium">${article.loans || 0}</p>
                   </div>
                 </div>
-              </div>
-              
-              <div class="border-t border-gray-200 px-6 py-4 flex justify-end">
-                <button class="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded transition duration-200 mr-2" onclick="editArticle(${article.id})">
-                  <i class="fas fa-edit mr-2"></i> Modifier
-                </button>
-                <button id="closeDetailBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded transition duration-200">
-                  Fermer
-                </button>
+                
+                <div class="mb-6">
+                  <p class="text-sm text-gray-600 mb-1">Description</p>
+                  <p class="bg-gray-50 p-3 rounded-md">${article.contenu || 'Aucune description disponible.'}</p>
+                </div>
               </div>
             </div>
-          `;
+          </div>
           
+          <div class="border-t border-gray-200 px-6 py-4 flex justify-end">
+            <button class="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded transition duration-200 mr-2" onclick="editArticle(${article.id})">
+              <i class="fas fa-edit mr-2"></i> Modifier
+            </button>
+            <button id="closeDetailBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded transition duration-200">
+              Fermer
+            </button>
+          </div>
+        </div>
+      `;
+
           document.body.appendChild(modal);
-          
+
           // Close modal
           document.getElementById('closeModalBtn').addEventListener('click', () => {
             document.body.removeChild(modal);
           });
-          
+
           document.getElementById('closeDetailBtn').addEventListener('click', () => {
             document.body.removeChild(modal);
           });
@@ -1002,51 +1102,9 @@
         });
     }
 
-    function showNotification(message, type = "success") {
-      // Remove any existing notifications
-      const existingNotifications = document.querySelectorAll('.notification');
-      existingNotifications.forEach(notification => {
-        notification.remove();
-      });
-
-      // Create new notification
-      const notification = document.createElement("div");
-      notification.className = "notification";
-      
-      if (type === "error") {
-        notification.style.backgroundColor = "#EF4444";
-      }
-      
-      notification.textContent = message;
-
-      document.body.appendChild(notification);
-
-      // Remove notification after delay
-      setTimeout(() => {
-        notification.classList.add("hiding");
-        setTimeout(() => {
-          if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
-          }
-        }, 300);
-      }, 3000);
-    }
-
-    // Global function to fetch articles
-    function fetchArticles() {
-      fetch('{{ route("articles.index") }}')
-        .then(response => response.json())
-        .then(data => {
-          articles = data;
-          totalPages = Math.ceil(articles.length / itemsPerPage);
-          updateTable();
-          updatePagination();
-        })
-        .catch(error => {
-          console.error('Error fetching articles:', error);
-          showNotification("Erreur lors du chargement des articles", "error");
-        });
-    }
+    // Function to show notifications
+    function show
   </script>
 </body>
+
 </html>

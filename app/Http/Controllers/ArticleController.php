@@ -21,187 +21,145 @@ class ArticleController extends Controller
             $response = Http::get($this->apiUrl);
             $articles = $response->json();
             
-            // If this is an AJAX request, return JSON
-            if (request()->ajax() || request()->wantsJson()) {
+            // If this is an AJAX request or explicitly requested JSON, return JSON
+            if (request()->ajax() || request()->wantsJson() || request()->has('json')) {
                 return response()->json($articles);
             }
             
             // Otherwise return the view with articles
             return view('client.article', compact('articles'));
         } catch (\Exception $e) {
-            if (request()->ajax() || request()->wantsJson()) {
-                return response()->json(['error' => 'Failed to fetch articles'], 500);
+            if (request()->ajax() || request()->wantsJson() || request()->has('json')) {
+                return response()->json(['error' => 'Failed to fetch articles: ' . $e->getMessage()], 500);
             }
             
-            return back()->with('error', 'Failed to fetch articles');
+            return back()->with('error', 'Failed to fetch articles: ' . $e->getMessage());
         }
     }
 
+    // Store a new article
     public function store(Request $request)
     {
         try {
-            // Validate the request
-            $request->validate([
-                'titre' => 'required|string|max:255',
-                'auteur' => 'required|string|max:255',
-                'contenu' => 'required|string',
-                'image' => 'nullable|image|max:2048', // 2MB max
+            // Handle file upload if there's an image
+            $imagePath = null;
+            if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                $image = $request->file('image');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('public/articles', $imageName);
+                $imagePath = 'articles/' . $imageName;
+            }
+
+            // Prepare data for API
+            $data = $request->except(['_token', 'image']);
+            if ($imagePath) {
+                $data['image'] = $imagePath;
+            }
+
+            // Send to API
+            $response = Http::post($this->apiUrl, $data);
+
+            if (!$response->successful()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'API returned error: ' . $response->status()
+                ], $response->status());
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Article créé avec succès',
+                'data' => $response->json()
             ]);
-
-            // Handle the image upload
-            $multipart = [
-                [
-                    'name' => 'article',
-                    'contents' => json_encode([
-                        'titre' => $request->titre,
-                        'auteur' => $request->auteur,
-                        'contenu' => $request->contenu,
-                        'id_categorie' => $request->id_categorie,
-                        'annee_pub' => $request->annee_pub,
-                        'isbn' => $request->isbn,
-                        'langue' => $request->langue,
-                        'qte' => $request->qte,
-                        'prix_emprunt' => $request->prix_emprunt,
-                    ]),
-                    'headers' => ['Content-Type' => 'application/json']
-                ]
-            ];
-
-            if ($request->hasFile('image')) {
-                $multipart[] = [
-                    'name' => 'image',
-                    'contents' => fopen($request->file('image')->getPathname(), 'r'),
-                    'filename' => $request->file('image')->getClientOriginalName()
-                ];
-            }
-
-            $response = Http::asMultipart()->post($this->apiUrl, $multipart);
-
-            if ($response->successful()) {
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json(['success' => true, 'message' => 'Article créé avec succès']);
-                }
-                
-                return redirect()->route('articles.index')->with('success', 'Article créé avec succès');
-            } else {
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json(['error' => 'Erreur lors de la création de l\'article'], 500);
-                }
-                
-                return back()->with('error', 'Erreur lors de la création de l\'article');
-            }
         } catch (\Exception $e) {
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json(['error' => $e->getMessage()], 500);
-            }
-            
-            return back()->with('error', $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la création de l\'article: ' . $e->getMessage()
+            ], 500);
         }
     }
 
-    public function update(Request $request)
+    // Update an existing article
+    public function update(Request $request, $id)
     {
         try {
-            // Validate the request
-            $request->validate([
-                'id' => 'required|numeric',
-                'titre' => 'required|string|max:255',
-                'auteur' => 'required|string|max:255',
-                'contenu' => 'required|string',
-                'image' => 'nullable|image|max:2048', // 2MB max
+            // Handle file upload if there's an image
+            $imagePath = null;
+            if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                $image = $request->file('image');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('public/articles', $imageName);
+                $imagePath = 'articles/' . $imageName;
+            }
+
+            // Prepare data for API
+            $data = $request->except(['_token', '_method', 'image']);
+            if ($imagePath) {
+                $data['image'] = $imagePath;
+            }
+
+            // Send to API - using PUT method regardless of how the request came in
+            $response = Http::put($this->apiUrl . '/' . $id, $data);
+
+            if (!$response->successful()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'API returned error: ' . $response->status()
+                ], $response->status());
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Article mis à jour avec succès',
+                'data' => $response->json()
             ]);
-
-            $id = $request->id;
-            $url = $this->apiUrl . '/' . $id;
-
-            $multipart = [
-                [
-                    'name' => 'article',
-                    'contents' => json_encode([
-                        'titre' => $request->titre,
-                        'auteur' => $request->auteur,
-                        'contenu' => $request->contenu,
-                        'id_categorie' => $request->id_categorie,
-                        'annee_pub' => $request->annee_pub,
-                        'isbn' => $request->isbn,
-                        'langue' => $request->langue,
-                        'qte' => $request->qte,
-                        'prix_emprunt' => $request->prix_emprunt,
-                    ]),
-                    'headers' => ['Content-Type' => 'application/json']
-                ]
-            ];
-
-            if ($request->hasFile('image')) {
-                $multipart[] = [
-                    'name' => 'image',
-                    'contents' => fopen($request->file('image')->getPathname(), 'r'),
-                    'filename' => $request->file('image')->getClientOriginalName()
-                ];
-            }
-
-            $response = Http::asMultipart()->put($url, $multipart);
-
-            if ($response->successful()) {
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json(['success' => true, 'message' => 'Article mis à jour avec succès']);
-                }
-                
-                return redirect()->route('articles.index')->with('success', 'Article mis à jour avec succès');
-            } else {
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json(['error' => 'Erreur lors de la mise à jour de l\'article'], 500);
-                }
-                
-                return back()->with('error', 'Erreur lors de la mise à jour de l\'article');
-            }
         } catch (\Exception $e) {
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json(['error' => $e->getMessage()], 500);
-            }
-            
-            return back()->with('error', $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la mise à jour de l\'article: ' . $e->getMessage()
+            ], 500);
         }
     }
 
-    public function destroy(Request $request)
+    // Delete an article
+    public function destroy($id)
     {
         try {
-            $id = $request->id;
             $response = Http::delete($this->apiUrl . '/' . $id);
 
-            if ($response->successful()) {
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json(['success' => true, 'message' => 'Article supprimé avec succès']);
-                }
-                
-                return redirect()->route('articles.index')->with('success', 'Article supprimé avec succès');
-            } else {
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json(['error' => 'Erreur lors de la suppression de l\'article'], 500);
-                }
-                
-                return back()->with('error', 'Erreur lors de la suppression de l\'article');
+            if (!$response->successful()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'API returned error: ' . $response->status()
+                ], $response->status());
             }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Article supprimé avec succès'
+            ]);
         } catch (\Exception $e) {
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json(['error' => $e->getMessage()], 500);
-            }
-            
-            return back()->with('error', $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la suppression de l\'article: ' . $e->getMessage()
+            ], 500);
         }
     }
 
-    // Add a method to get a single article
+    // Ensure getArticle handles exceptions properly
     public function getArticle($id)
     {
         try {
             $response = Http::get($this->apiUrl . '/' . $id);
-            $article = $response->json();
             
+            if (!$response->successful()) {
+                return response()->json(['error' => 'API returned error: ' . $response->status()], $response->status());
+            }
+            
+            $article = $response->json();
             return response()->json($article);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch article'], 500);
+            return response()->json(['error' => 'Failed to fetch article: ' . $e->getMessage()], 500);
         }
     }
 }
