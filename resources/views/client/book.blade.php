@@ -116,7 +116,8 @@
                 </span>
             @endif
         </div>
-        <div class="sidebar-icon text-white text-2xl mb-6"><i class="fas fa-camera"></i></div>
+        <div class="sidebar-icon text-white text-2xl mb-6">        <a href="{{route('order.history')}}" class="text-white text-xl mb-6"><i class="fas fa-history"></i></a>
+</div>
         <div class="sidebar-icon text-white text-2xl mb-6"><i class="fas fa-envelope"></i></div>
         <div class="subscribe-text text-white rotate-90 mt-auto text-sm bg-green-400 px-4 py-2 rounded">Subscribe</div>
     </div>
@@ -131,8 +132,7 @@
 
         <div class="flex gap-8">
             <div class="w-1/3">
-                <img src="{{ !empty($book['image']) ? (filter_var($book['image'], FILTER_VALIDATE_URL) ? $book['image'] : asset('storage/' . $book['image'])) : 'https://via.placeholder.com/200x300?text=Livre' }}"
-                    alt="{{ $book['titre'] ?? 'Livre' }}" class="w-full rounded shadow">
+                <img src="@bookImage($book['image'])" alt="{{ $book['titre'] ?? 'Livre' }}" class="w-full rounded shadow">
             </div>
             <div class="flex-1">
                 <h2 class="text-4xl font-bold mb-4">{{ $book['titre'] ?? 'Titre inconnu' }}</h2>

@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class LivreurController extends Controller
+class PaymentBiblioController extends Controller
 {
     public function index()
     {
-        return view('livreur.dashboard');
+        return view('bibliothecaire.payment');
     }
+
     public function show()
     {
-        
-        return view('bibliothecaire.livreur');
+        return view('bibliothecaire.payment');
     }
 }

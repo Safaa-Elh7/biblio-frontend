@@ -19,21 +19,8 @@ class BookController extends Controller
         if ($response->successful()) {
             $book = $response->json();
             
-            // Vérifier si l'image existe et la formater correctement
-            if (isset($book['image']) && !empty($book['image'])) {
-                // Si l'image est déjà un chemin complet, on le laisse tel quel
-                if (filter_var($book['image'], FILTER_VALIDATE_URL)) {
-                    // Ne rien faire, c'est déjà une URL complète
-                } 
-                // Si c'est un chemin relatif, on s'assure qu'il est correctement formaté
-                else {
-                    // Supprimer les éventuels slashes au début pour éviter les doublons
-                    $book['image'] = ltrim($book['image'], '/');
-                }
-            } else {
-                // Si pas d'image, utiliser une image par défaut
-                $book['image'] = 'default-book.jpg';
-            }
+            // Nous n'avons plus besoin de vérifier ou formater l'image ici
+            // car notre directive @bookImage et la classe ImageHelper s'en chargeront
             
             return view('client.book', compact('book'));
         }

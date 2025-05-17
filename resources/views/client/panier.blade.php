@@ -434,7 +434,8 @@
         </a>
         
         <div class="sidebar-icon">
-            <i class="fas fa-camera"></i>
+                    <a href="{{route('order.history')}}" class="text-white text-xl mb-6"><i class="fas fa-history"></i></a>
+</i>
         </div>
         
         <div class="sidebar-icon">
@@ -489,7 +490,7 @@
                 @else
                     @foreach($cart as $id => $item)
                         <div class="cart-item">
-                            <img src="{{ !empty($item['image']) ? (filter_var($item['image'], FILTER_VALIDATE_URL) ? $item['image'] : asset('storage/' . $item['image'])) : 'https://via.placeholder.com/80x100?text=Livre' }}" alt="{{ $item['name'] }}" class="item-image">
+                            <img src="@bookImage($item['image'])" alt="{{ $item['name'] }}" class="item-image">
                             <div class="item-details">
                                 <h3 class="item-title">{{ $item['name'] }}</h3>
                                 <p class="item-author">{{ $item['author'] }}</p>
@@ -590,10 +591,17 @@
                         </div>
                     `;
                 } else {
+                    // Fonction pour gérer les URLs d'images de manière cohérente
+                    function getImageUrl(imagePath, defaultUrl = 'https://via.placeholder.com/100x130?text=Image') {
+                        if (!imagePath) return defaultUrl;
+                        if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+                            return imagePath;
+                        }
+                        return `/storage/${imagePath.replace(/^\/+/, '')}`;
+                    }
+                    
                     data.forEach(item => {
-                        const imageUrl = item.image
-                            ? `http://localhost:8080/api/articles/images/${item.image}`
-                            : 'https://via.placeholder.com/100x130?text=Image';
+                        const imageUrl = getImageUrl(item.image);
 
                         container.innerHTML += `
                             <div class="cart-item">

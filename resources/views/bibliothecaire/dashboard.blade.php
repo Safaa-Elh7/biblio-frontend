@@ -79,25 +79,25 @@
       <div class="py-4">
         <ul>
           <li class="px-4 py-2">
-            <a href="#" class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.dashboard.index') }}" class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-home mr-3"></i>
               <span>Accueil</span>
             </a>
           </li>
           <li class="px-4 py-2">
-            <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.user.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-users mr-3"></i>
               <span>Users</span>
             </a>
           </li>
           <li class="px-4 py-2">
-            <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.livreur.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-truck mr-3"></i>
               <span>Livreurs</span>
             </a>
           </li>
           <li class="px-4 py-2">
-            <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.payment.show') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-credit-card mr-3"></i>
               <span>Payments</span>
             </a>
@@ -151,19 +151,19 @@
               </a>
             </li>
             <li class="px-4 py-2">
-              <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+              <a href="{{ route('bibliothecaire.user.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
                 <i class="fas fa-users mr-3"></i>
                 <span>Users</span>
               </a>
             </li>
             <li class="px-4 py-2">
-              <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+              <a href="{{ route('bibliothecaire.livreur.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
                 <i class="fas fa-truck mr-3"></i>
                 <span>Livreurs</span>
               </a>
             </li>
             <li class="px-4 py-2">
-              <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+              <a href="{{route('bibliothecaire.payment.show')}}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
                 <i class="fas fa-credit-card mr-3"></i>
                 <span>Payments</span>
               </a>

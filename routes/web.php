@@ -14,8 +14,12 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\bookController;
 use App\Http\Controllers\CardController;
+use App\Http\Controllers\DashboardBiblioController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PanierController;
+use App\Http\Controllers\PaymentBiblioController;
+use App\Http\Controllers\UserBiblioController;
+use App\Models\Livreur;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,6 +36,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
      return view('welcome');
 })->name('welcome');
+
+// Route pour tester la directive @bookImage
+Route::get('/test-image', function () {
+     return view('test.image-test');
+})->name('test.image');
 
 Route::get('/dashboard', function () {
      return view('dashboard');
@@ -98,7 +107,13 @@ Route::middleware(['auth'])
         Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order.show');
         Route::get('/orders/search', [OrderController::class, 'search'])->name('order.search');
     });
+Route::get('/dashboard', [DashboardBiblioController::class, 'index'])->name('bibliothecaire.dashboard.index');
 Route::get('/articles', [ArticleController::class, 'show'])->name('bibliothecaire.article.index');
+Route::get('/livreurs', [LivreurController::class, 'show'])->name('bibliothecaire.livreur.index');
+Route::get('/users', [UserBiblioController::class, 'show'])->name('bibliothecaire.user.index');
+Route::get('/payment', [PaymentBiblioController::class, 'show'])->name('bibliothecaire.payment.show');
 
+
+Route::get('/orders', [OrderController::class, 'history'])->name('order.history');
 
 require __DIR__ . '/auth.php';

@@ -417,7 +417,7 @@
             <div class="space-y-2">
                 @foreach($order->items as $item)
                     <div class="item-row">
-                        <img src="{{ !empty($item->image) ? (filter_var($item->image, FILTER_VALIDATE_URL) ? $item->image : asset('storage/' . $item->image)) : 'https://via.placeholder.com/80x100?text=Livre' }}" alt="{{ $item->name }}" class="item-image">
+                        <img src="@bookImage($item->image)" alt="{{ $item->name }}" class="item-image">
                         
                         <div class="item-details">
                             <div class="item-title">{{ $item->name }}</div>

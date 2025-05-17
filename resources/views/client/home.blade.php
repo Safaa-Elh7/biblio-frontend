@@ -615,7 +615,7 @@
         </div>
 
         <div class="sidebar-icon">
-            <i class="fas fa-camera"></i>
+        <a href="{{route('order.history')}}" class="text-white text-xl mb-6"><i class="fas fa-history"></i></a>
         </div>
 
         <div class="sidebar-icon">
@@ -824,6 +824,15 @@ function updateBannerVisibility() {
 // Supprimer le tableau books statique
 let books = [];
 
+// Fonction pour gérer les URLs d'images de manière cohérente
+function getImageUrl(imagePath, defaultUrl = 'https://via.placeholder.com/150x200?text=Livre') {
+    if (!imagePath) return defaultUrl;
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+        return imagePath;
+    }
+    return `/storage/${imagePath.replace(/^\/+/, '')}`;
+}
+
 // Fonction pour sécuriser l'accès aux propriétés
 function getBookProperty(book, property, defaultValue = "Non disponible") {
     if (book && book[property] !== undefined && book[property] !== null) {
@@ -850,7 +859,7 @@ function loadBooks() {
                     title: getBookProperty(book, 'titre', 'Titre inconnu'),
                     author: getBookProperty(book, 'auteur', 'Auteur inconnu'),
                     category: getBookProperty(book, 'category', 'all'),
-                    image: book.image ? `/storage/${book.image}` : 'https://via.placeholder.com/150x200?text=Livre',
+                    image: getBookProperty(book, 'image', null), // Nous utiliserons getImageUrl() lors de l'affichage
                     prix_emprunt: getBookProperty(book, 'prix_emprunt', 0),
                     isBestSeller: book.prix_emprunt > 100 || getBookProperty(book, 'isBestSeller', false)
                 }));
@@ -933,14 +942,13 @@ function displayBooks(containerId, booksToDisplay) {
         
         const title = getBookProperty(book, 'title', 'Titre inconnu');
         const author = getBookProperty(book, 'author', 'Auteur inconnu');
-        const image = getBookProperty(book, 'image', 'https://images.unsplash.com/photo-1598618253208-d75408cee680?q=80&w=1000&auto=format&fit=crop');
+        const image = getBookProperty(book, 'image', '');
         const isBestSeller = getBookProperty(book, 'isBestSeller', false);
         
         const bestSellerBadge = isBestSeller ? `<span class="book-badge">Best Seller</span>` : '';
         
         bookCard.innerHTML = `
-            <img src="${image}" alt="${title}" class="book-cover" 
-                 onerror="this.src='https://images.unsplash.com/photo-1598618253208-d75408cee680?q=80&w=1000&auto=format&fit=crop'; this.onerror=null;">
+            <img src="{{ !empty(${image}) ? (filter_var(${image}, FILTER_VALIDATE_URL) ? image : asset('storage/' . ${image})) : 'https://via.placeholder.com/80x100?text=Livre' }}" alt="{{ $item->name }}" class="book-cover">
             <h3 class="book-title">${title}</h3>
             <span class="author-name">${author}</span>
             ${bestSellerBadge}
