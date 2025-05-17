@@ -704,7 +704,7 @@
                     <span>Total</span>
                     <span>{{ $total + $shipping }} Dh</span>
                 </div>
-                <button type="button" class="place-order-btn" id="placeOrderBtn">
+                <button type="submit" class="place-order-btn" id="placeOrderBtn">
                     Place Order
                 </button>
                 <div class="secure-badge">
@@ -754,6 +754,33 @@
                     e.target.value = value.slice(0, 2) + '/' + value.slice(2);
                 } else {
                     e.target.value = value;
+                }
+            });
+
+            // Gestion unique de la soumission du formulaire
+            const checkoutForm = document.getElementById('checkoutForm');
+            checkoutForm.addEventListener('submit', function(e) {
+                // Ne soumettre le formulaire que si la validation passe
+                if (!validateFields()) {
+                    e.preventDefault();
+                    // Faire défiler jusqu'au premier champ avec une erreur
+                    const firstError = document.querySelector('.input-field.border-red-500');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.focus();
+                    }
+                } else {
+                    // Afficher l'animation de chargement
+                    loadingOverlay.classList.add('active');
+                    
+                    // Ajouter un petit délai avant la soumission pour montrer l'animation
+                    if (!e.submitter || e.submitter.id === 'placeOrderBtn') {
+                        e.preventDefault();
+                        setTimeout(() => {
+                            console.log('Soumission du formulaire après délai...');
+                            checkoutForm.submit();
+                        }, 800);
+                    }
                 }
             });
             
@@ -870,26 +897,9 @@
                 return isValid;
             }
             
-            // Traitement de la commande
-            placeOrderBtn.addEventListener('click', function(event) {
-                event.preventDefault(); // Empêcher la soumission par défaut
-                
-                if (validateFields()) {
-                    // Afficher l'animation de chargement
-                    loadingOverlay.classList.add('active');
-                    // Soumettre le formulaire après un court délai pour montrer l'animation
-                    setTimeout(() => {
-                        document.getElementById('checkoutForm').submit();
-                    }, 500);
-                } else {
-                    // Faire défiler jusqu'au premier champ avec une erreur
-                    const firstError = document.querySelector('.input-field.border-red-500');
-                    if (firstError) {
-                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        firstError.focus();
-                    }
-                }
-            });
+            // La gestion du bouton "Place Order" est maintenant entièrement 
+            // prise en charge par l'écouteur submit du formulaire
+            // Nous n'avons plus besoin d'un écouteur click séparé pour le bouton
         });
     </script>
 </body>
