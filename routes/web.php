@@ -114,7 +114,12 @@ Route::post('/articles', [App\Http\Controllers\ArticleController::class, 'store'
 Route::match(['put', 'post'], '/articles/{id}', [App\Http\Controllers\ArticleController::class, 'update'])->name('articles.update');
 Route::delete('/articles/{id}', [App\Http\Controllers\ArticleController::class, 'destroy'])->name('articles.destroy');
 Route::get('/api/articles/{id}', [App\Http\Controllers\ArticleController::class, 'getArticle'])->name('api.articles.show');
-Route::get('/livreurs', [LivreurController::class, 'show'])->name('bibliothecaire.livreur.index');
+// Routes pour la gestion des livreurs (CRUD)
+Route::get('/bibliothecaire/livreurs', [LivreurController::class, 'show'])->name('bibliothecaire.livreur.index');
+Route::post('/bibliothecaire/livreurs', [LivreurController::class, 'store'])->name('bibliothecaire.livreur.store');
+Route::get('/bibliothecaire/livreurs/{id}', [LivreurController::class, 'edit'])->name('bibliothecaire.livreur.edit');
+Route::put('/bibliothecaire/livreurs/{id}', [LivreurController::class, 'update'])->name('bibliothecaire.livreur.update');
+Route::delete('/bibliothecaire/livreurs/{id}', [LivreurController::class, 'destroy'])->name('bibliothecaire.livreur.destroy');
 Route::get('/users', [UserBiblioController::class, 'show'])->name('bibliothecaire.user.index');
 Route::get('/payment', [PaymentBiblioController::class, 'show'])->name('bibliothecaire.payment.show');
 

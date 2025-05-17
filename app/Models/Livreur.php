@@ -13,8 +13,7 @@ class Livreur extends Authenticatable
 use HasFactory,Notifiable;
 protected $table = 'livreur';
 protected $primaryKey = 'id_livreur';
-public $incrementing = false;
-public $timestamps = true;
+
 
 protected $fillable = ['zone_livraison','moyen_transport'];
 
