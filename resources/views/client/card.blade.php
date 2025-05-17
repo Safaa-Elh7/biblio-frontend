@@ -589,8 +589,21 @@
         <!-- Checkout Title -->
         <h1 class="checkout-title">Checkout</h1>
         
+        <!-- Flash Messages -->
+        @if(session('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ session('error') }}</span>
+        </div>
+        @endif
+        
+        @if(session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+        @endif
+        
         <!-- Checkout Content -->
-        <form id="checkoutForm" method="POST" action="{{ route('client.card.processPayment') }}">
+        <form id="checkoutForm" method="POST" action="{{ route('client.card.processPayment') }}" onsubmit="return validateAllFields()">
             @csrf
             <div class="checkout-container">
                 <!-- Left Side - Shipping Address -->
@@ -704,7 +717,7 @@
                     <span>Total</span>
                     <span>{{ $total + $shipping }} Dh</span>
                 </div>
-                <button type="submit" class="place-order-btn" id="placeOrderBtn">
+                <button type="submit" class="place-order-btn" id="placeOrderBtn" onclick="showLoading()">
                     Place Order
                 </button>
                 <div class="secure-badge">
@@ -719,6 +732,102 @@
     </div>
 
     <script>
+        // Function to reset all error states
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(error => {
+                error.textContent = '';
+            });
+            
+            document.querySelectorAll('.input-field').forEach(input => {
+                input.classList.remove('border-red-500', 'shake');
+            });
+        }
+        
+        // Function to show loading screen
+        function showLoading() {
+            if (validateAllFields()) {
+                document.getElementById('loadingOverlay').classList.add('active');
+                return true;
+            }
+            return false;
+        }
+        
+        // Function to validate all fields
+        function validateAllFields() {
+            clearErrors();
+            let isValid = true;
+            const requiredFields = document.querySelectorAll('.input-field');
+            const errorMessages = {
+                fullName: 'Please enter your full name',
+                address: 'Please enter your address',
+                city: 'Please enter your city',
+                zipCode: 'Please enter a valid zip code',
+                cardNumber: 'Please enter a valid card number',
+                cardHolder: 'Please enter the card holder name',
+                expiryDate: 'Please enter a valid expiry date (MM/YY)',
+                cvv: 'Please enter a valid security code'
+            };
+            
+            // Basic validation - checking for empty fields
+            requiredFields.forEach(field => {
+                const fieldId = field.id;
+                const errorElement = document.getElementById(`${fieldId}-error`);
+                
+                if (!field.value.trim()) {
+                    field.classList.add('border-red-500', 'shake');
+                    isValid = false;
+                    
+                    if (errorElement) {
+                        errorElement.textContent = errorMessages[fieldId] || 'This field is required';
+                    }
+                    
+                    setTimeout(() => {
+                        field.classList.remove('shake');
+                    }, 500);
+                } else {
+                    // Field-specific validations
+                    if (fieldId === 'cardNumber') {
+                        const cardDigits = field.value.replace(/\D/g, '');
+                        if (cardDigits.length < 13) {
+                            isValid = false;
+                            field.classList.add('border-red-500');
+                            if (errorElement) errorElement.textContent = 'Card number must have at least 13 digits';
+                        }
+                    } else if (fieldId === 'expiryDate') {
+                        if (!/^\d{2}\/\d{2}$/.test(field.value)) {
+                            isValid = false;
+                            field.classList.add('border-red-500');
+                            if (errorElement) errorElement.textContent = 'Use MM/YY format';
+                        }
+                    } else if (fieldId === 'cvv') {
+                        if (!/^\d{3,4}$/.test(field.value)) {
+                            isValid = false;
+                            field.classList.add('border-red-500');
+                            if (errorElement) errorElement.textContent = 'CVV must be 3 or 4 digits';
+                        }
+                    } else if (fieldId === 'zipCode') {
+                        if (!/^[a-zA-Z0-9\s-]{4,10}$/.test(field.value)) {
+                            isValid = false;
+                            field.classList.add('border-red-500');
+                            if (errorElement) errorElement.textContent = 'Please enter a valid zip code';
+                        }
+                    }
+                }
+            });
+            
+            if (!isValid) {
+                // Scroll to first error
+                const firstError = document.querySelector('.input-field.border-red-500');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstError.focus();
+                }
+                return false;
+            }
+            
+            return true;
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Sélection des éléments
             const cardIcons = document.querySelectorAll('.card-icon');
@@ -757,32 +866,8 @@
                 }
             });
 
-            // Gestion unique de la soumission du formulaire
-            const checkoutForm = document.getElementById('checkoutForm');
-            checkoutForm.addEventListener('submit', function(e) {
-                // Ne soumettre le formulaire que si la validation passe
-                if (!validateFields()) {
-                    e.preventDefault();
-                    // Faire défiler jusqu'au premier champ avec une erreur
-                    const firstError = document.querySelector('.input-field.border-red-500');
-                    if (firstError) {
-                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        firstError.focus();
-                    }
-                } else {
-                    // Afficher l'animation de chargement
-                    loadingOverlay.classList.add('active');
-                    
-                    // Ajouter un petit délai avant la soumission pour montrer l'animation
-                    if (!e.submitter || e.submitter.id === 'placeOrderBtn') {
-                        e.preventDefault();
-                        setTimeout(() => {
-                            console.log('Soumission du formulaire après délai...');
-                            checkoutForm.submit();
-                        }, 800);
-                    }
-                }
-            });
+            // Les fonctions validateAllFields et showLoading gèrent maintenant la soumission du formulaire
+            // Nous n'avons plus besoin de cette logique supplémentaire
             
             // Sélection de la carte de crédit
             cardIcons.forEach(icon => {
@@ -816,85 +901,7 @@
                 });
             }
             
-            // Validation avancée des champs
-            function validateFields() {
-                clearErrors();
-                let isValid = true;
-                const errorMessages = {
-                    fullName: 'Please enter your full name',
-                    address: 'Please enter your address',
-                    city: 'Please enter your city',
-                    zipCode: 'Please enter a valid zip code',
-                    cardNumber: 'Please enter a valid card number',
-                    cardHolder: 'Please enter the card holder name',
-                    expiryDate: 'Please enter a valid expiry date (MM/YY)',
-                    cvv: 'Please enter a valid security code'
-                };
-                
-                // Validation de chaque champ
-                inputFields.forEach(input => {
-                    const fieldId = input.id;
-                    const errorElement = document.getElementById(`${fieldId}-error`);
-                    
-                    if (!input.value.trim()) {
-                        isValid = false;
-                        input.classList.add('border-red-500');
-                        input.classList.add('shake');
-                        
-                        if (errorElement) {
-                            errorElement.textContent = errorMessages[fieldId] || 'This field is required';
-                        }
-                        
-                        setTimeout(() => {
-                            input.classList.remove('shake');
-                        }, 500);
-                    } else {
-                        // Validations spécifiques
-                        if (fieldId === 'cardNumber') {
-                            // Valider que la carte a au moins 13 chiffres (sans les espaces)
-                            const cardDigits = input.value.replace(/\D/g, '');
-                            if (cardDigits.length < 13) {
-                                isValid = false;
-                                input.classList.add('border-red-500');
-                                errorElement.textContent = 'Card number must have at least 13 digits';
-                            }
-                        } else if (fieldId === 'expiryDate') {
-                            // Valider format MM/YY
-                            if (!/^\d{2}\/\d{2}$/.test(input.value)) {
-                                isValid = false;
-                                input.classList.add('border-red-500');
-                                errorElement.textContent = 'Use MM/YY format';
-                            } else {
-                                // Vérifier que la date n'est pas expirée
-                                const [month, year] = input.value.split('/');
-                                const expiryDate = new Date(2000 + parseInt(year), parseInt(month) - 1);
-                                const currentDate = new Date();
-                                
-                                if (expiryDate < currentDate) {
-                                    isValid = false;
-                                    input.classList.add('border-red-500');
-                                    errorElement.textContent = 'Card has expired';
-                                }
-                            }
-                        } else if (fieldId === 'cvv') {
-                            // Valider que CVV contient 3 ou 4 chiffres
-                            if (!/^\d{3,4}$/.test(input.value)) {
-                                isValid = false;
-                                input.classList.add('border-red-500');
-                                errorElement.textContent = 'CVV must be 3 or 4 digits';
-                            }
-                        } else if (fieldId === 'zipCode') {
-                            // Validation simple du code postal (chiffres et lettres)
-                            if (!/^[a-zA-Z0-9\s-]{4,10}$/.test(input.value)) {
-                                isValid = false;
-                                input.classList.add('border-red-500');
-                                errorElement.textContent = 'Please enter a valid zip code';
-                            }
-                        }
-                    }
-                });
-                
-                return isValid;
+            // Nous utilisons maintenant validateAllFields défini plus haut à la place de validateFields
             }
             
             // La gestion du bouton "Place Order" est maintenant entièrement 

@@ -24,8 +24,12 @@ class OrderController extends Controller
         
         // Si l'utilisateur est connecté, vérifier qu'il est autorisé à voir cette commande
         // (Si l'utilisateur n'est pas connecté, on autorise quand même car la commande peut être faite sans compte)
-        if (Auth::check() && Auth::id() !== $order->user_id && !Auth::Utilisateur()->isBibliothecaire()) {
-            abort(403, 'Vous n\'êtes pas autorisé à voir cette commande.');
+        if (Auth::check() && Auth::id() !== $order->user_id) {
+            // Check if user is a bibliothecaire (has admin rights)
+            $user = Auth::user();
+            if (!method_exists($user, 'isBibliothecaire') || !$user->isBibliothecaire()) {
+                abort(403, 'Vous n\'êtes pas autorisé à voir cette commande.');
+            }
         }
         
         return view('client.order.confirmation', compact('order'));

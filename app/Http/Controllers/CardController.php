@@ -31,7 +31,10 @@ class CardController extends Controller
         // Total général
         $total = $subtotal + $tax;
         
-        return view('client.card', compact('cart', 'subtotal', 'tax', 'shipping', 'total'));
+        // Check if the fixed version exists, use it instead
+        $view = file_exists(resource_path('views/client/card_fixed.blade.php')) ? 'client.card_fixed' : 'client.card';
+        
+        return view($view, compact('cart', 'subtotal', 'tax', 'shipping', 'total'));
     }
 
     public function processPayment(Request $request)
