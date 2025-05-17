@@ -108,7 +108,12 @@ Route::middleware(['auth'])
         Route::get('/orders/search', [OrderController::class, 'search'])->name('order.search');
     });
 Route::get('/dashboard', [DashboardBiblioController::class, 'index'])->name('bibliothecaire.dashboard.index');
-Route::get('/articles', [ArticleController::class, 'show'])->name('bibliothecaire.article.index');
+Route::get('/bibliothecaire/article', [App\Http\Controllers\ArticleController::class, 'show'])->name('bibliothecaire.article.index');
+Route::get('/articles', [App\Http\Controllers\ArticleController::class, 'index'])->name('articles.index');
+Route::post('/articles', [App\Http\Controllers\ArticleController::class, 'store'])->name('articles.store');
+Route::put('/articles/{id}', [App\Http\Controllers\ArticleController::class, 'update'])->name('articles.update');
+Route::delete('/articles/{id}', [App\Http\Controllers\ArticleController::class, 'destroy'])->name('articles.destroy');
+Route::get('/api/articles/{id}', [App\Http\Controllers\ArticleController::class, 'getArticle'])->name('api.articles.show');
 Route::get('/livreurs', [LivreurController::class, 'show'])->name('bibliothecaire.livreur.index');
 Route::get('/users', [UserBiblioController::class, 'show'])->name('bibliothecaire.user.index');
 Route::get('/payment', [PaymentBiblioController::class, 'show'])->name('bibliothecaire.payment.show');

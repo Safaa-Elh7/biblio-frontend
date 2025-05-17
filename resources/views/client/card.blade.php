@@ -541,18 +541,6 @@
         .border-red-500 {
             border-color: #ef4444 !important;
         }
-        
-        .error-message {
-            display: block;
-            font-size: 0.75rem;
-            color: #ef4444;
-            margin-top: 0.25rem;
-            transition: all 0.2s ease;
-        }
-        
-        input:focus {
-            outline: none;
-        }
     </style>
 </head>
 <body>
@@ -589,21 +577,8 @@
         <!-- Checkout Title -->
         <h1 class="checkout-title">Checkout</h1>
         
-        <!-- Flash Messages -->
-        @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
-            <span class="block sm:inline">{{ session('error') }}</span>
-        </div>
-        @endif
-        
-        @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
-            <span class="block sm:inline">{{ session('success') }}</span>
-        </div>
-        @endif
-        
         <!-- Checkout Content -->
-        <form id="checkoutForm" method="POST" action="{{ route('client.card.processPayment') }}" onsubmit="return validateAllFields()">
+        <form id="checkoutForm" method="POST" action="{{ route('client.card.processPayment') }}">
             @csrf
             <div class="checkout-container">
                 <!-- Left Side - Shipping Address -->
@@ -616,25 +591,21 @@
                         <label class="input-label">Full name</label>
                         <input type="text" placeholder="Enter your full name" class="input-field" id="fullName" name="fullName">
                         <i class="fas fa-user input-icon"></i>
-                        <span class="error-message text-red-500 text-xs mt-1" id="fullName-error"></span>
                     </div>
                     <div class="input-group">
                         <label class="input-label">Address</label>
                         <input type="text" placeholder="Enter your address" class="input-field" id="address" name="address">
                         <i class="fas fa-home input-icon"></i>
-                        <span class="error-message text-red-500 text-xs mt-1" id="address-error"></span>
                     </div>
                     <div class="input-group">
                         <label class="input-label">City</label>
                         <input type="text" placeholder="Enter your city" class="input-field" id="city" name="city">
                         <i class="fas fa-city input-icon"></i>
-                        <span class="error-message text-red-500 text-xs mt-1" id="city-error"></span>
                     </div>
                     <div class="input-group">
                         <label class="input-label">Zip code</label>
                         <input type="text" placeholder="Enter your zip code" class="input-field" id="zipCode" name="zipCode">
                         <i class="fas fa-map-marker-alt input-icon"></i>
-                        <span class="error-message text-red-500 text-xs mt-1" id="zipCode-error"></span>
                     </div>
                 </div>
                 <!-- Right Side - Payment Information -->
@@ -656,26 +627,22 @@
                             <label class="input-label">Card number</label>
                             <input type="text" placeholder="1234 5678 9565 5555" class="input-field" id="cardNumber" name="cardNumber">
                             <i class="fas fa-credit-card input-icon"></i>
-                            <span class="error-message text-red-500 text-xs mt-1" id="cardNumber-error"></span>
                         </div>
                         <div class="input-group">
                             <label class="input-label">Card holder</label>
                             <input type="text" placeholder="Enter card holder name" class="input-field" id="cardHolder" name="cardHolder">
                             <i class="fas fa-user input-icon"></i>
-                            <span class="error-message text-red-500 text-xs mt-1" id="cardHolder-error"></span>
                         </div>
                         <div class="card-row">
                             <div class="input-group w-1/2 pr-2">
                                 <label class="input-label">Expiry date</label>
                                 <input type="text" placeholder="MM/YY" class="input-field" id="expiryDate" name="expiryDate" maxlength="5">
                                 <i class="fas fa-calendar input-icon"></i>
-                                <span class="error-message text-red-500 text-xs mt-1" id="expiryDate-error"></span>
                             </div>
                             <div class="input-group w-1/2 pl-2">
                                 <label class="input-label">CVV</label>
                                 <input type="text" placeholder="CVV" class="input-field" id="cvv" name="cvv" maxlength="4">
                                 <i class="fas fa-lock input-icon"></i>
-                                <span class="error-message text-red-500 text-xs mt-1" id="cvv-error"></span>
                             </div>
                         </div>
                     </div>
@@ -717,7 +684,7 @@
                     <span>Total</span>
                     <span>{{ $total + $shipping }} Dh</span>
                 </div>
-                <button type="submit" class="place-order-btn" id="placeOrderBtn" onclick="showLoading()">
+                <button type="button" class="place-order-btn" id="placeOrderBtn">
                     Place Order
                 </button>
                 <div class="secure-badge">
@@ -732,102 +699,6 @@
     </div>
 
     <script>
-        // Function to reset all error states
-        function clearErrors() {
-            document.querySelectorAll('.error-message').forEach(error => {
-                error.textContent = '';
-            });
-            
-            document.querySelectorAll('.input-field').forEach(input => {
-                input.classList.remove('border-red-500', 'shake');
-            });
-        }
-        
-        // Function to show loading screen
-        function showLoading() {
-            if (validateAllFields()) {
-                document.getElementById('loadingOverlay').classList.add('active');
-                return true;
-            }
-            return false;
-        }
-        
-        // Function to validate all fields
-        function validateAllFields() {
-            clearErrors();
-            let isValid = true;
-            const requiredFields = document.querySelectorAll('.input-field');
-            const errorMessages = {
-                fullName: 'Please enter your full name',
-                address: 'Please enter your address',
-                city: 'Please enter your city',
-                zipCode: 'Please enter a valid zip code',
-                cardNumber: 'Please enter a valid card number',
-                cardHolder: 'Please enter the card holder name',
-                expiryDate: 'Please enter a valid expiry date (MM/YY)',
-                cvv: 'Please enter a valid security code'
-            };
-            
-            // Basic validation - checking for empty fields
-            requiredFields.forEach(field => {
-                const fieldId = field.id;
-                const errorElement = document.getElementById(`${fieldId}-error`);
-                
-                if (!field.value.trim()) {
-                    field.classList.add('border-red-500', 'shake');
-                    isValid = false;
-                    
-                    if (errorElement) {
-                        errorElement.textContent = errorMessages[fieldId] || 'This field is required';
-                    }
-                    
-                    setTimeout(() => {
-                        field.classList.remove('shake');
-                    }, 500);
-                } else {
-                    // Field-specific validations
-                    if (fieldId === 'cardNumber') {
-                        const cardDigits = field.value.replace(/\D/g, '');
-                        if (cardDigits.length < 13) {
-                            isValid = false;
-                            field.classList.add('border-red-500');
-                            if (errorElement) errorElement.textContent = 'Card number must have at least 13 digits';
-                        }
-                    } else if (fieldId === 'expiryDate') {
-                        if (!/^\d{2}\/\d{2}$/.test(field.value)) {
-                            isValid = false;
-                            field.classList.add('border-red-500');
-                            if (errorElement) errorElement.textContent = 'Use MM/YY format';
-                        }
-                    } else if (fieldId === 'cvv') {
-                        if (!/^\d{3,4}$/.test(field.value)) {
-                            isValid = false;
-                            field.classList.add('border-red-500');
-                            if (errorElement) errorElement.textContent = 'CVV must be 3 or 4 digits';
-                        }
-                    } else if (fieldId === 'zipCode') {
-                        if (!/^[a-zA-Z0-9\s-]{4,10}$/.test(field.value)) {
-                            isValid = false;
-                            field.classList.add('border-red-500');
-                            if (errorElement) errorElement.textContent = 'Please enter a valid zip code';
-                        }
-                    }
-                }
-            });
-            
-            if (!isValid) {
-                // Scroll to first error
-                const firstError = document.querySelector('.input-field.border-red-500');
-                if (firstError) {
-                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    firstError.focus();
-                }
-                return false;
-            }
-            
-            return true;
-        }
-        
         document.addEventListener('DOMContentLoaded', function() {
             // Sélection des éléments
             const cardIcons = document.querySelectorAll('.card-icon');
@@ -865,9 +736,6 @@
                     e.target.value = value;
                 }
             });
-
-            // Les fonctions validateAllFields et showLoading gèrent maintenant la soumission du formulaire
-            // Nous n'avons plus besoin de cette logique supplémentaire
             
             // Sélection de la carte de crédit
             cardIcons.forEach(icon => {
@@ -890,23 +758,39 @@
                 });
             });
             
-            // Réinitialiser les messages d'erreur
-            function clearErrors() {
-                document.querySelectorAll('.error-message').forEach(error => {
-                    error.textContent = '';
+            // Validation de base des champs
+            function validateFields() {
+                let isValid = true;
+                
+                inputFields.forEach(input => {
+                    if (!input.value.trim()) {
+                        isValid = false;
+                        input.classList.add('border-red-500');
+                        
+                        // Ajouter un effet de secousse
+                        input.classList.add('shake');
+                        setTimeout(() => {
+                            input.classList.remove('shake');
+                        }, 500);
+                    } else {
+                        input.classList.remove('border-red-500');
+                    }
                 });
-                document.querySelectorAll('.input-field').forEach(input => {
-                    input.classList.remove('border-red-500');
-                    input.classList.remove('shake');
-                });
+                
+                return isValid;
             }
             
-            // Nous utilisons maintenant validateAllFields défini plus haut à la place de validateFields
-            }
-            
-            // La gestion du bouton "Place Order" est maintenant entièrement 
-            // prise en charge par l'écouteur submit du formulaire
-            // Nous n'avons plus besoin d'un écouteur click séparé pour le bouton
+            // Traitement de la commande
+            placeOrderBtn.addEventListener('click', function() {
+                if (validateFields()) {
+                    // Afficher l'animation de chargement
+                    loadingOverlay.classList.add('active');
+                    // Soumettre le formulaire
+                    document.getElementById('checkoutForm').submit();
+                } else {
+                    alert('Veuillez remplir tous les champs obligatoires.');
+                }
+            });
         });
     </script>
 </body>

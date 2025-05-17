@@ -35,8 +35,6 @@ return new class extends Migration
             $table->string('name');
             $table->decimal('price', 10, 2);
             $table->integer('quantity');
-            $table->string('image')->nullable(); // Ajout du champ pour stocker l'image
-            $table->string('author')->nullable(); // Ajout du champ pour stocker l'auteur
             $table->timestamps();
         });
     }

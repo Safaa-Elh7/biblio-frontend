@@ -417,7 +417,7 @@
             <div class="space-y-2">
                 @foreach($order->items as $item)
                     <div class="item-row">
-                        <img src="@bookImage($item->image)" alt="{{ $item->name }}" class="item-image">
+                        <img src="{{$item['image']}}" alt="{{ $item->name }}" class="item-image">
                         
                         <div class="item-details">
                             <div class="item-title">{{ $item->name }}</div>
