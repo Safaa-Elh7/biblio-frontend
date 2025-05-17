@@ -14,9 +14,33 @@ class LivreurController extends Controller
     /**
      * Affiche le tableau de bord du livreur connecté
      */
+    /**
+     * Affiche le tableau de bord du livreur connecté
+     */
     public function index()
     {
-        return view('livreur.dashboard');
+        // Récupérer le livreur connecté
+        $user = Auth::user();
+        $livreur = Livreur::with('user')->where('id_livreur', $user->id_users)->first();
+        
+        if (!$livreur) {
+            return redirect()->route('welcome')->with('error', 'Profil de livreur non trouvé');
+        }
+        
+        // Récupérer les livraisons du livreur
+        $livraisons = Livraison::where('id_livreur', $livreur->id_livreur)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        // Statistiques
+        $stats = [
+            'total_livraisons' => $livraisons->count(),
+            'livraisons_en_cours' => $livraisons->where('statut', 'en_cours')->count(),
+            'livraisons_terminees' => $livraisons->where('statut', 'livré')->count(),
+            'note_moyenne' => $livreur->rating ?? 0
+        ];
+        
+        return view('livreur.dashboard', compact('livreur', 'livraisons', 'stats'));
     }
 
     /**

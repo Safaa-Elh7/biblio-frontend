@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('id_livreur')->primary();
             $table->string('zone_livraison', 100)->nullable();
             $table->string('moyen_transport', 100)->nullable();
+            $table->boolean('disponibilite')->default(true);
+            $table->decimal('rating', 3, 2)->nullable()->default(0.00);
             $table->timestamps();
     
             // FK vers personne.id_personne
