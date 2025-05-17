@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
-    protected $apiUrl = 'http://localhost:8080/api/articles';
+    protected $apiUrl = 'http://localhost:8081/api/articles';
 
     public function show()
     {
