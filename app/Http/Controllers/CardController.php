@@ -31,7 +31,10 @@ class CardController extends Controller
         // Total général
         $total = $subtotal + $tax;
         
-        return view('client.card', compact('cart', 'subtotal', 'tax', 'shipping', 'total'));
+        // Check if the fixed version exists, use it instead
+        $view = file_exists(resource_path('views/client/card.blade.php')) ? 'client.card' : 'client.card';
+        
+        return view($view, compact('cart', 'subtotal', 'tax', 'shipping', 'total'));
     }
 
     public function processPayment(Request $request)
@@ -65,7 +68,7 @@ class CardController extends Controller
         $tax = round($subtotal * 0.04);
         $total = $subtotal + $tax;
         
-        try {
+        
             // Créer une nouvelle commande en base de données
             $order = new Order();
             $order->user_id = Auth::id() ?? null; // Si l'utilisateur est connecté
@@ -104,10 +107,6 @@ class CardController extends Controller
             return redirect()->route('client.order.confirmation', ['order_number' => $order->order_number])
                 ->with('success', 'Votre commande a été traitée avec succès!');
                 
-        } catch (\Exception $e) {
-            // En cas d'erreur
-            return redirect()->back()
-                ->with('error', 'Une erreur est survenue lors du traitement de votre commande: ' . $e->getMessage());
-        }
+        
     }
 }

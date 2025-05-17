@@ -1,8 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>MyBookSpace - Gestion des Articles</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -111,7 +113,7 @@
       <div class="py-4">
         <ul>
           <li class="px-4 py-2">
-            <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.dashboard.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-home mr-3"></i>
               <span>Accueil</span>
             </a>
@@ -123,7 +125,7 @@
             </a>
           </li>
           <li class="px-4 py-2">
-            <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.livreur.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-truck mr-3"></i>
               <span>Livreurs</span>
             </a>
@@ -135,7 +137,7 @@
             </a>
           </li>
           <li class="px-4 py-2">
-            <a href="#" class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.article.index') }}" class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-book mr-3"></i>
               <span>Articles</span>
             </a>
@@ -308,19 +310,20 @@
       </button>
       <h2 class="text-2xl font-semibold text-gray-800 mb-6">Ajouter un article</h2>
       
-      <form id="addArticleForm" class="space-y-4">
+      <form id="addArticleForm" action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+        @csrf
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label for="titre" class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
-            <input type="text" id="titre" name="titre" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+            <input type="text" id="titre" name="titre" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
           </div>
           <div>
             <label for="auteur" class="block text-sm font-medium text-gray-700 mb-1">Auteur</label>
-            <input type="text" id="auteur" name="auteur" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+            <input type="text" id="auteur" name="auteur" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
           </div>
           <div>
             <label for="id_categorie" class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
-            <select id="id_categorie" name="id_categorie" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+            <select id="id_categorie" name="id_categorie" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
               <option value="">Sélectionner une catégorie</option>
               <option value="1">Fiction</option>
               <option value="2">Science-fiction</option>
@@ -333,15 +336,15 @@
           </div>
           <div>
             <label for="annee_pub" class="block text-sm font-medium text-gray-700 mb-1">Année de publication</label>
-            <input type="number" id="annee_pub" name="annee_pub" min="1000" max="2099" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+            <input type="number" id="annee_pub" name="annee_pub" min="1000" max="2099" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
           </div>
           <div>
             <label for="isbn" class="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
-            <input type="text" id="isbn" name="isbn" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+            <input type="text" id="isbn" name="isbn" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
           </div>
           <div>
             <label for="langue" class="block text-sm font-medium text-gray-700 mb-1">Langue</label>
-            <select id="langue" name="langue" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+            <select id="langue" name="langue" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
               <option value="">Sélectionner une langue</option>
               <option value="Français">Français</option>
               <option value="Anglais">Anglais</option>
@@ -353,19 +356,19 @@
           </div>
           <div>
             <label for="qte" class="block text-sm font-medium text-gray-700 mb-1">Quantité en stock</label>
-            <input type="number" id="qte" name="qte" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+            <input type="number" id="qte" name="qte" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
           </div>
           <div>
             <label for="prix_emprunt" class="block text-sm font-medium text-gray-700 mb-1">Prix d'emprunt</label>
-            <input type="number" id="prix_emprunt" name="prix_emprunt" min="0" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+            <input type="number" id="prix_emprunt" name="prix_emprunt" min="0" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
           </div>
           <div class="md:col-span-2">
-            <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Image (URL)</label>
-            <input type="text" id="image" name="image" placeholder="https://example.com/image.jpg" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+            <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Image</label>
+            <input type="file" id="image" name="image" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" accept="image/*">
           </div>
           <div class="md:col-span-2">
-            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea id="description" name="description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+            <label for="contenu" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea id="contenu" name="contenu" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required></textarea>
           </div>
         </div>
         
@@ -381,6 +384,8 @@
     </div>
   </div>
 
+  <!-- Edit Article Modal (will be created dynamically) -->
+
   <!-- JavaScript -->
   <script>
     // Wait for DOM to be fully loaded
@@ -388,178 +393,8 @@
       // Create logo
       createLogo();
 
-      // Sample data for articles
-      const articles = [
-        {
-          id: 1,
-          id_article: 1,
-          titre: "Le Petit Prince",
-          auteur: "Antoine de Saint-Exupéry",
-          genre: "Fiction",
-          id_categorie: 1,
-          annee_pub: 1943,
-          isbn: "978-2-07-040850-4",
-          qte: 15,
-          prix_emprunt: 2.50,
-          image: "petit-prince.jpg",
-          description: "Un récit poétique et philosophique sous l'apparence d'un conte pour enfants.",
-          langue: "Français",
-          loans: 120,
-        },
-        {
-          id: 2,
-          id_article: 2,
-          titre: "1984",
-          auteur: "George Orwell",
-          genre: "Science-fiction",
-          id_categorie: 2,
-          annee_pub: 1949,
-          isbn: "978-2-07-036822-8",
-          qte: 8,
-          prix_emprunt: 3.00,
-          image: "1984.jpg",
-          description: "Une dystopie politique et sociale décrivant un futur où la société est soumise à une dictature totalitaire.",
-          langue: "Anglais",
-          loans: 95,
-        },
-        {
-          id: 3,
-          id_article: 3,
-          titre: "Harry Potter à l'école des sorciers",
-          auteur: "J.K. Rowling",
-          genre: "Fantasy",
-          id_categorie: 3,
-          annee_pub: 1997,
-          isbn: "978-2-07-054090-1",
-          qte: 20,
-          prix_emprunt: 3.50,
-          image: "harry-potter.jpg",
-          description: "Le premier tome des aventures du jeune sorcier Harry Potter.",
-          langue: "Anglais",
-          loans: 200,
-        },
-        {
-          id: 4,
-          id_article: 4,
-          titre: "L'Étranger",
-          auteur: "Albert Camus",
-          genre: "Roman",
-          id_categorie: 4,
-          annee_pub: 1942,
-          isbn: "978-2-07-036002-4",
-          qte: 12,
-          prix_emprunt: 2.00,
-          image: "etranger.jpg",
-          description: "Un roman existentialiste qui explore l'absurdité de la vie humaine.",
-          langue: "Français",
-          loans: 85,
-        },
-        {
-          id: 5,
-          id_article: 5,
-          titre: "Les Misérables",
-          auteur: "Victor Hugo",
-          genre: "Roman historique",
-          id_categorie: 5,
-          annee_pub: 1862,
-          isbn: "978-2-253-09634-8",
-          qte: 5,
-          prix_emprunt: 4.00,
-          image: "miserables.jpg",
-          description: "Un roman historique, social et philosophique dans lequel on retrouve les idéaux du romantisme.",
-          langue: "Français",
-          loans: 60,
-        },
-        {
-          id: 6,
-          id_article: 6,
-          titre: "Voyage au centre de la Terre",
-          auteur: "Jules Verne",
-          genre: "Science-fiction",
-          id_categorie: 2,
-          annee_pub: 1864,
-          isbn: "978-2-01-002461-3",
-          qte: 10,
-          prix_emprunt: 2.75,
-          image: "voyage-centre-terre.jpg",
-          description: "Un roman d'aventures et de science-fiction relatant le voyage de trois personnages au centre de la Terre.",
-          langue: "Français",
-          loans: 75,
-        },
-        {
-          id: 7,
-          id_article: 7,
-          titre: "Le Comte de Monte-Cristo",
-          auteur: "Alexandre Dumas",
-          genre: "Roman historique",
-          id_categorie: 5,
-          annee_pub: 1844,
-          isbn: "978-2-07-041776-6",
-          qte: 7,
-          prix_emprunt: 3.25,
-          image: "monte-cristo.jpg",
-          description: "Un roman d'aventures sur le thème de la vengeance et de la justice.",
-          langue: "Français",
-          loans: 110,
-        },
-        {
-          id: 8,
-          id_article: 8,
-          titre: "Orgueil et Préjugés",
-          auteur: "Jane Austen",
-          genre: "Roman",
-          id_categorie: 4,
-          annee_pub: 1813,
-          isbn: "978-2-07-037689-6",
-          qte: 9,
-          prix_emprunt: 2.50,
-          image: "orgueil-prejuges.jpg",
-          description: "Un roman qui dépeint avec humour et finesse la société anglaise du début du XIXe siècle.",
-          langue: "Anglais",
-          loans: 88,
-        },
-        {
-          id: 9,
-          id_article: 9,
-          titre: "Don Quichotte",
-          auteur: "Miguel de Cervantes",
-          genre: "Roman",
-          id_categorie: 4,
-          annee_pub: 1605,
-          isbn: "978-2-07-011669-5",
-          qte: 6,
-          prix_emprunt: 3.50,
-          image: "don-quichotte.jpg",
-          description: "Un roman qui parodie les récits chevaleresques et explore les thèmes de l'idéalisme et de la réalité.",
-          langue: "Espagnol",
-          loans: 65,
-        },
-        {
-          id: 10,
-          id_article: 10,
-          titre: "Guerre et Paix",
-          auteur: "Léon Tolstoï",
-          genre: "Roman historique",
-          id_categorie: 5,
-          annee_pub: 1869,
-          isbn: "978-2-07-010361-9",
-          qte: 4,
-          prix_emprunt: 4.50,
-          image: "guerre-paix.jpg",
-          description: "Une fresque historique qui dépeint la société russe pendant les guerres napoléoniennes.",
-          langue: "Russe",
-          loans: 50,
-        },
-      ];
-
-      // Pagination variables
-      let currentPage = 1;
-      const itemsPerPage = 5;
-      const totalPages = Math.ceil(articles.length / itemsPerPage);
-
-      // Initialize the table
-      updateTable();
-      updatePagination();
+      // Fetch articles from API
+      fetchArticles();
 
       // Mobile sidebar toggle
       const sidebarToggle = document.getElementById("sidebarToggle");
@@ -593,6 +428,12 @@
           }, 300);
         }
       });
+
+      // Pagination variables
+      let currentPage = 1;
+      const itemsPerPage = 5;
+      let articles = [];
+      let totalPages = 0;
 
       // Pagination event listeners
       document.getElementById("prevPage").addEventListener("click", () => {
@@ -648,43 +489,6 @@
         }
       });
 
-      // Form submission
-      addArticleForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        // Get form values
-        const newArticle = {
-          id: articles.length + 1,
-          id_article: articles.length + 1,
-          titre: document.getElementById("titre").value,
-          auteur: document.getElementById("auteur").value,
-          id_categorie: document.getElementById("id_categorie").value,
-          genre: document.getElementById("id_categorie").options[document.getElementById("id_categorie").selectedIndex].text,
-          annee_pub: Number.parseInt(document.getElementById("annee_pub").value),
-          isbn: document.getElementById("isbn").value,
-          langue: document.getElementById("langue").value,
-          qte: Number.parseInt(document.getElementById("qte").value),
-          prix_emprunt: Number.parseFloat(document.getElementById("prix_emprunt").value),
-          image: document.getElementById("image").value,
-          description: document.getElementById("description").value,
-          loans: 0 // Nouvelle entrée, pas encore d'emprunts
-        };
-
-        // Add to articles array
-        articles.unshift(newArticle);
-
-        // Update table and pagination
-        currentPage = 1;
-        updateTable();
-        updatePagination();
-
-        // Close modal
-        closeModalFunction();
-
-        // Show success notification
-        showNotification("Article ajouté avec succès!");
-      });
-
       // Search functionality
       const searchInput = document.querySelector(".search-input");
       searchInput.addEventListener("input", () => {
@@ -692,6 +496,23 @@
         updateTable();
         updatePagination();
       });
+
+      // Fetch articles from API
+      async function fetchArticles() {
+        try {
+          const response = await fetch('{{ route("articles.index") }}');
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          articles = await response.json();
+          totalPages = Math.ceil(articles.length / itemsPerPage);
+          updateTable();
+          updatePagination();
+        } catch (error) {
+          console.error('Error fetching articles:', error);
+          showNotification("Erreur lors du chargement des articles", "error");
+        }
+      }
 
       // Function to update the table based on current page and search
       function updateTable() {
@@ -724,21 +545,21 @@
           row.className = "table-row border-b hover:bg-gray-50";
 
           row.innerHTML = `
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${article.titre}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.auteur}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.genre}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.isbn}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.qte}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.loans}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${article.titre || ''}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.auteur || ''}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.genre || ''}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.isbn || ''}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.qte || 0}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.loans || 0}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               <div class="flex space-x-2">
-                <button class="action-button bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="editArticle(${article.id_article})">
+                <button class="action-button bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="editArticle(${article.id})">
                   <i class="fas fa-edit mr-1"></i> Modifier
                 </button>
-                <button class="action-button bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="deleteArticle(${article.id_article})">
+                <button class="action-button bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="deleteArticle(${article.id})">
                   <i class="fas fa-trash mr-1"></i> Supprimer
                 </button>
-                <button class="action-button bg-gray-600 hover:bg-gray-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="viewArticleDetails(${article.id_article})">
+                <button class="action-button bg-gray-600 hover:bg-gray-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="viewArticleDetails(${article.id})">
                   <i class="fas fa-info-circle mr-1"></i> Détail
                 </button>
               </div>
@@ -850,283 +671,338 @@
       }
     });
 
+    // CSRF token for AJAX requests
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
     // Global functions for table actions
     function editArticle(id) {
-      const article = articles.find(a => a.id_article === id);
-      
-      if (article) {
-        // Créer une modale pour l'édition
-        const modal = document.createElement('div');
-        modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
-        
-        // Fonction pour gérer les URLs d'images de manière cohérente
-        function getImageUrl(imagePath, defaultUrl = 'https://via.placeholder.com/300x400?text=Livre') {
-          if (!imagePath) return defaultUrl;
-          if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-            return imagePath;
+      // Fetch article details
+      fetch(`/api/articles/${id}`)
+        .then(response => response.json())
+        .then(article => {
+          // Create edit modal
+          const modal = document.createElement('div');
+          modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
+          
+          // Function to get image URL
+          function getImageUrl(imagePath, defaultUrl = 'https://via.placeholder.com/300x400?text=Livre') {
+            if (!imagePath) return defaultUrl;
+            if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+              return imagePath;
+            }
+            return `/storage/${imagePath.replace(/^\/+/, '')}`;
           }
-          return `/storage/${imagePath.replace(/^\/+/, '')}`;
-        }
-        
-        const imageUrl = getImageUrl(article.image);
-        
-        modal.innerHTML = `
-          <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-screen overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
-              <h3 class="text-xl font-semibold text-gray-800">Modifier le livre</h3>
-              <button id="closeEditModalBtn" class="text-gray-400 hover:text-gray-500">
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
-            
-            <div class="p-6">
-              <form id="editArticleForm">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div class="col-span-1">
-                    <div class="mb-4">
-                      <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
-                      <input type="text" id="edit-titre" value="${article.titre}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                    </div>
-                    
-                    <div class="mb-4">
-                      <label class="block text-sm font-medium text-gray-700 mb-1">Auteur</label>
-                      <input type="text" id="edit-auteur" value="${article.auteur}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                      <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Genre</label>
-                        <input type="text" id="edit-genre" value="${article.genre}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                      </div>
-                      <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
-                        <input type="text" id="edit-isbn" value="${article.isbn}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                      </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-3 gap-4 mb-4">
-                      <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
-                        <input type="number" id="edit-qte" value="${article.qte}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                      </div>
-                      <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Prix</label>
-                        <input type="number" step="0.01" id="edit-prix" value="${article.prix_emprunt}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                      </div>
-                      <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Année</label>
-                        <input type="number" id="edit-annee" value="${article.annee_pub}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                      </div>
-                    </div>
-                    
-                    <div class="mb-4">
-                      <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                      <textarea id="edit-description" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="5">${article.description || ''}</textarea>
-                    </div>
-                  </div>
+          
+          const imageUrl = getImageUrl(article.image);
+          
+          modal.innerHTML = `
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-screen overflow-y-auto">
+              <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
+                <h3 class="text-xl font-semibold text-gray-800">Modifier le livre</h3>
+                <button id="closeEditModalBtn" class="text-gray-400 hover:text-gray-500">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              
+              <div class="p-6">
+                <form id="editArticleForm" action="/articles/${id}" method="POST" enctype="multipart/form-data">
+                  <input type="hidden" name="_token" value="${csrfToken}">
+                  <input type="hidden" name="_method" value="PUT">
+                  <input type="hidden" name="id" value="${id}">
                   
-                  <div class="col-span-1">
-                    <div class="mb-4">
-                      <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
-                      <div class="mt-1 flex flex-col items-center justify-center">
-                        <img src="${imageUrl}" alt="${article.titre}" class="w-full max-h-60 object-cover rounded-lg mb-4">
-                        <input type="file" id="edit-image-input" class="hidden">
-                        <label for="edit-image-input" class="cursor-pointer bg-white text-primary hover:text-primary-dark py-2 px-4 border border-primary rounded-md transition duration-200">
-                          <i class="fas fa-upload mr-2"></i> Changer l'image
-                        </label>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="col-span-1">
+                      <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+                        <input type="text" id="edit-titre" name="titre" value="${article.titre || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                      </div>
+                      
+                      <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Auteur</label>
+                        <input type="text" id="edit-auteur" name="auteur" value="${article.auteur || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                      </div>
+                      
+                      <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <label class="block text-sm font-medium text-gray-700 mb-1">Genre</label>
+                          <input type="text" id="edit-genre" name="genre" value="${article.genre || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        <div>
+                          <label class="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
+                          <input type="text" id="edit-isbn" name="isbn" value="${article.isbn || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                      </div>
+                      
+                      <div class="grid grid-cols-3 gap-4 mb-4">
+                        <div>
+                          <label class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                          <input type="number" id="edit-qte" name="qte" value="${article.qte || 0}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        <div>
+                          <label class="block text-sm font-medium text-gray-700 mb-1">Prix</label>
+                          <input type="number" step="0.01" id="edit-prix" name="prix_emprunt" value="${article.prix_emprunt || 0}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        <div>
+                          <label class="block text-sm font-medium text-gray-700 mb-1">Année</label>
+                          <input type="number" id="edit-annee" name="annee_pub" value="${article.annee_pub || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                      </div>
+                      
+                      <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <textarea id="edit-contenu" name="contenu" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="5">${article.contenu || ''}</textarea>
                       </div>
                     </div>
                     
-                    <div class="mb-4">
-                      <label class="block text-sm font-medium text-gray-700 mb-1">Langue</label>
-                      <select id="edit-langue" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        <option value="Français" ${article.langue === 'Français' ? 'selected' : ''}>Français</option>
-                        <option value="Anglais" ${article.langue === 'Anglais' ? 'selected' : ''}>Anglais</option>
-                        <option value="Espagnol" ${article.langue === 'Espagnol' ? 'selected' : ''}>Espagnol</option>
-                        <option value="Allemand" ${article.langue === 'Allemand' ? 'selected' : ''}>Allemand</option>
-                        <option value="Italien" ${article.langue === 'Italien' ? 'selected' : ''}>Italien</option>
-                        <option value="Arabe" ${article.langue === 'Arabe' ? 'selected' : ''}>Arabe</option>
-                        <option value="Autre" ${!['Français', 'Anglais', 'Espagnol', 'Allemand', 'Italien', 'Arabe'].includes(article.langue) ? 'selected' : ''}>Autre</option>
-                      </select>
-                    </div>
-                    
-                    <div class="mb-4">
-                      <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
-                      <select id="edit-categorie" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        <option value="1" ${article.id_categorie === 1 ? 'selected' : ''}>Fiction</option>
-                        <option value="2" ${article.id_categorie === 2 ? 'selected' : ''}>Science-fiction</option>
-                        <option value="3" ${article.id_categorie === 3 ? 'selected' : ''}>Fantasy</option>
-                        <option value="4" ${article.id_categorie === 4 ? 'selected' : ''}>Roman</option>
-                        <option value="5" ${article.id_categorie === 5 ? 'selected' : ''}>Roman historique</option>
-                      </select>
+                    <div class="col-span-1">
+                      <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
+                        <div class="mt-1 flex flex-col items-center justify-center">
+                          <img src="${imageUrl}" alt="${article.titre}" class="w-full max-h-60 object-cover rounded-lg mb-4">
+                          <input type="file" id="edit-image" name="image" class="hidden">
+                          <label for="edit-image" class="cursor-pointer bg-white text-primary hover:text-primary-dark py-2 px-4 border border-primary rounded-md transition duration-200">
+                            <i class="fas fa-upload mr-2"></i> Changer l'image
+                          </label>
+                        </div>
+                      </div>
+                      
+                      <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Langue</label>
+                        <select id="edit-langue" name="langue" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                          <option value="Français" ${article.langue === 'Français' ? 'selected' : ''}>Français</option>
+                          <option value="Anglais" ${article.langue === 'Anglais' ? 'selected' : ''}>Anglais</option>
+                          <option value="Espagnol" ${article.langue === 'Espagnol' ? 'selected' : ''}>Espagnol</option>
+                          <option value="Allemand" ${article.langue === 'Allemand' ? 'selected' : ''}>Allemand</option>
+                          <option value="Italien" ${article.langue === 'Italien' ? 'selected' : ''}>Italien</option>
+                          <option value="Arabe" ${article.langue === 'Arabe' ? 'selected' : ''}>Arabe</option>
+                          <option value="Autre" ${!['Français', 'Anglais', 'Espagnol', 'Allemand', 'Italien', 'Arabe'].includes(article.langue) ? 'selected' : ''}>Autre</option>
+                        </select>
+                      </div>
+                      
+                      <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                        <select id="edit-categorie" name="id_categorie" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                          <option value="1" ${article.id_categorie == 1 ? 'selected' : ''}>Fiction</option>
+                          <option value="2" ${article.id_categorie == 2 ? 'selected' : ''}>Science-fiction</option>
+                          <option value="3" ${article.id_categorie == 3 ? 'selected' : ''}>Fantasy</option>
+                          <option value="4" ${article.id_categorie == 4 ? 'selected' : ''}>Roman</option>
+                          <option value="5" ${article.id_categorie == 5 ? 'selected' : ''}>Roman historique</option>
+                          <option value="6" ${article.id_categorie == 6 ? 'selected' : ''}>Biographie</option>
+                          <option value="7" ${article.id_categorie == 7 ? 'selected' : ''}>Poésie</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </form>
+                
+                  <div class="border-t border-gray-200 pt-4 mt-4 flex justify-end">
+                    <button type="submit" id="saveArticleBtn" class="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded transition duration-200 mr-2">
+                      <i class="fas fa-save mr-2"></i> Enregistrer
+                    </button>
+                    <button type="button" id="closeEditFormBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded transition duration-200">
+                      Annuler
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
+          `;
+          
+          document.body.appendChild(modal);
+          
+          // Event handlers
+          document.getElementById('closeEditModalBtn').addEventListener('click', () => {
+            document.body.removeChild(modal);
+          });
+          
+          document.getElementById('closeEditFormBtn').addEventListener('click', () => {
+            document.body.removeChild(modal);
+          });
+          
+          // Image preview
+          const imageInput = document.getElementById('edit-image');
+          imageInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                const imgElement = modal.querySelector('img');
+                imgElement.src = event.target.result;
+              };
+              reader.readAsDataURL(e.target.files[0]);
+            }
+          });
+          
+          // Form submission
+          document.getElementById('editArticleForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            <div class="border-t border-gray-200 px-6 py-4 flex justify-end">
-              <button id="saveArticleBtn" class="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded transition duration-200 mr-2">
-                <i class="fas fa-save mr-2"></i> Enregistrer
-              </button>
-              <button id="closeEditFormBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded transition duration-200">
-                Annuler
-              </button>
-            </div>
-          </div>
-        `;
-        
-        document.body.appendChild(modal);
-        
-        // Gestion des événements
-        document.getElementById('closeEditModalBtn').addEventListener('click', () => {
-          document.body.removeChild(modal);
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+              method: 'POST',
+              body: formData,
+              headers: {
+                'X-CSRF-TOKEN': csrfToken,
+              }
+            })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+            .then(data => {
+              document.body.removeChild(modal);
+              showNotification("Article modifié avec succès!");
+              // Refresh the articles list
+              fetchArticles();
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              showNotification("Erreur lors de la modification de l'article", "error");
+            });
+          });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showNotification("Erreur lors du chargement des détails de l'article", "error");
         });
-        
-        document.getElementById('closeEditFormBtn').addEventListener('click', () => {
-          document.body.removeChild(modal);
-        });
-        
-        document.getElementById('saveArticleBtn').addEventListener('click', () => {
-          // Dans une application réelle, vous enverriez ces données au serveur
-          showNotification("Modifications enregistrées pour l'article #" + id);
-          document.body.removeChild(modal);
-        });
-        
-        // Prévisualisation de l'image
-        const imageInput = document.getElementById('edit-image-input');
-        imageInput.addEventListener('change', (e) => {
-          if (e.target.files && e.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-              const imgElement = e.target.previousElementSibling;
-              imgElement.src = event.target.result;
-            };
-            reader.readAsDataURL(e.target.files[0]);
-          }
-        });
-        
-      } else {
-        showNotification("Article non trouvé!");
-      }
     }
 
     function deleteArticle(id) {
       if (confirm("Êtes-vous sûr de vouloir supprimer cet article?")) {
-        showNotification("Article #" + id + " supprimé avec succès!");
-        // In a real application, you would remove the article from the array and update the table
+        fetch(`/articles/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-TOKEN': csrfToken,
+            'Content-Type': 'application/json'
+          },
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          showNotification("Article supprimé avec succès!");
+          // Refresh the articles list
+          fetchArticles();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showNotification("Erreur lors de la suppression de l'article", "error");
+        });
       }
     }
 
     function viewArticleDetails(id) {
-      const article = articles.find(a => a.id_article === id);
-      
-      if (article) {
-        // Créer une modale pour les détails
-        const modal = document.createElement('div');
-        modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
-        
-        // Fonction pour gérer les URLs d'images de manière cohérente
-        function getImageUrl(imagePath, defaultUrl = 'https://via.placeholder.com/300x400?text=Livre') {
-          if (!imagePath) return defaultUrl;
-          if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-            return imagePath;
+      // Fetch article details
+      fetch(`/api/articles/${id}`)
+        .then(response => response.json())
+        .then(article => {
+          // Create details modal
+          const modal = document.createElement('div');
+          modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
+          
+          // Function to get image URL
+          function getImageUrl(imagePath, defaultUrl = 'https://via.placeholder.com/300x400?text=Livre') {
+            if (!imagePath) return defaultUrl;
+            if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+              return imagePath;
+            }
+            return `/storage/${imagePath.replace(/^\/+/, '')}`;
           }
-          return `/storage/${imagePath.replace(/^\/+/, '')}`;
-        }
-        
-        const imageUrl = getImageUrl(article.image);
-        
-        // Contenu de la modale
-        modal.innerHTML = `
-          <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-screen overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
-              <h3 class="text-xl font-semibold text-gray-800">Détails du livre</h3>
-              <button id="closeModalBtn" class="text-gray-400 hover:text-gray-500">
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
-            
-            <div class="p-6">
-              <div class="flex flex-col md:flex-row gap-6">
-                <div class="w-full md:w-1/3">
-                  <img src="${imageUrl}" alt="${article.titre}" class="rounded-lg shadow-md w-full">
-                </div>
-                
-                <div class="flex-1">
-                  <h2 class="text-2xl font-semibold mb-4">${article.titre}</h2>
-                  
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                      <p class="text-sm text-gray-600">Auteur</p>
-                      <p class="font-medium">${article.auteur}</p>
-                    </div>
-                    <div>
-                      <p class="text-sm text-gray-600">Genre</p>
-                      <p class="font-medium">${article.genre}</p>
-                    </div>
-                    <div>
-                      <p class="text-sm text-gray-600">Année de publication</p>
-                      <p class="font-medium">${article.annee_pub}</p>
-                    </div>
-                    <div>
-                      <p class="text-sm text-gray-600">Langue</p>
-                      <p class="font-medium">${article.langue}</p>
-                    </div>
-                    <div>
-                      <p class="text-sm text-gray-600">ISBN</p>
-                      <p class="font-medium">${article.isbn}</p>
-                    </div>
-                    <div>
-                      <p class="text-sm text-gray-600">Stock disponible</p>
-                      <p class="font-medium">${article.qte}</p>
-                    </div>
-                    <div>
-                      <p class="text-sm text-gray-600">Prix d'emprunt</p>
-                      <p class="font-medium">${article.prix_emprunt} Dh</p>
-                    </div>
-                    <div>
-                      <p class="text-sm text-gray-600">Nombre d'emprunts</p>
-                      <p class="font-medium">${article.loans}</p>
-                    </div>
+          
+          const imageUrl = getImageUrl(article.image);
+          
+          // Modal content
+          modal.innerHTML = `
+            <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-screen overflow-y-auto">
+              <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
+                <h3 class="text-xl font-semibold text-gray-800">Détails du livre</h3>
+                <button id="closeModalBtn" class="text-gray-400 hover:text-gray-500">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              
+              <div class="p-6">
+                <div class="flex flex-col md:flex-row gap-6">
+                  <div class="w-full md:w-1/3">
+                    <img src="${imageUrl}" alt="${article.titre}" class="rounded-lg shadow-md w-full">
                   </div>
                   
-                  <div class="mb-6">
-                    <p class="text-sm text-gray-600 mb-1">Description</p>
-                    <p class="bg-gray-50 p-3 rounded-md">${article.description || 'Aucune description disponible.'}</p>
+                  <div class="flex-1">
+                    <h2 class="text-2xl font-semibold mb-4">${article.titre || ''}</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                      <div>
+                        <p class="text-sm text-gray-600">Auteur</p>
+                        <p class="font-medium">${article.auteur || ''}</p>
+                      </div>
+                      <div>
+                        <p class="text-sm text-gray-600">Genre</p>
+                        <p class="font-medium">${article.genre || ''}</p>
+                      </div>
+                      <div>
+                        <p class="text-sm text-gray-600">Année de publication</p>
+                        <p class="font-medium">${article.annee_pub || ''}</p>
+                      </div>
+                      <div>
+                        <p class="text-sm text-gray-600">Langue</p>
+                        <p class="font-medium">${article.langue || ''}</p>
+                      </div>
+                      <div>
+                        <p class="text-sm text-gray-600">ISBN</p>
+                        <p class="font-medium">${article.isbn || ''}</p>
+                      </div>
+                      <div>
+                        <p class="text-sm text-gray-600">Stock disponible</p>
+                        <p class="font-medium">${article.qte || 0}</p>
+                      </div>
+                      <div>
+                        <p class="text-sm text-gray-600">Prix d'emprunt</p>
+                        <p class="font-medium">${article.prix_emprunt || 0} Dh</p>
+                      </div>
+                      <div>
+                        <p class="text-sm text-gray-600">Nombre d'emprunts</p>
+                        <p class="font-medium">${article.loans || 0}</p>
+                      </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                      <p class="text-sm text-gray-600 mb-1">Description</p>
+                      <p class="bg-gray-50 p-3 rounded-md">${article.contenu || 'Aucune description disponible.'}</p>
+                    </div>
                   </div>
                 </div>
               </div>
+              
+              <div class="border-t border-gray-200 px-6 py-4 flex justify-end">
+                <button class="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded transition duration-200 mr-2" onclick="editArticle(${article.id})">
+                  <i class="fas fa-edit mr-2"></i> Modifier
+                </button>
+                <button id="closeDetailBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded transition duration-200">
+                  Fermer
+                </button>
+              </div>
             </div>
-            
-            <div class="border-t border-gray-200 px-6 py-4 flex justify-end">
-              <button class="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded transition duration-200 mr-2" onclick="editArticle(${article.id_article})">
-                <i class="fas fa-edit mr-2"></i> Modifier
-              </button>
-              <button id="closeDetailBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded transition duration-200">
-                Fermer
-              </button>
-            </div>
-          </div>
-        `;
-        
-        document.body.appendChild(modal);
-        
-        // Fermeture de la modale
-        document.getElementById('closeModalBtn').addEventListener('click', () => {
-          document.body.removeChild(modal);
+          `;
+          
+          document.body.appendChild(modal);
+          
+          // Close modal
+          document.getElementById('closeModalBtn').addEventListener('click', () => {
+            document.body.removeChild(modal);
+          });
+          
+          document.getElementById('closeDetailBtn').addEventListener('click', () => {
+            document.body.removeChild(modal);
+          });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showNotification("Erreur lors du chargement des détails de l'article", "error");
         });
-        
-        document.getElementById('closeDetailBtn').addEventListener('click', () => {
-          document.body.removeChild(modal);
-        });
-        
-      } else {
-        showNotification("Article non trouvé!");
-      }
     }
 
-    function showNotification(message) {
+    function showNotification(message, type = "success") {
       // Remove any existing notifications
       const existingNotifications = document.querySelectorAll('.notification');
       existingNotifications.forEach(notification => {
@@ -1136,6 +1012,11 @@
       // Create new notification
       const notification = document.createElement("div");
       notification.className = "notification";
+      
+      if (type === "error") {
+        notification.style.backgroundColor = "#EF4444";
+      }
+      
       notification.textContent = message;
 
       document.body.appendChild(notification);
@@ -1149,6 +1030,22 @@
           }
         }, 300);
       }, 3000);
+    }
+
+    // Global function to fetch articles
+    function fetchArticles() {
+      fetch('{{ route("articles.index") }}')
+        .then(response => response.json())
+        .then(data => {
+          articles = data;
+          totalPages = Math.ceil(articles.length / itemsPerPage);
+          updateTable();
+          updatePagination();
+        })
+        .catch(error => {
+          console.error('Error fetching articles:', error);
+          showNotification("Erreur lors du chargement des articles", "error");
+        });
     }
   </script>
 </body>
