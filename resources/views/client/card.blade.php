@@ -657,7 +657,7 @@
                     @else
                         @foreach($cart as $item)
                         <div class="order-item">
-                            <img src="@bookImage($item['image'])" alt="{{ $item['name'] }}" class="item-image">
+                            <img src="{{$item['image']}}" alt="{{ $item['name'] }}" class="item-image">
                             <div class="item-details">
                                 <div class="item-title">{{ $item['name'] }}</div>
                                 <div class="item-author">{{ $item['author'] }}</div>

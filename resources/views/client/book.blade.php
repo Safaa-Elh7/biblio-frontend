@@ -132,7 +132,7 @@
 
         <div class="flex gap-8">
             <div class="w-1/3">
-                <img src="@bookImage($book['image'])" alt="{{ $book['titre'] ?? 'Livre' }}" class="w-full rounded shadow">
+                <img src="{{$book['image']}}" alt="{{ $book['titre'] ?? 'Livre' }}" class="w-full rounded shadow">
             </div>
             <div class="flex-1">
                 <h2 class="text-4xl font-bold mb-4">{{ $book['titre'] ?? 'Titre inconnu' }}</h2>
