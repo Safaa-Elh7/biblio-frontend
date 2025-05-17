@@ -1046,7 +1046,7 @@
       showNotification("Chargement des détails de l'article...", "info");
 
       // Fetch article details
-      fetch(`/api/articles/${id}`)
+      fetch(`/api/articles/${id_article}`)
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -1106,7 +1106,7 @@
           <div class="p-6">
             <form id="editArticleForm" class="space-y-4">
               <input type="hidden" name="_token" value="${csrfToken}">
-              <input type="hidden" name="id" value="${article.id}">
+              <input type="hidden" name="id" value="${article.id_article}">
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="col-span-1">
