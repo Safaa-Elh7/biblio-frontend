@@ -61,6 +61,10 @@ Route::middleware(['auth', 'role:livreur'])
      ->group(function () {
           Route::get('dashboard', [LivreurController::class, 'index'])
                ->name('dashboard');
+          Route::post('update-disponibilite', [LivreurController::class, 'updateDisponibilite'])
+               ->name('update.disponibilite');
+          Route::get('details/{id}', [LivreurController::class, 'getDetails'])
+               ->name('details');
      });
 
 Route::middleware(['auth', 'role:employe'])

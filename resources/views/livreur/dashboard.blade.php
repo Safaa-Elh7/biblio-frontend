@@ -100,6 +100,105 @@
 
     <!-- Main Content -->
     <main class="container mx-auto p-6">
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <!-- Total Livraisons -->
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex items-center">
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-gray-500 text-sm">Total Livraisons</h3>
+                        <p class="text-2xl font-bold text-gray-800">{{ $stats['total_livraisons'] }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Livraisons en cours -->
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex items-center">
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-gray-500 text-sm">En cours</h3>
+                        <p class="text-2xl font-bold text-gray-800">{{ $stats['livraisons_en_cours'] }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Livraisons terminées -->
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex items-center">
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-gray-500 text-sm">Terminées</h3>
+                        <p class="text-2xl font-bold text-gray-800">{{ $stats['livraisons_terminees'] }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Note moyenne -->
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex items-center">
+                    <div class="bg-purple-100 p-3 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-gray-500 text-sm">Note moyenne</h3>
+                        <p class="text-2xl font-bold text-gray-800">{{ number_format($stats['note_moyenne'], 2) }}/5</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Livreur Info Card -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Information du Livreur</h2>
+                <div>
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="disponibiliteToggle" class="sr-only peer" @if($livreur->disponibilite) checked @endif>
+                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-800"></div>
+                        <span class="ml-3 text-sm font-medium text-gray-900">Disponible pour livraison</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div id="livreurInfoCard" class="bg-gray-50 p-4 rounded-lg">
+                    <div class="mb-4">
+                        <h3 class="text-md font-semibold text-gray-700">Informations Personnelles</h3>
+                        <p class="text-sm mt-1"><span class="font-medium">Nom complet:</span> <span id="livreurFullName">{{ $livreur->fullName() }}</span></p>
+                        <p class="text-sm mt-1"><span class="font-medium">Email:</span> <span id="livreurEmail">{{ $livreur->user->email ?? 'N/A' }}</span></p>
+                        <p class="text-sm mt-1"><span class="font-medium">Téléphone:</span> <span id="livreurPhone">{{ $livreur->user->telephone ?? 'N/A' }}</span></p>
+                        <p class="text-sm mt-1"><span class="font-medium">Adresse:</span> <span id="livreurAddress">{{ $livreur->user->adresse ?? 'N/A' }}</span></p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="mb-4">
+                        <h3 class="text-md font-semibold text-gray-700">Informations de Livraison</h3>
+                        <p class="text-sm mt-1"><span class="font-medium">Zone de livraison:</span> <span id="livreurZone">{{ $livreur->zone_livraison ?? 'N/A' }}</span></p>
+                        <p class="text-sm mt-1"><span class="font-medium">Moyen de transport:</span> <span id="livreurTransport">{{ $livreur->moyen_transport ?? 'N/A' }}</span></p>
+                        <p class="text-sm mt-1"><span class="font-medium">Note:</span> <span id="livreurRating">{{ $livreur->rating ?? '0.00' }}/5</span></p>
+                        <p class="text-sm mt-1"><span class="font-medium">Livraisons effectuées:</span> <span id="livreurTotalDeliveries">{{ $stats['total_livraisons'] ?? 0 }}</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="bg-white rounded-lg shadow-md p-6">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-bold text-gray-800">Gestion des Livraisons</h2>
@@ -154,44 +253,8 @@
     </main>
 
     <script>
-        // Sample data for deliveries
-        const deliveries = [
-            {
-                id: "CMD-001",
-                client: "Ahmed Benali",
-                address: "123 Rue Hassan II, Casablanca",
-                date: "15/05/2023",
-                status: "en-cours"
-            },
-            {
-                id: "CMD-002",
-                client: "Fatima Zahra",
-                address: "45 Avenue Mohammed V, Rabat",
-                date: "16/05/2023",
-                status: "livre"
-            },
-            {
-                id: "CMD-003",
-                client: "Karim Idrissi",
-                address: "78 Rue Ibn Sina, Marrakech",
-                date: "14/05/2023",
-                status: "non-livre"
-            },
-            {
-                id: "CMD-004",
-                client: "Nadia Tazi",
-                address: "12 Boulevard Zerktouni, Casablanca",
-                date: "17/05/2023",
-                status: "en-cours"
-            },
-            {
-                id: "CMD-005",
-                client: "Youssef Alami",
-                address: "56 Rue Moulay Ismail, Tanger",
-                date: "13/05/2023",
-                status: "livre"
-            }
-        ];
+        // Récupérer les livraisons du livreur connecté
+        const deliveries = @json($livraisons ?? []);
 
         // DOM elements
         const tableBody = document.getElementById('deliveryTableBody');
@@ -231,22 +294,38 @@
         function renderDeliveries() {
             tableBody.innerHTML = '';
             
-            deliveries.forEach(delivery => {
+            if (deliveries && deliveries.length > 0) {
+                deliveries.forEach(delivery => {
+                    const row = document.createElement('tr');
+                    row.className = `border-b border-gray-200 hover:bg-gray-50 cursor-pointer ${selectedDeliveryId === delivery.id_livraison ? 'selected-row' : ''}`;
+                    row.dataset.id = delivery.id_livraison;
+                    
+                    // Formatage de la date de livraison prévue
+                    const dateLivraison = delivery.date_livraison_prevue ? new Date(delivery.date_livraison_prevue).toLocaleDateString('fr-FR') : 'Non définie';
+                    
+                    // Récupérer les informations de commande et client
+                    const commandeId = delivery.id_commande || 'N/A';
+                    const client = delivery.client ? `${delivery.client.nom} ${delivery.client.prenom}` : 'Client inconnu';
+                    const adresse = delivery.adresse_livraison || (delivery.client ? delivery.client.adresse : 'Adresse inconnue');
+                    
+                    row.innerHTML = `
+                        <td class="py-3 px-6 text-left">CMD-${commandeId}</td>
+                        <td class="py-3 px-6 text-left">${client}</td>
+                        <td class="py-3 px-6 text-left">${adresse}</td>
+                        <td class="py-3 px-6 text-left">${dateLivraison}</td>
+                        <td class="py-3 px-6 text-center">${getStatusBadge(delivery.statut)}</td>
+                    `;
+                    
+                    row.addEventListener('click', () => selectDelivery(delivery.id_livraison));
+                    tableBody.appendChild(row);
+                });
+            } else {
                 const row = document.createElement('tr');
-                row.className = `border-b border-gray-200 hover:bg-gray-50 cursor-pointer ${selectedDeliveryId === delivery.id ? 'selected-row' : ''}`;
-                row.dataset.id = delivery.id;
-                
                 row.innerHTML = `
-                    <td class="py-3 px-6 text-left">${delivery.id}</td>
-                    <td class="py-3 px-6 text-left">${delivery.client}</td>
-                    <td class="py-3 px-6 text-left">${delivery.address}</td>
-                    <td class="py-3 px-6 text-left">${delivery.date}</td>
-                    <td class="py-3 px-6 text-center">${getStatusBadge(delivery.status)}</td>
+                    <td colspan="5" class="py-4 px-6 text-center text-gray-500">Aucune livraison disponible</td>
                 `;
-                
-                row.addEventListener('click', () => selectDelivery(delivery.id));
                 tableBody.appendChild(row);
-            });
+            }
         }
 
         // Function to select a delivery
@@ -259,8 +338,8 @@
         // Function to update button states
         function updateButtonStates() {
             const isSelected = selectedDeliveryId !== null;
-            const selectedDelivery = deliveries.find(d => d.id === selectedDeliveryId);
-            const isDelivered = selectedDelivery && selectedDelivery.status === 'livre';
+            const selectedDelivery = deliveries.find(d => d.id_livraison === selectedDeliveryId);
+            const isDelivered = selectedDelivery && selectedDelivery.statut === 'livré';
             
             // Enable/disable buttons based on selection
             if (isSelected) {
@@ -288,25 +367,69 @@
         // Function to mark a delivery as delivered
         function markAsDelivered() {
             if (selectedDeliveryId) {
-                const index = deliveries.findIndex(d => d.id === selectedDeliveryId);
-                if (index !== -1) {
-                    deliveries[index].status = 'livre';
-                    renderDeliveries();
-                    updateButtonStates();
-                }
+                // Appel API pour mettre à jour le statut de la livraison
+                fetch(`/api/livraisons/${selectedDeliveryId}/update-status`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        statut: 'livré'
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Mise à jour locale
+                        const index = deliveries.findIndex(d => d.id_livraison === selectedDeliveryId);
+                        if (index !== -1) {
+                            deliveries[index].statut = 'livré';
+                            renderDeliveries();
+                            updateButtonStates();
+                            alert('Livraison marquée comme livrée avec succès');
+                        }
+                    } else {
+                        alert('Erreur lors de la mise à jour du statut');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Une erreur est survenue lors de la mise à jour du statut');
+                });
             }
         }
 
         // Function to delete a delivery
         function deleteDelivery() {
-            if (selectedDeliveryId) {
-                const index = deliveries.findIndex(d => d.id === selectedDeliveryId);
-                if (index !== -1) {
-                    deliveries.splice(index, 1);
-                    selectedDeliveryId = null;
-                    renderDeliveries();
-                    updateButtonStates();
-                }
+            if (selectedDeliveryId && confirm('Êtes-vous sûr de vouloir supprimer cette livraison ?')) {
+                // Appel API pour supprimer la livraison
+                fetch(`/api/livraisons/${selectedDeliveryId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Mise à jour locale
+                        const index = deliveries.findIndex(d => d.id_livraison === selectedDeliveryId);
+                        if (index !== -1) {
+                            deliveries.splice(index, 1);
+                            selectedDeliveryId = null;
+                            renderDeliveries();
+                            updateButtonStates();
+                            alert('Livraison supprimée avec succès');
+                        }
+                    } else {
+                        alert('Erreur lors de la suppression de la livraison');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Une erreur est survenue lors de la suppression de la livraison');
+                });
             }
         }
 
@@ -314,11 +437,72 @@
         markDeliveredBtn.addEventListener('click', markAsDelivered);
         deleteBtn.addEventListener('click', deleteDelivery);
         
+        // Gestion de la disponibilité du livreur
+        const disponibiliteToggle = document.getElementById('disponibiliteToggle');
+        disponibiliteToggle.addEventListener('change', function() {
+            const disponibilite = this.checked;
+            
+            // Appel AJAX pour mettre à jour la disponibilité
+            fetch("{{ route('livreur.update.disponibilite') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    id_livreur: {{ $livreur->id_livreur }},
+                    disponibilite: disponibilite
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Afficher une notification de succès
+                    alert('Votre disponibilité a été mise à jour');
+                } else {
+                    // En cas d'erreur
+                    alert('Erreur lors de la mise à jour de votre disponibilité');
+                    disponibiliteToggle.checked = !disponibilite; // Remettre dans l'état précédent
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert('Une erreur est survenue lors de la mise à jour de votre disponibilité');
+                disponibiliteToggle.checked = !disponibilite; // Remettre dans l'état précédent
+            });
+        });
+
+        // Fonction pour charger les données du livreur depuis l'API
+        function loadLivreurDetails() {
+            fetch("{{ route('livreur.details', ['id' => $livreur->id_livreur]) }}")
+            .then(response => response.json())
+            .then(data => {
+                if (data.livreur) {
+                    // Mettre à jour les informations du livreur dans l'interface
+                    document.getElementById('livreurFullName').textContent = data.fullName;
+                    document.getElementById('livreurEmail').textContent = data.email;
+                    document.getElementById('livreurPhone').textContent = data.telephone;
+                    document.getElementById('livreurAddress').textContent = data.adresse;
+                    document.getElementById('livreurZone').textContent = data.livreur.zone_livraison || 'N/A';
+                    document.getElementById('livreurTransport').textContent = data.livreur.moyen_transport || 'N/A';
+                    document.getElementById('livreurRating').textContent = (data.livreur.rating || '0.00') + '/5';
+                    document.getElementById('livreurTotalDeliveries').textContent = data.totalLivraisons;
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors du chargement des données du livreur:', error);
+            });
+        }
+
         // Ajouter un événement pour le bouton de déconnexion
         document.querySelector('.logout-btn').addEventListener('click', function() {
-            alert('Déconnexion en cours...');
-            // Ici vous pouvez rediriger vers la page de connexion
-            // window.location.href = 'login.html';
+            // Rediriger vers la page de déconnexion
+            window.location.href = "{{ route('logout') }}";
+        });
+
+        // Charger les détails du livreur au chargement de la page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLivreurDetails();
         });
 
         // Initial render

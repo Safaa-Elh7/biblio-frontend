@@ -17,3 +17,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Routes pour les livreurs
+Route::middleware(['auth:sanctum'])->group(function () {
+    // Route pour obtenir les détails d'un livreur
+    Route::get('/livreurs/{id}', [\App\Http\Controllers\LivreurController::class, 'getDetails']);
+    
+    // Routes pour les livraisons
+    Route::get('/livraisons', [\App\Http\Controllers\LivraisonController::class, 'index']);
+    Route::post('/livraisons/{id}/update-status', [\App\Http\Controllers\LivraisonController::class, 'updateStatus']);
+    Route::delete('/livraisons/{id}', [\App\Http\Controllers\LivraisonController::class, 'destroy']);
+});
