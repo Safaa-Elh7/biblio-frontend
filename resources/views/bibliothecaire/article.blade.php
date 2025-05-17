@@ -1042,6 +1042,9 @@
 
     // Function to edit an article
     function editArticle(id) {
+      // Afficher un spinner ou un indicateur de chargement
+      showNotification("Chargement des détails de l'article...", "info");
+
       // Fetch article details
       fetch(`/api/articles/${id}`)
         .then(response => {
@@ -1051,6 +1054,30 @@
           return response.json();
         })
         .then(article => {
+          // Masquer la notification de chargement
+          document.querySelectorAll('.notification.bg-blue-500').forEach(el => {
+            if (el.parentNode) {
+              el.parentNode.removeChild(el);
+            }
+          });
+
+          // S'assurer que toutes les propriétés existent
+          article = {
+            id: article.id || id,
+            titre: article.titre || '',
+            auteur: article.auteur || '',
+            genre: article.genre || '',
+            isbn: article.isbn || '',
+            qte: article.qte || 0,
+            prix_emprunt: article.prix_emprunt || 0,
+            annee_pub: article.annee_pub || '',
+            description: article.description || '',
+            langue: article.langue || 'Français',
+            id_categorie: article.id_categorie || 1,
+            image: article.image || '',
+            ...article // conserver d'autres propriétés potentielles
+          };
+
           // Create edit modal
           const modal = document.createElement('div');
           modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
@@ -1078,49 +1105,49 @@
           <div class="p-6">
             <form id="editArticleForm" class="space-y-4">
               <input type="hidden" name="_token" value="${csrfToken}">
-              <input type="hidden" name="id" value="${id}">
+              <input type="hidden" name="id" value="${article.id}">
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="col-span-1">
                   <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
-                    <input type="text" id="edit-titre" name="titre" value="${article.titre || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                    <input type="text" id="edit-titre" name="titre" value="${article.titre}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
                   </div>
                   
                   <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Auteur</label>
-                    <input type="text" id="edit-auteur" name="auteur" value="${article.auteur || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                    <input type="text" id="edit-auteur" name="auteur" value="${article.auteur}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
                   </div>
                   
                   <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-1">Genre</label>
-                      <input type="text" id="edit-genre" name="genre" value="${article.genre || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                      <input type="text" id="edit-genre" name="genre" value="${article.genre}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                     </div>
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
-                      <input type="text" id="edit-isbn" name="isbn" value="${article.isbn || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                      <input type="text" id="edit-isbn" name="isbn" value="${article.isbn}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                     </div>
                   </div>
                   
                   <div class="grid grid-cols-3 gap-4 mb-4">
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
-                      <input type="number" id="edit-qte" name="qte" value="${article.qte || 0}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                      <input type="number" id="edit-qte" name="qte" value="${article.qte}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                     </div>
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-1">Prix</label>
-                      <input type="number" step="0.01" id="edit-prix" name="prix_emprunt" value="${article.prix_emprunt || 0}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                      <input type="number" step="0.01" id="edit-prix" name="prix_emprunt" value="${article.prix_emprunt}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                     </div>
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-1">Année</label>
-                      <input type="number" id="edit-annee" name="annee_pub" value="${article.annee_pub || ''}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                      <input type="number" id="edit-annee" name="annee_pub" value="${article.annee_pub}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                     </div>
                   </div>
                   
                   <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <textarea id="edit-contenu" name="description" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="5">${article.description || ''}</textarea>
+                    <textarea id="edit-contenu" name="description" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="5">${article.description}</textarea>
                   </div>
                 </div>
                 
@@ -1245,26 +1272,17 @@
 
     // Function to delete an article
     function deleteArticle(id) {
+      // Vérifier que l'ID est valide
+      if (!id || isNaN(parseInt(id))) {
+        showNotification("ID d'article invalide", "error");
+        return;
+      }
+      
       if (confirm("Êtes-vous sûr de vouloir supprimer cet article?")) {
-        // Créer un formulaire temporaire pour gérer correctement le CSRF token
-        const form = document.createElement('form');
-        form.style.display = 'none';
-        
-        const csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = '_token';
-        csrfInput.value = csrfToken;
-        
-        const methodInput = document.createElement('input');
-        methodInput.type = 'hidden';
-        methodInput.name = '_method';
-        methodInput.value = 'DELETE';
-        
-        form.appendChild(csrfInput);
-        form.appendChild(methodInput);
-        
-        // Créer FormData à partir du formulaire
-        const formData = new FormData(form);
+        // Utiliser FormData pour le corps de la requête
+        const formData = new FormData();
+        formData.append('_token', csrfToken);
+        formData.append('_method', 'DELETE');
         
         fetch(`/articles/${id}`, {
           method: 'POST',
@@ -1274,21 +1292,35 @@
           body: formData
         })
           .then(response => {
-            if (!response.ok) {
+            // Gérer également les réponses non JSON
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") !== -1) {
               return response.json().then(data => {
-                throw new Error(data.message || 'Network response was not ok');
+                if (!response.ok) {
+                  throw new Error(data.message || `Erreur ${response.status}`);
+                }
+                return data;
               });
+            } else {
+              if (!response.ok) {
+                throw new Error(`Erreur ${response.status}`);
+              }
+              return { success: true, message: "Article supprimé avec succès" };
             }
-            return response.json();
           })
           .then(data => {
-            showNotification("Article supprimé avec succès!");
-            // Refresh the articles list
-            fetchArticles();
+            if (data.success) {
+              showNotification("Article supprimé avec succès!");
+              // Refresh the articles list
+              fetchArticles();
+            } else {
+              showNotification(data.message || "Opération réussie", data.success ? "success" : "error");
+            }
           })
           .catch(error => {
             console.error('Error:', error);
-            showNotification("Erreur lors de la suppression de l'article: " + error.message, "error");
+            // Message d'erreur plus court et plus convivial
+            showNotification("Erreur lors de la suppression: " + error.message, "error");
           });
       }
     }
@@ -1411,18 +1443,54 @@
 
     // Function to show notifications
     function showNotification(message, type = "success") {
+      // Éviter les messages vides ou non définis
+      if (!message) {
+        console.warn("Tentative d'afficher une notification sans message");
+        return;
+      }
+      
+      // Déterminer la classe de couleur en fonction du type
+      let bgColor = "bg-green-500"; // success par défaut
+      let icon = "fa-check-circle";
+      
+      if (type === "error") {
+        bgColor = "bg-red-500";
+        icon = "fa-exclamation-circle";
+        // Si le message contient une erreur trop technique, la simplifier
+        if (message.includes("NetworkError") || message.includes("Failed to fetch")) {
+          message = "Problème de connexion au serveur";
+        } else if (message.length > 100) {
+          // Tronquer les messages trop longs
+          message = message.substring(0, 100) + "...";
+        }
+      } else if (type === "info") {
+        bgColor = "bg-blue-500";
+        icon = "fa-info-circle";
+      } else if (type === "warning") {
+        bgColor = "bg-yellow-500";
+        icon = "fa-exclamation-triangle";
+      }
+
+      // Supprimer toutes les notifications existantes du même type
+      document.querySelectorAll(`.notification.${bgColor}`).forEach(el => {
+        if (el.parentNode) {
+          el.parentNode.removeChild(el);
+        }
+      });
+
       const notification = document.createElement('div');
-      notification.className = `notification ${type === "success" ? "bg-green-500" : "bg-red-500"}`;
+      notification.className = `notification ${bgColor}`;
       notification.innerHTML = `
         <div class="flex items-center">
-          <i class="fas ${type === "success" ? "fa-check-circle" : "fa-exclamation-circle"} mr-2"></i>
+          <i class="fas ${icon} mr-2"></i>
           <span>${message}</span>
         </div>
       `;
       
       document.body.appendChild(notification);
       
-      // Auto hide after 3 seconds
+      // Auto hide after 3 seconds (sauf si c'est une notification de type info qui peut rester plus longtemps)
+      const timeout = type === "info" ? 2000 : 3000;
       setTimeout(() => {
         notification.classList.add('hiding');
         
@@ -1432,7 +1500,7 @@
             notification.parentNode.removeChild(notification);
           }
         }, 300);
-      }, 3000);
+      }, timeout);
     }
 
     // Initialize pagination event handlers for grid view

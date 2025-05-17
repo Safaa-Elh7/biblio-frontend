@@ -139,7 +139,7 @@ class ArticleController extends Controller
     public function destroy($id)
     {
         try {
-            // Vérification de l'ID
+            // Vérification de l'ID - s'assurer qu'il est numérique
             if (!$id || !is_numeric($id)) {
                 return response()->json([
                     'success' => false,
@@ -148,37 +148,63 @@ class ArticleController extends Controller
             }
 
             // Vérifier si l'article existe avant de le supprimer
-            $checkResponse = Http::get($this->apiUrl . '/' . $id);
-            if (!$checkResponse->successful()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Article introuvable avec cet ID'
-                ], 404);
-            }
-
-            $response = Http::delete($this->apiUrl . '/' . $id);
-
-            if (!$response->successful()) {
-                $errorMessage = 'API returned error: ' . $response->status();
-                // Essayer d'extraire un message d'erreur plus précis si disponible
-                if ($response->json() && isset($response->json()['message'])) {
-                    $errorMessage = $response->json()['message'];
-                }
+            try {
+                $checkResponse = Http::timeout(5)->get($this->apiUrl . '/' . $id);
                 
-                return response()->json([
-                    'success' => false,
-                    'message' => $errorMessage
-                ], $response->status());
+                if (!$checkResponse->successful()) {
+                    // Si l'article n'existe pas mais que l'erreur est 404, on considère que c'est déjà supprimé
+                    if ($checkResponse->status() === 404) {
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Article déjà supprimé ou inexistant'
+                        ]);
+                    }
+                    
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Article introuvable: ' . $checkResponse->status()
+                    ], $checkResponse->status());
+                }
+            } catch (\Exception $e) {
+                // Si la vérification échoue, on tente quand même de supprimer
+                // car l'erreur peut être liée à une timeout plutôt qu'à l'inexistence de l'article
             }
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Article supprimé avec succès'
-            ]);
+            try {
+                $response = Http::timeout(10)->delete($this->apiUrl . '/' . $id);
+
+                if (!$response->successful()) {
+                    $errorMessage = 'Erreur API: ' . $response->status();
+                    
+                    // Essayer d'extraire un message d'erreur plus précis si disponible
+                    try {
+                        if ($response->json() && isset($response->json()['message'])) {
+                            $errorMessage = $response->json()['message'];
+                        }
+                    } catch (\Exception $e) {
+                        // Si on ne peut pas extraire le message, on garde le message par défaut
+                    }
+                    
+                    return response()->json([
+                        'success' => false,
+                        'message' => $errorMessage
+                    ], $response->status());
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Article supprimé avec succès'
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la suppression: ' . $e->getMessage()
+                ], 500);
+            }
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur lors de la suppression de l\'article: ' . $e->getMessage()
+                'message' => 'Erreur système: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -187,13 +213,50 @@ class ArticleController extends Controller
     public function getArticle($id)
     {
         try {
-            $response = Http::get($this->apiUrl . '/' . $id);
+            // Vérification de la validité de l'ID
+            if (!$id || !is_numeric($id)) {
+                return response()->json([
+                    'error' => 'ID d\'article invalide',
+                    'id' => $id
+                ], 400);
+            }
+
+            $response = Http::timeout(5)->get($this->apiUrl . '/' . $id);
             
             if (!$response->successful()) {
-                return response()->json(['error' => 'API returned error: ' . $response->status()], $response->status());
+                $status = $response->status();
+                $message = 'API returned error: ' . $status;
+                
+                // Si on a une réponse JSON avec un message, l'utiliser
+                try {
+                    if ($response->json() && isset($response->json()['message'])) {
+                        $message = $response->json()['message'];
+                    }
+                } catch (\Exception $e) {
+                    // Ignorer les erreurs de parsing JSON
+                }
+                
+                return response()->json(['error' => $message], $status);
             }
             
             $article = $response->json();
+            
+            // S'assurer que tous les champs nécessaires sont disponibles
+            $article = array_merge([
+                'id' => $id,
+                'titre' => '',
+                'auteur' => '',
+                'genre' => '',
+                'isbn' => '',
+                'qte' => 0,
+                'prix_emprunt' => 0.00,
+                'annee_pub' => date('Y'),
+                'description' => '',
+                'langue' => 'Français',
+                'id_categorie' => 1,
+                'image' => null
+            ], $article);
+            
             return response()->json($article);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to fetch article: ' . $e->getMessage()], 500);
