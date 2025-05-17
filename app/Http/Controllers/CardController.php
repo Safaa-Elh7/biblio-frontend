@@ -91,6 +91,8 @@ class CardController extends Controller
                 $orderItem->name = $item['name'];
                 $orderItem->price = $item['price'];
                 $orderItem->quantity = $item['quantity'];
+                $orderItem->image = $item['image'] ?? null; // Sauvegarde de l'image
+                $orderItem->author = $item['author'] ?? 'Non spécifié'; // Sauvegarde de l'auteur
                 
                 $orderItem->save();
             }

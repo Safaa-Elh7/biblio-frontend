@@ -37,6 +37,11 @@ Route::get('/', function () {
      return view('welcome');
 })->name('welcome');
 
+// Route pour tester la directive @bookImage
+Route::get('/test-image', function () {
+     return view('test.image-test');
+})->name('test.image');
+
 Route::get('/dashboard', function () {
      return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

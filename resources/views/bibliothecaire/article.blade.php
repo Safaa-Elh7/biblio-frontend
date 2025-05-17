@@ -852,7 +852,163 @@
 
     // Global functions for table actions
     function editArticle(id) {
-      showNotification("Modification de l'article #" + id);
+      const article = articles.find(a => a.id_article === id);
+      
+      if (article) {
+        // Créer une modale pour l'édition
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
+        
+        // Fonction pour gérer les URLs d'images de manière cohérente
+        function getImageUrl(imagePath, defaultUrl = 'https://via.placeholder.com/300x400?text=Livre') {
+          if (!imagePath) return defaultUrl;
+          if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+            return imagePath;
+          }
+          return `/storage/${imagePath.replace(/^\/+/, '')}`;
+        }
+        
+        const imageUrl = getImageUrl(article.image);
+        
+        modal.innerHTML = `
+          <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
+              <h3 class="text-xl font-semibold text-gray-800">Modifier le livre</h3>
+              <button id="closeEditModalBtn" class="text-gray-400 hover:text-gray-500">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            
+            <div class="p-6">
+              <form id="editArticleForm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div class="col-span-1">
+                    <div class="mb-4">
+                      <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+                      <input type="text" id="edit-titre" value="${article.titre}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                    
+                    <div class="mb-4">
+                      <label class="block text-sm font-medium text-gray-700 mb-1">Auteur</label>
+                      <input type="text" id="edit-auteur" value="${article.auteur}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Genre</label>
+                        <input type="text" id="edit-genre" value="${article.genre}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
+                        <input type="text" id="edit-isbn" value="${article.isbn}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                      </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-4 mb-4">
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                        <input type="number" id="edit-qte" value="${article.qte}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Prix</label>
+                        <input type="number" step="0.01" id="edit-prix" value="${article.prix_emprunt}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Année</label>
+                        <input type="number" id="edit-annee" value="${article.annee_pub}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                      </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                      <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                      <textarea id="edit-description" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="5">${article.description || ''}</textarea>
+                    </div>
+                  </div>
+                  
+                  <div class="col-span-1">
+                    <div class="mb-4">
+                      <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
+                      <div class="mt-1 flex flex-col items-center justify-center">
+                        <img src="${imageUrl}" alt="${article.titre}" class="w-full max-h-60 object-cover rounded-lg mb-4">
+                        <input type="file" id="edit-image-input" class="hidden">
+                        <label for="edit-image-input" class="cursor-pointer bg-white text-primary hover:text-primary-dark py-2 px-4 border border-primary rounded-md transition duration-200">
+                          <i class="fas fa-upload mr-2"></i> Changer l'image
+                        </label>
+                      </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                      <label class="block text-sm font-medium text-gray-700 mb-1">Langue</label>
+                      <select id="edit-langue" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option value="Français" ${article.langue === 'Français' ? 'selected' : ''}>Français</option>
+                        <option value="Anglais" ${article.langue === 'Anglais' ? 'selected' : ''}>Anglais</option>
+                        <option value="Espagnol" ${article.langue === 'Espagnol' ? 'selected' : ''}>Espagnol</option>
+                        <option value="Allemand" ${article.langue === 'Allemand' ? 'selected' : ''}>Allemand</option>
+                        <option value="Italien" ${article.langue === 'Italien' ? 'selected' : ''}>Italien</option>
+                        <option value="Arabe" ${article.langue === 'Arabe' ? 'selected' : ''}>Arabe</option>
+                        <option value="Autre" ${!['Français', 'Anglais', 'Espagnol', 'Allemand', 'Italien', 'Arabe'].includes(article.langue) ? 'selected' : ''}>Autre</option>
+                      </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                      <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                      <select id="edit-categorie" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option value="1" ${article.id_categorie === 1 ? 'selected' : ''}>Fiction</option>
+                        <option value="2" ${article.id_categorie === 2 ? 'selected' : ''}>Science-fiction</option>
+                        <option value="3" ${article.id_categorie === 3 ? 'selected' : ''}>Fantasy</option>
+                        <option value="4" ${article.id_categorie === 4 ? 'selected' : ''}>Roman</option>
+                        <option value="5" ${article.id_categorie === 5 ? 'selected' : ''}>Roman historique</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            
+            <div class="border-t border-gray-200 px-6 py-4 flex justify-end">
+              <button id="saveArticleBtn" class="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded transition duration-200 mr-2">
+                <i class="fas fa-save mr-2"></i> Enregistrer
+              </button>
+              <button id="closeEditFormBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded transition duration-200">
+                Annuler
+              </button>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Gestion des événements
+        document.getElementById('closeEditModalBtn').addEventListener('click', () => {
+          document.body.removeChild(modal);
+        });
+        
+        document.getElementById('closeEditFormBtn').addEventListener('click', () => {
+          document.body.removeChild(modal);
+        });
+        
+        document.getElementById('saveArticleBtn').addEventListener('click', () => {
+          // Dans une application réelle, vous enverriez ces données au serveur
+          showNotification("Modifications enregistrées pour l'article #" + id);
+          document.body.removeChild(modal);
+        });
+        
+        // Prévisualisation de l'image
+        const imageInput = document.getElementById('edit-image-input');
+        imageInput.addEventListener('change', (e) => {
+          if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const imgElement = e.target.previousElementSibling;
+              imgElement.src = event.target.result;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+          }
+        });
+        
+      } else {
+        showNotification("Article non trouvé!");
+      }
     }
 
     function deleteArticle(id) {
@@ -863,7 +1019,111 @@
     }
 
     function viewArticleDetails(id) {
-      showNotification("Affichage des détails de l'article #" + id);
+      const article = articles.find(a => a.id_article === id);
+      
+      if (article) {
+        // Créer une modale pour les détails
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
+        
+        // Fonction pour gérer les URLs d'images de manière cohérente
+        function getImageUrl(imagePath, defaultUrl = 'https://via.placeholder.com/300x400?text=Livre') {
+          if (!imagePath) return defaultUrl;
+          if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+            return imagePath;
+          }
+          return `/storage/${imagePath.replace(/^\/+/, '')}`;
+        }
+        
+        const imageUrl = getImageUrl(article.image);
+        
+        // Contenu de la modale
+        modal.innerHTML = `
+          <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
+              <h3 class="text-xl font-semibold text-gray-800">Détails du livre</h3>
+              <button id="closeModalBtn" class="text-gray-400 hover:text-gray-500">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            
+            <div class="p-6">
+              <div class="flex flex-col md:flex-row gap-6">
+                <div class="w-full md:w-1/3">
+                  <img src="${imageUrl}" alt="${article.titre}" class="rounded-lg shadow-md w-full">
+                </div>
+                
+                <div class="flex-1">
+                  <h2 class="text-2xl font-semibold mb-4">${article.titre}</h2>
+                  
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                      <p class="text-sm text-gray-600">Auteur</p>
+                      <p class="font-medium">${article.auteur}</p>
+                    </div>
+                    <div>
+                      <p class="text-sm text-gray-600">Genre</p>
+                      <p class="font-medium">${article.genre}</p>
+                    </div>
+                    <div>
+                      <p class="text-sm text-gray-600">Année de publication</p>
+                      <p class="font-medium">${article.annee_pub}</p>
+                    </div>
+                    <div>
+                      <p class="text-sm text-gray-600">Langue</p>
+                      <p class="font-medium">${article.langue}</p>
+                    </div>
+                    <div>
+                      <p class="text-sm text-gray-600">ISBN</p>
+                      <p class="font-medium">${article.isbn}</p>
+                    </div>
+                    <div>
+                      <p class="text-sm text-gray-600">Stock disponible</p>
+                      <p class="font-medium">${article.qte}</p>
+                    </div>
+                    <div>
+                      <p class="text-sm text-gray-600">Prix d'emprunt</p>
+                      <p class="font-medium">${article.prix_emprunt} Dh</p>
+                    </div>
+                    <div>
+                      <p class="text-sm text-gray-600">Nombre d'emprunts</p>
+                      <p class="font-medium">${article.loans}</p>
+                    </div>
+                  </div>
+                  
+                  <div class="mb-6">
+                    <p class="text-sm text-gray-600 mb-1">Description</p>
+                    <p class="bg-gray-50 p-3 rounded-md">${article.description || 'Aucune description disponible.'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="border-t border-gray-200 px-6 py-4 flex justify-end">
+              <button class="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded transition duration-200 mr-2" onclick="editArticle(${article.id_article})">
+                <i class="fas fa-edit mr-2"></i> Modifier
+              </button>
+              <button id="closeDetailBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded transition duration-200">
+                Fermer
+              </button>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Fermeture de la modale
+        document.getElementById('closeModalBtn').addEventListener('click', () => {
+          document.body.removeChild(modal);
+        });
+        
+        document.getElementById('closeDetailBtn').addEventListener('click', () => {
+          document.body.removeChild(modal);
+        });
+        
+      } else {
+        showNotification("Article non trouvé!");
+      }
     }
 
     function showNotification(message) {
