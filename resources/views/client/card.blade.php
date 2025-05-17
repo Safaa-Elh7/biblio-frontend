@@ -732,17 +732,6 @@
     </div>
 
     <script>
-        // Function to reset all error states
-        function clearErrors() {
-            document.querySelectorAll('.error-message').forEach(error => {
-                error.textContent = '';
-            });
-            
-            document.querySelectorAll('.input-field').forEach(input => {
-                input.classList.remove('border-red-500', 'shake');
-            });
-        }
-        
         // Function to show loading screen
         function showLoading() {
             if (validateAllFields()) {
@@ -752,65 +741,20 @@
             return false;
         }
         
-        // Function to validate all fields
+        // Function to validate all fields quickly
         function validateAllFields() {
-            clearErrors();
             let isValid = true;
             const requiredFields = document.querySelectorAll('.input-field');
-            const errorMessages = {
-                fullName: 'Please enter your full name',
-                address: 'Please enter your address',
-                city: 'Please enter your city',
-                zipCode: 'Please enter a valid zip code',
-                cardNumber: 'Please enter a valid card number',
-                cardHolder: 'Please enter the card holder name',
-                expiryDate: 'Please enter a valid expiry date (MM/YY)',
-                cvv: 'Please enter a valid security code'
-            };
             
-            // Basic validation - checking for empty fields
             requiredFields.forEach(field => {
-                const fieldId = field.id;
-                const errorElement = document.getElementById(`${fieldId}-error`);
-                
                 if (!field.value.trim()) {
-                    field.classList.add('border-red-500', 'shake');
+                    field.classList.add('border-red-500');
                     isValid = false;
                     
+                    // Show error message if exists
+                    const errorElement = document.getElementById(`${field.id}-error`);
                     if (errorElement) {
-                        errorElement.textContent = errorMessages[fieldId] || 'This field is required';
-                    }
-                    
-                    setTimeout(() => {
-                        field.classList.remove('shake');
-                    }, 500);
-                } else {
-                    // Field-specific validations
-                    if (fieldId === 'cardNumber') {
-                        const cardDigits = field.value.replace(/\D/g, '');
-                        if (cardDigits.length < 13) {
-                            isValid = false;
-                            field.classList.add('border-red-500');
-                            if (errorElement) errorElement.textContent = 'Card number must have at least 13 digits';
-                        }
-                    } else if (fieldId === 'expiryDate') {
-                        if (!/^\d{2}\/\d{2}$/.test(field.value)) {
-                            isValid = false;
-                            field.classList.add('border-red-500');
-                            if (errorElement) errorElement.textContent = 'Use MM/YY format';
-                        }
-                    } else if (fieldId === 'cvv') {
-                        if (!/^\d{3,4}$/.test(field.value)) {
-                            isValid = false;
-                            field.classList.add('border-red-500');
-                            if (errorElement) errorElement.textContent = 'CVV must be 3 or 4 digits';
-                        }
-                    } else if (fieldId === 'zipCode') {
-                        if (!/^[a-zA-Z0-9\s-]{4,10}$/.test(field.value)) {
-                            isValid = false;
-                            field.classList.add('border-red-500');
-                            if (errorElement) errorElement.textContent = 'Please enter a valid zip code';
-                        }
+                        errorElement.textContent = 'This field is required';
                     }
                 }
             });
@@ -866,8 +810,28 @@
                 }
             });
 
-            // Les fonctions validateAllFields et showLoading gèrent maintenant la soumission du formulaire
-            // Nous n'avons plus besoin de cette logique supplémentaire
+            // Gestion de la soumission du formulaire
+            const checkoutForm = document.getElementById('checkoutForm');
+            checkoutForm.addEventListener('submit', function(e) {
+                // Empêcher la soumission par défaut
+                e.preventDefault();
+                
+                // Ne soumettre le formulaire que si la validation passe
+                if (!validateFields()) {
+                    // Faire défiler jusqu'au premier champ avec une erreur
+                    const firstError = document.querySelector('.input-field.border-red-500');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.focus();
+                    }
+                } else {
+                    // Afficher l'animation de chargement
+                    loadingOverlay.classList.add('active');
+                    
+                    // Soumettre le formulaire directement (sans délai)
+                    this.submit();
+                }
+            });
             
             // Sélection de la carte de crédit
             cardIcons.forEach(icon => {
@@ -901,7 +865,85 @@
                 });
             }
             
-            // Nous utilisons maintenant validateAllFields défini plus haut à la place de validateFields
+            // Validation avancée des champs
+            function validateFields() {
+                clearErrors();
+                let isValid = true;
+                const errorMessages = {
+                    fullName: 'Please enter your full name',
+                    address: 'Please enter your address',
+                    city: 'Please enter your city',
+                    zipCode: 'Please enter a valid zip code',
+                    cardNumber: 'Please enter a valid card number',
+                    cardHolder: 'Please enter the card holder name',
+                    expiryDate: 'Please enter a valid expiry date (MM/YY)',
+                    cvv: 'Please enter a valid security code'
+                };
+                
+                // Validation de chaque champ
+                inputFields.forEach(input => {
+                    const fieldId = input.id;
+                    const errorElement = document.getElementById(`${fieldId}-error`);
+                    
+                    if (!input.value.trim()) {
+                        isValid = false;
+                        input.classList.add('border-red-500');
+                        input.classList.add('shake');
+                        
+                        if (errorElement) {
+                            errorElement.textContent = errorMessages[fieldId] || 'This field is required';
+                        }
+                        
+                        setTimeout(() => {
+                            input.classList.remove('shake');
+                        }, 500);
+                    } else {
+                        // Validations spécifiques
+                        if (fieldId === 'cardNumber') {
+                            // Valider que la carte a au moins 13 chiffres (sans les espaces)
+                            const cardDigits = input.value.replace(/\D/g, '');
+                            if (cardDigits.length < 13) {
+                                isValid = false;
+                                input.classList.add('border-red-500');
+                                errorElement.textContent = 'Card number must have at least 13 digits';
+                            }
+                        } else if (fieldId === 'expiryDate') {
+                            // Valider format MM/YY
+                            if (!/^\d{2}\/\d{2}$/.test(input.value)) {
+                                isValid = false;
+                                input.classList.add('border-red-500');
+                                errorElement.textContent = 'Use MM/YY format';
+                            } else {
+                                // Vérifier que la date n'est pas expirée
+                                const [month, year] = input.value.split('/');
+                                const expiryDate = new Date(2000 + parseInt(year), parseInt(month) - 1);
+                                const currentDate = new Date();
+                                
+                                if (expiryDate < currentDate) {
+                                    isValid = false;
+                                    input.classList.add('border-red-500');
+                                    errorElement.textContent = 'Card has expired';
+                                }
+                            }
+                        } else if (fieldId === 'cvv') {
+                            // Valider que CVV contient 3 ou 4 chiffres
+                            if (!/^\d{3,4}$/.test(input.value)) {
+                                isValid = false;
+                                input.classList.add('border-red-500');
+                                errorElement.textContent = 'CVV must be 3 or 4 digits';
+                            }
+                        } else if (fieldId === 'zipCode') {
+                            // Validation simple du code postal (chiffres et lettres)
+                            if (!/^[a-zA-Z0-9\s-]{4,10}$/.test(input.value)) {
+                                isValid = false;
+                                input.classList.add('border-red-500');
+                                errorElement.textContent = 'Please enter a valid zip code';
+                            }
+                        }
+                    }
+                });
+                
+                return isValid;
             }
             
             // La gestion du bouton "Place Order" est maintenant entièrement 
