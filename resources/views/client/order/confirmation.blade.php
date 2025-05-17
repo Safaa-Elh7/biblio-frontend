@@ -184,7 +184,7 @@
                     @foreach($order->items as $item)
                         <div class="flex items-center">
                             <div class="w-16 h-20 bg-white rounded overflow-hidden mr-4">
-                                <img src="{{ !empty($item->image) ? asset('storage/' . $item->image) : 'https://via.placeholder.com/80x100?text=Livre' }}" alt="{{ $item->name }}" class="w-full h-full object-cover">
+                                <img src="{{ !empty($item->image) ? (filter_var($item->image, FILTER_VALIDATE_URL) ? $item->image : asset('storage/' . $item->image)) : 'https://via.placeholder.com/80x100?text=Livre' }}" alt="{{ $item->name }}" class="w-full h-full object-cover">
                             </div>
                             
                             <div class="flex-1">

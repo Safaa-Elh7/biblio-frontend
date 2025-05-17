@@ -933,14 +933,13 @@ function displayBooks(containerId, booksToDisplay) {
         
         const title = getBookProperty(book, 'title', 'Titre inconnu');
         const author = getBookProperty(book, 'author', 'Auteur inconnu');
-        const image = getBookProperty(book, 'image', 'https://images.unsplash.com/photo-1598618253208-d75408cee680?q=80&w=1000&auto=format&fit=crop');
+        const image = getBookProperty(book, 'image', '');
         const isBestSeller = getBookProperty(book, 'isBestSeller', false);
         
         const bestSellerBadge = isBestSeller ? `<span class="book-badge">Best Seller</span>` : '';
         
         bookCard.innerHTML = `
-            <img src="${image}" alt="${title}" class="book-cover" 
-                 onerror="this.src='https://images.unsplash.com/photo-1598618253208-d75408cee680?q=80&w=1000&auto=format&fit=crop'; this.onerror=null;">
+            <img src="{{ !empty(${image}) ? (filter_var(${image}, FILTER_VALIDATE_URL) ? image : asset('storage/' . ${image})) : 'https://via.placeholder.com/80x100?text=Livre' }}" alt="{{ $item->name }}" class="book-cover">
             <h3 class="book-title">${title}</h3>
             <span class="author-name">${author}</span>
             ${bestSellerBadge}
