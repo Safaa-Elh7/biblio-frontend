@@ -328,8 +328,8 @@
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Auteur</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Genre</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ISBN</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Langue</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock
                     disponible</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre
@@ -731,8 +731,8 @@
       </td>
       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${article.titre || ''}</td>
       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.auteur || ''}</td>
-      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.genre || ''}</td>
-      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.isbn || ''}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.description || ''}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.langue || ''}</td>
       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.qte || 0}</td>
       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.loans || 0}</td>
       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -1119,17 +1119,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Auteur</label>
                     <input type="text" id="edit-auteur" name="auteur" value="${article.auteur}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
                   </div>
-                  
-                  <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-1">Genre</label>
-                      <input type="text" id="edit-genre" name="genre" value="${article.genre}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                    </div>
-                    <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
-                      <input type="text" id="edit-isbn" name="isbn" value="${article.isbn}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                    </div>
-                  </div>
+
                   
                   <div class="grid grid-cols-3 gap-4 mb-4">
                     <div>
@@ -1280,7 +1270,6 @@
       }
       
       if (confirm("Êtes-vous sûr de vouloir supprimer cet article?")) {
-        // Utiliser FormData pour le corps de la requête
         const formData = new FormData();
         formData.append('_token', csrfToken);
         formData.append('_method', 'DELETE');
