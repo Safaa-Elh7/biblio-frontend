@@ -737,13 +737,13 @@
       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${article.loans || 0}</td>
       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
         <div class="flex space-x-2">
-          <button class="action-button bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="editArticle(${article.id})">
+          <button class="action-button bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="editArticle(${article.id_article})">
             <i class="fas fa-edit mr-1"></i> Modifier
           </button>
-          <button class="action-button bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="deleteArticle(${article.id})">
+          <button class="action-button bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="deleteArticle(${article.id_article})">
             <i class="fas fa-trash mr-1"></i> Supprimer
           </button>
-          <button class="action-button bg-gray-600 hover:bg-gray-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="viewArticleDetails(${article.id})">
+          <button class="action-button bg-gray-600 hover:bg-gray-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="viewArticleDetails(${article.id_article})">
             <i class="fas fa-info-circle mr-1"></i> Détail
           </button>
         </div>
@@ -816,13 +816,13 @@
             <div class="flex justify-between items-center">
               <span class="text-xs font-semibold text-gray-500">ISBN: ${article.isbn || 'N/A'}</span>
               <div class="flex space-x-1">
-                <button onclick="editArticle(${article.id})" class="text-blue-500 hover:text-blue-700">
+                <button onclick="editArticle(${article.id_article})" class="text-blue-500 hover:text-blue-700">
                   <i class="fas fa-edit"></i>
                 </button>
-                <button onclick="deleteArticle(${article.id})" class="text-red-500 hover:text-red-700">
+                <button onclick="deleteArticle(${article.id_article})" class="text-red-500 hover:text-red-700">
                   <i class="fas fa-trash"></i>
                 </button>
-                <button onclick="viewArticleDetails(${article.id})" class="text-gray-500 hover:text-gray-700">
+                <button onclick="viewArticleDetails(${article.id_article})" class="text-gray-500 hover:text-gray-700">
                   <i class="fas fa-info-circle"></i>
                 </button>
               </div>
@@ -1063,7 +1063,7 @@
 
           // S'assurer que toutes les propriétés existent
           article = {
-            id: article.id || id,
+            id: article.id_article || id,
             titre: article.titre || '',
             auteur: article.auteur || '',
             genre: article.genre || '',
@@ -1077,6 +1077,7 @@
             image: article.image || '',
             ...article // conserver d'autres propriétés potentielles
           };
+          
 
           // Create edit modal
           const modal = document.createElement('div');
