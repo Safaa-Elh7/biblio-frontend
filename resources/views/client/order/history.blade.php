@@ -112,6 +112,9 @@
         
         .order-items {
             margin-bottom: 1.5rem;
+            padding: 0.5rem;
+            background-color: #f0e1c0;
+            border-radius: 0.5rem;
         }
         
         .order-item {
@@ -131,6 +134,7 @@
             border-radius: 50%;
             font-size: 0.875rem;
             font-weight: 600;
+            flex-shrink: 0;
         }
         
         .order-item-name {
@@ -192,6 +196,14 @@
             align-items: center;
             gap: 0.5rem;
             text-decoration: none;
+        }
+        
+        .item-image {
+            width: 60px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         
         .view-details-btn:hover {
@@ -298,10 +310,13 @@
                                     $book = $books->firstWhere('id_article', $item->book_id);
                                     $bookImage = $book && !empty($book->image) ? (filter_var($book->image, FILTER_VALIDATE_URL) ? $book->image : asset('storage/' . $book->image)) : 'https://via.placeholder.com/80x100?text=Livre';
                                 @endphp
-                                <div class="order-item">
-                                    <div class="order-item-quantity">{{ $item->quantity }}</div>
-                                    <div class="order-item-name">{{ $item->name }}</div>
+                                <div class="order-item flex items-center gap-4 mb-3 bg-white p-2 rounded-lg">
                                     <img src="{{ $bookImage }}" alt="{{ $item->name }}" class="item-image">
+                                    <div class="flex-1">
+                                        <div class="order-item-name font-medium">{{ $item->name }}</div>
+                                        <div class="text-sm text-gray-500">{{ $book->auteur ?? 'Auteur inconnu' }}</div>
+                                    </div>
+                                    <div class="order-item-quantity">{{ $item->quantity }}</div>
                                 </div>
                             @endforeach
                             

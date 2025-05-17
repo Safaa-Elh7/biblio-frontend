@@ -45,11 +45,18 @@ class OrderController extends Controller
         
         // Récupérer les commandes de l'utilisateur, les plus récentes en premier
         $orders = Order::where('user_id', Auth::id())
+            ->with('items')  // Préchargement des items pour éviter les requêtes N+1
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        $orderItem =  $orders[0]->items;
-        $books = Article::whereIn('id_article', $orderItem->pluck('book_id'))
+        // Collecter tous les IDs de livres de toutes les commandes
+        $bookIds = collect();
+        foreach ($orders as $order) {
+            $bookIds = $bookIds->merge($order->items->pluck('book_id'));
+        }
+        
+        // Récupérer tous les livres associés à toutes les commandes
+        $books = Article::whereIn('id_article', $bookIds->unique())
             ->get();
         
         return view('client.order.history', compact('orders', 'books'));
@@ -172,14 +179,24 @@ class OrderController extends Controller
         // Sinon, recherche uniquement dans les commandes de l'utilisateur
         else {
             $orders = Order::where('user_id', Auth::id())
+                ->with('items')
                 ->where(function($query) use ($searchTerm) {
                     $query->where('order_number', 'LIKE', "%{$searchTerm}%")
                         ->orWhere('full_name', 'LIKE', "%{$searchTerm}%");
                 })
                 ->orderBy('created_at', 'desc')
                 ->paginate(10);
+            
+            // Collecter tous les IDs de livres des commandes trouvées
+            $bookIds = collect();
+            foreach ($orders as $order) {
+                $bookIds = $bookIds->merge($order->items->pluck('book_id'));
+            }
+            
+            // Récupérer tous les livres associés aux commandes
+            $books = Article::whereIn('id_article', $bookIds->unique())->get();
                 
-            return view('client.order.history', compact('orders', 'searchTerm'));
+            return view('client.order.history', compact('orders', 'books', 'searchTerm'));
         }
     }
 }
