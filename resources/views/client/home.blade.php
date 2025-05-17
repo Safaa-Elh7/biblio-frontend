@@ -615,7 +615,7 @@
         </div>
 
         <div class="sidebar-icon">
-            <i class="fas fa-camera"></i>
+        <a href="{{route('order.history')}}" class="text-white text-xl mb-6"><i class="fas fa-history"></i></a>
         </div>
 
         <div class="sidebar-icon">

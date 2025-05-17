@@ -116,7 +116,8 @@
                 </span>
             @endif
         </div>
-        <div class="sidebar-icon text-white text-2xl mb-6"><i class="fas fa-camera"></i></div>
+        <div class="sidebar-icon text-white text-2xl mb-6">        <a href="{{route('order.history')}}" class="text-white text-xl mb-6"><i class="fas fa-history"></i></a>
+</div>
         <div class="sidebar-icon text-white text-2xl mb-6"><i class="fas fa-envelope"></i></div>
         <div class="subscribe-text text-white rotate-90 mt-auto text-sm bg-green-400 px-4 py-2 rounded">Subscribe</div>
     </div>
