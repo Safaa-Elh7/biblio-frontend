@@ -294,10 +294,14 @@
                             @endphp
                             
                             @foreach($displayItems as $item)
+                                @php
+                                    $book = $books->firstWhere('id_article', $item->book_id);
+                                    $bookImage = $book && !empty($book->image) ? (filter_var($book->image, FILTER_VALIDATE_URL) ? $book->image : asset('storage/' . $book->image)) : 'https://via.placeholder.com/80x100?text=Livre';
+                                @endphp
                                 <div class="order-item">
                                     <div class="order-item-quantity">{{ $item->quantity }}</div>
                                     <div class="order-item-name">{{ $item->name }}</div>
-                                    <img src="{{ !empty($item->image) ? (filter_var($item->image, FILTER_VALIDATE_URL) ? $item->image : asset('storage/' . $item->image)) : 'https://via.placeholder.com/80x100?text=Livre' }}" alt="{{ $item->name }}" class="item-image">
+                                    <img src="{{ $bookImage }}" alt="{{ $item->name }}" class="item-image">
                                 </div>
                             @endforeach
                             

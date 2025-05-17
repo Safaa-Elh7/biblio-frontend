@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
@@ -46,8 +47,12 @@ class OrderController extends Controller
         $orders = Order::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->paginate(10);
+
+        $orderItem =  $orders[0]->items;
+        $books = Article::whereIn('id_article', $orderItem->pluck('book_id'))
+            ->get();
         
-        return view('client.order.history', compact('orders'));
+        return view('client.order.history', compact('orders', 'books'));
     }
     
     /**

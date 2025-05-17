@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Livreur - MyBookSpace</title>
+    <title>Dashboard Employé - MyBookSpace</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         /* Custom styles */
@@ -41,10 +41,6 @@
                 display: none;
             }
         }
-
-        .selected-row {
-            background-color: #f3f4f6;
-        }
         
         .logout-btn {
             background-color: #9b2c2c;
@@ -67,6 +63,10 @@
             outline: none;
             box-shadow: 0 0 0 3px rgba(155, 44, 44, 0.5);
         }
+        
+        .selected-row {
+            background-color: #f3f4f6;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -83,11 +83,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
             </div>
-            <div class="bg-red-800 p-2 rounded-md cursor-pointer hover:bg-red-900 transition-colors mr-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-            </div>
+            
             <!-- Bouton de déconnexion -->
             <button class="logout-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -102,27 +98,35 @@
     <main class="container mx-auto p-6">
         <div class="bg-white rounded-lg shadow-md p-6">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold text-gray-800">Gestion des Livraisons</h2>
+                <h2 class="text-xl font-bold text-gray-800">Gestion des Articles et Amendes</h2>
             </div>
 
             <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold">Liste des Livraisons</h3>
+                    <h3 class="text-lg font-semibold">Liste des Articles et Amendes</h3>
+                    <button class="bg-red-800 hover:bg-red-900 text-white py-2 px-4 rounded flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Ajouter un article
+                    </button>
                 </div>
 
                 <!-- Table -->
                 <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white" id="deliveryTable">
+                    <table class="min-w-full bg-white" id="articlesTable">
                         <thead>
                             <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-                                <th class="py-3 px-6 text-left">Commande</th>
-                                <th class="py-3 px-6 text-left">Client</th>
-                                <th class="py-3 px-6 text-left">Adresse</th>
-                                <th class="py-3 px-6 text-left">Date de livraison prévue</th>
-                                <th class="py-3 px-6 text-center">État</th>
+                                <th class="py-3 px-6 text-left">Article</th>
+                                <th class="py-3 px-6 text-left">User</th>
+                                <th class="py-3 px-6 text-left">Date de retour prévue</th>
+                                <th class="py-3 px-6 text-left">Date de retour réelle</th>
+                                <th class="py-3 px-6 text-center">Retard (jours)</th>
+                                <th class="py-3 px-6 text-center">Amende (Dhs)</th>
+                                <th class="py-3 px-6 text-center">État de l'amende</th>
                             </tr>
                         </thead>
-                        <tbody class="text-gray-600 text-sm" id="deliveryTableBody">
+                        <tbody class="text-gray-600 text-sm" id="articlesTableBody">
                             <!-- Table rows will be inserted here by JavaScript -->
                         </tbody>
                     </table>
@@ -130,11 +134,11 @@
 
                 <!-- Action Buttons -->
                 <div class="flex mt-6 gap-2">
-                    <button id="markDeliveredBtn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded flex items-center opacity-50 cursor-not-allowed" disabled>
+                    <button id="addBtn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center opacity-50 cursor-not-allowed" disabled>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
-                        Marquer comme livré
+                        Ajouter
                     </button>
                     <button id="editBtn" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded flex items-center opacity-50 cursor-not-allowed" disabled>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -154,70 +158,81 @@
     </main>
 
     <script>
-        // Sample data for deliveries
-        const deliveries = [
+        // Sample data for articles and fines
+        const articles = [
             {
-                id: "CMD-001",
-                client: "Ahmed Benali",
-                address: "123 Rue Hassan II, Casablanca",
-                date: "15/05/2023",
-                status: "en-cours"
+                id: 1,
+                title: "Le Petit Prince",
+                user: "Ahmed Benali",
+                expectedReturnDate: "10/05/2023",
+                actualReturnDate: "15/05/2023",
+                delayDays: 5,
+                fine: 50,
+                fineStatus: "paye"
             },
             {
-                id: "CMD-002",
-                client: "Fatima Zahra",
-                address: "45 Avenue Mohammed V, Rabat",
-                date: "16/05/2023",
-                status: "livre"
+                id: 2,
+                title: "1984",
+                user: "Fatima Zahra",
+                expectedReturnDate: "12/05/2023",
+                actualReturnDate: "12/05/2023",
+                delayDays: 0,
+                fine: 0,
+                fineStatus: "paye"
             },
             {
-                id: "CMD-003",
-                client: "Karim Idrissi",
-                address: "78 Rue Ibn Sina, Marrakech",
-                date: "14/05/2023",
-                status: "non-livre"
+                id: 3,
+                title: "Harry Potter à l'école des sorciers",
+                user: "Karim Idrissi",
+                expectedReturnDate: "05/05/2023",
+                actualReturnDate: "15/05/2023",
+                delayDays: 10,
+                fine: 100,
+                fineStatus: "non-paye"
             },
             {
-                id: "CMD-004",
-                client: "Nadia Tazi",
-                address: "12 Boulevard Zerktouni, Casablanca",
-                date: "17/05/2023",
-                status: "en-cours"
+                id: 4,
+                title: "L'Étranger",
+                user: "Nadia Tazi",
+                expectedReturnDate: "08/05/2023",
+                actualReturnDate: "16/05/2023",
+                delayDays: 8,
+                fine: 80,
+                fineStatus: "non-paye"
             },
             {
-                id: "CMD-005",
-                client: "Youssef Alami",
-                address: "56 Rue Moulay Ismail, Tanger",
-                date: "13/05/2023",
-                status: "livre"
+                id: 5,
+                title: "Les Misérables",
+                user: "Youssef Alami",
+                expectedReturnDate: "01/05/2023",
+                actualReturnDate: "03/05/2023",
+                delayDays: 2,
+                fine: 20,
+                fineStatus: "paye"
             }
         ];
 
         // DOM elements
-        const tableBody = document.getElementById('deliveryTableBody');
-        const markDeliveredBtn = document.getElementById('markDeliveredBtn');
+        const tableBody = document.getElementById('articlesTableBody');
+        const addBtn = document.getElementById('addBtn');
         const editBtn = document.getElementById('editBtn');
         const deleteBtn = document.getElementById('deleteBtn');
         
-        let selectedDeliveryId = null;
+        let selectedArticleId = null;
 
-        // Function to get status badge HTML
-        function getStatusBadge(status) {
+        // Function to get fine status badge HTML
+        function getFineStatusBadge(status) {
             let badgeClass = '';
             let statusText = '';
 
             switch (status) {
-                case 'en-cours':
-                    badgeClass = 'bg-yellow-100 text-yellow-800';
-                    statusText = 'En cours';
-                    break;
-                case 'livre':
+                case 'paye':
                     badgeClass = 'bg-green-100 text-green-800';
-                    statusText = 'Livré';
+                    statusText = 'Payé';
                     break;
-                case 'non-livre':
+                case 'non-paye':
                     badgeClass = 'bg-red-100 text-red-800';
-                    statusText = 'Non livré';
+                    statusText = 'Non payé';
                     break;
                 default:
                     badgeClass = 'bg-gray-100 text-gray-800';
@@ -227,46 +242,44 @@
             return `<span class="${badgeClass} py-1 px-3 rounded-full text-xs">${statusText}</span>`;
         }
 
-        // Function to render deliveries
-        function renderDeliveries() {
+        // Function to render articles
+        function renderArticles() {
             tableBody.innerHTML = '';
             
-            deliveries.forEach(delivery => {
+            articles.forEach(article => {
                 const row = document.createElement('tr');
-                row.className = `border-b border-gray-200 hover:bg-gray-50 cursor-pointer ${selectedDeliveryId === delivery.id ? 'selected-row' : ''}`;
-                row.dataset.id = delivery.id;
+                row.className = `border-b border-gray-200 hover:bg-gray-50 cursor-pointer ${selectedArticleId === article.id ? 'selected-row' : ''}`;
+                row.dataset.id = article.id;
                 
                 row.innerHTML = `
-                    <td class="py-3 px-6 text-left">${delivery.id}</td>
-                    <td class="py-3 px-6 text-left">${delivery.client}</td>
-                    <td class="py-3 px-6 text-left">${delivery.address}</td>
-                    <td class="py-3 px-6 text-left">${delivery.date}</td>
-                    <td class="py-3 px-6 text-center">${getStatusBadge(delivery.status)}</td>
+                    <td class="py-3 px-6 text-left">${article.title}</td>
+                    <td class="py-3 px-6 text-left">${article.user}</td>
+                    <td class="py-3 px-6 text-left">${article.expectedReturnDate}</td>
+                    <td class="py-3 px-6 text-left">${article.actualReturnDate}</td>
+                    <td class="py-3 px-6 text-center">${article.delayDays}</td>
+                    <td class="py-3 px-6 text-center">${article.fine}</td>
+                    <td class="py-3 px-6 text-center">${getFineStatusBadge(article.fineStatus)}</td>
                 `;
                 
-                row.addEventListener('click', () => selectDelivery(delivery.id));
+                row.addEventListener('click', () => selectArticle(article.id));
                 tableBody.appendChild(row);
             });
         }
 
-        // Function to select a delivery
-        function selectDelivery(id) {
-            selectedDeliveryId = id;
-            renderDeliveries();
+        // Function to select an article
+        function selectArticle(id) {
+            selectedArticleId = id;
+            renderArticles();
             updateButtonStates();
         }
 
         // Function to update button states
         function updateButtonStates() {
-            const isSelected = selectedDeliveryId !== null;
-            const selectedDelivery = deliveries.find(d => d.id === selectedDeliveryId);
-            const isDelivered = selectedDelivery && selectedDelivery.status === 'livre';
+            const isSelected = selectedArticleId !== null;
             
-            // Enable/disable buttons based on selection
             if (isSelected) {
-                markDeliveredBtn.disabled = isDelivered;
-                markDeliveredBtn.classList.toggle('opacity-50', isDelivered);
-                markDeliveredBtn.classList.toggle('cursor-not-allowed', isDelivered);
+                addBtn.disabled = false;
+                addBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 
                 editBtn.disabled = false;
                 editBtn.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -274,8 +287,8 @@
                 deleteBtn.disabled = false;
                 deleteBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             } else {
-                markDeliveredBtn.disabled = true;
-                markDeliveredBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                addBtn.disabled = true;
+                addBtn.classList.add('opacity-50', 'cursor-not-allowed');
                 
                 editBtn.disabled = true;
                 editBtn.classList.add('opacity-50', 'cursor-not-allowed');
@@ -285,34 +298,21 @@
             }
         }
 
-        // Function to mark a delivery as delivered
-        function markAsDelivered() {
-            if (selectedDeliveryId) {
-                const index = deliveries.findIndex(d => d.id === selectedDeliveryId);
+        // Function to delete an article
+        function deleteArticle() {
+            if (selectedArticleId) {
+                const index = articles.findIndex(a => a.id === selectedArticleId);
                 if (index !== -1) {
-                    deliveries[index].status = 'livre';
-                    renderDeliveries();
-                    updateButtonStates();
-                }
-            }
-        }
-
-        // Function to delete a delivery
-        function deleteDelivery() {
-            if (selectedDeliveryId) {
-                const index = deliveries.findIndex(d => d.id === selectedDeliveryId);
-                if (index !== -1) {
-                    deliveries.splice(index, 1);
-                    selectedDeliveryId = null;
-                    renderDeliveries();
+                    articles.splice(index, 1);
+                    selectedArticleId = null;
+                    renderArticles();
                     updateButtonStates();
                 }
             }
         }
 
         // Event listeners for buttons
-        markDeliveredBtn.addEventListener('click', markAsDelivered);
-        deleteBtn.addEventListener('click', deleteDelivery);
+        deleteBtn.addEventListener('click', deleteArticle);
         
         // Ajouter un événement pour le bouton de déconnexion
         document.querySelector('.logout-btn').addEventListener('click', function() {
@@ -322,7 +322,7 @@
         });
 
         // Initial render
-        renderDeliveries();
+        renderArticles();
         updateButtonStates();
     </script>
 </body>
