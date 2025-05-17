@@ -1127,7 +1127,7 @@
                   
                   <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <textarea id="edit-contenu" name="contenu" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="5">${article.contenu || ''}</textarea>
+                    <textarea id="edit-contenu" name="description" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="5">${article.contenu || ''}</textarea>
                   </div>
                 </div>
                 
