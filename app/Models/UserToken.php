@@ -19,4 +19,5 @@ class UserToken extends Authenticatable
     {
         return $this->belongsTo(Utilisateur::class, 'id_user', 'id_utilisateur');
     }
+    
 }

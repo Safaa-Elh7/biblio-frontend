@@ -1,0 +1,328 @@
+document.addEventListener("DOMContentLoaded", () => {
+  // Éléments du DOM
+  const addLivreurBtn = document.getElementById("addLivreurBtn")
+  const addLivreurModal = document.getElementById("addLivreurModal")
+  const closeModal = document.getElementById("closeModal")
+  const cancelAddLivreur = document.getElementById("cancelAddLivreur")
+  const addLivreurForm = document.getElementById("addLivreurForm")
+
+  const editLivreurModal = document.getElementById("editLivreurModal")
+  const closeEditModal = document.getElementById("closeEditModal")
+  const cancelEditLivreur = document.getElementById("cancelEditLivreur")
+  const editLivreurForm = document.getElementById("editLivreurForm")
+
+  const viewLivreurModal = document.getElementById("viewLivreurModal")
+  const closeViewModal = document.getElementById("closeViewModal")
+  const closeViewModalBtn = document.getElementById("closeViewModalBtn")
+
+  const sidebarToggle = document.getElementById("sidebarToggle")
+  const mobileSidebar = document.getElementById("mobileSidebar")
+  const closeSidebar = document.getElementById("closeSidebar")
+
+  const searchInput = document.getElementById("searchInput")
+
+  // Token CSRF pour les requêtes AJAX
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+
+  // Fonction pour afficher les notifications
+  window.showNotification = (message, type = "success") => {
+    // Supprimer les notifications existantes
+    const existingNotifications = document.querySelectorAll(".notification")
+    existingNotifications.forEach((notification) => {
+      notification.remove()
+    })
+
+    // Créer une nouvelle notification
+    const notification = document.createElement("div")
+    notification.className = `notification ${type === "success" ? "bg-green-500" : "bg-red-500"}`
+    notification.textContent = message
+
+    document.body.appendChild(notification)
+
+    // Supprimer la notification après un délai
+    setTimeout(() => {
+      notification.classList.add("hiding")
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification)
+        }
+      }, 300)
+    }, 3000)
+  }
+
+  // Gestion du sidebar mobile
+  if (sidebarToggle) {
+    sidebarToggle.addEventListener("click", () => {
+      mobileSidebar.classList.remove("hidden")
+      const sidebar = mobileSidebar.querySelector(".sidebar")
+      setTimeout(() => {
+        sidebar.style.transform = "translateX(0)"
+      }, 10)
+    })
+  }
+
+  if (closeSidebar) {
+    closeSidebar.addEventListener("click", () => {
+      const sidebar = mobileSidebar.querySelector(".sidebar")
+      sidebar.style.transform = "translateX(-100%)"
+      setTimeout(() => {
+        mobileSidebar.classList.add("hidden")
+      }, 300)
+    })
+  }
+
+  // Gestion des modals
+  if (addLivreurBtn) {
+    addLivreurBtn.addEventListener("click", () => {
+      addLivreurModal.classList.remove("hidden")
+      document.body.style.overflow = "hidden"
+    })
+  }
+
+  // Fonction pour fermer les modals
+  function closeModalFunction(modal) {
+    modal.classList.add("hidden")
+    document.body.style.overflow = "auto"
+  }
+
+  // Événements pour fermer les modals
+  if (closeModal) {
+    closeModal.addEventListener("click", () => closeModalFunction(addLivreurModal))
+  }
+
+  if (cancelAddLivreur) {
+    cancelAddLivreur.addEventListener("click", () => closeModalFunction(addLivreurModal))
+  }
+
+  if (closeEditModal) {
+    closeEditModal.addEventListener("click", () => closeModalFunction(editLivreurModal))
+  }
+
+  if (cancelEditLivreur) {
+    cancelEditLivreur.addEventListener("click", () => closeModalFunction(editLivreurModal))
+  }
+
+  if (closeViewModal) {
+    closeViewModal.addEventListener("click", () => closeModalFunction(viewLivreurModal))
+  }
+
+  if (closeViewModalBtn) {
+    closeViewModalBtn.addEventListener("click", () => closeModalFunction(viewLivreurModal))
+  }
+
+  // Gestion du formulaire d'ajout
+  if (addLivreurForm) {
+    addLivreurForm.addEventListener("submit", (e) => {
+      e.preventDefault()
+
+      const formData = new FormData(addLivreurForm)
+
+      fetch("/bibliothecaire/livreurs", {
+        method: "POST",
+        headers: {
+          "X-CSRF-TOKEN": csrfToken,
+        },
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            // Fermer le modal
+            closeModalFunction(addLivreurModal)
+
+            // Réinitialiser le formulaire
+            addLivreurForm.reset()
+
+            // Rafraîchir la liste des livreurs
+            window.location.reload()
+
+            // Afficher un message de succès
+            window.showNotification(data.message)
+          } else {
+            // Afficher un message d'erreur
+            window.showNotification(data.message, "error")
+          }
+        })
+        .catch((error) => {
+          console.error("Erreur:", error)
+          window.showNotification("Une erreur est survenue lors de l'ajout du livreur", "error")
+        })
+    })
+  }
+
+  // Gestion du formulaire d'édition
+  if (editLivreurForm) {
+    editLivreurForm.addEventListener("submit", (e) => {
+      e.preventDefault()
+
+      const formData = new FormData(editLivreurForm)
+      const livreurId = editLivreurForm.getAttribute("data-id")
+
+      // Utiliser la méthode PUT pour la mise à jour
+      formData.append("_method", "PUT")
+
+      fetch(`/bibliothecaire/livreurs/${livreurId}`, {
+        method: "POST", // POST avec _method=PUT
+        headers: {
+          "X-CSRF-TOKEN": csrfToken,
+        },
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            // Fermer le modal
+            closeModalFunction(editLivreurModal)
+
+            // Réinitialiser le formulaire
+            editLivreurForm.reset()
+
+            // Rafraîchir la liste des livreurs
+            window.location.reload()
+
+            // Afficher un message de succès
+            window.showNotification(data.message)
+          } else {
+            // Afficher un message d'erreur
+            window.showNotification(data.message, "error")
+          }
+        })
+        .catch((error) => {
+          console.error("Erreur:", error)
+          window.showNotification("Une erreur est survenue lors de la mise à jour du livreur", "error")
+        })
+    })
+  }
+
+  // Recherche de livreurs
+  if (searchInput) {
+    searchInput.addEventListener("keyup", function () {
+      const searchTerm = this.value.toLowerCase()
+      const tableRows = document.querySelectorAll("#livreursTableBody tr")
+
+      tableRows.forEach((row) => {
+        const text = row.textContent.toLowerCase()
+        if (text.includes(searchTerm)) {
+          row.style.display = ""
+        } else {
+          row.style.display = "none"
+        }
+      })
+
+      // Mettre à jour les compteurs d'entrées
+      updateEntryCounters()
+    })
+  }
+
+  // Fonction pour mettre à jour les compteurs d'entrées
+  function updateEntryCounters() {
+    const tableRows = document.querySelectorAll("#livreursTableBody tr")
+    const visibleRows = document.querySelectorAll('#livreursTableBody tr:not([style*="display: none"])')
+
+    document.getElementById("startEntry").textContent = visibleRows.length > 0 ? "1" : "0"
+    document.getElementById("endEntry").textContent = visibleRows.length.toString()
+    document.getElementById("totalEntries").textContent = tableRows.length.toString()
+  }
+
+  // Fonction pour éditer un livreur
+  window.editLivreur = (id) => {
+    fetch(`/bibliothecaire/livreurs/${id}/edit`, {
+      method: "GET",
+      headers: {
+        "X-CSRF-TOKEN": csrfToken,
+        Accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          // Remplir le formulaire avec les données du livreur
+          const livreur = data.livreur
+          document.getElementById("edit_nom").value = livreur.nom
+          document.getElementById("edit_prenom").value = livreur.prenom
+          document.getElementById("edit_email").value = livreur.email
+          document.getElementById("edit_telephone").value = livreur.telephone
+          document.getElementById("edit_zone_livraison").value = livreur.zone_livraison
+          document.getElementById("edit_moyen_transport").value = livreur.moyen_transport
+
+          // Définir l'ID du livreur pour la soumission du formulaire
+          editLivreurForm.setAttribute("data-id", livreur.id_users)
+
+          // Ouvrir le modal
+          editLivreurModal.classList.remove("hidden")
+          document.body.style.overflow = "hidden"
+        } else {
+          window.showNotification(data.message, "error")
+        }
+      })
+      .catch((error) => {
+        console.error("Erreur:", error)
+        window.showNotification("Une erreur est survenue lors de la récupération des données du livreur", "error")
+      })
+  }
+
+  // Fonction pour supprimer un livreur
+  window.deleteLivreur = (id) => {
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce livreur?")) {
+      fetch(`/bibliothecaire/livreurs/${id}`, {
+        method: "DELETE",
+        headers: {
+          "X-CSRF-TOKEN": csrfToken,
+          Accept: "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            // Rafraîchir la liste des livreurs
+            window.location.reload()
+
+            // Afficher un message de succès
+            window.showNotification(data.message)
+          } else {
+            // Afficher un message d'erreur
+            window.showNotification(data.message, "error")
+          }
+        })
+        .catch((error) => {
+          console.error("Erreur:", error)
+          window.showNotification("Une erreur est survenue lors de la suppression du livreur", "error")
+        })
+    }
+  }
+
+  // Fonction pour voir les détails d'un livreur
+  window.viewLivreurDetails = (id) => {
+    fetch(`/bibliothecaire/livreurs/${id}/edit`, {
+      method: "GET",
+      headers: {
+        "X-CSRF-TOKEN": csrfToken,
+        Accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          // Récupérer les données du livreur
+          const livreur = data.livreur
+
+          // Remplir le modal avec les détails du livreur
+          document.getElementById("detail_nom").textContent = `${livreur.nom} ${livreur.prenom}`
+          document.getElementById("detail_email").textContent = livreur.email
+          document.getElementById("detail_telephone").textContent = livreur.telephone
+          document.getElementById("detail_zone").textContent = livreur.zone_livraison
+          document.getElementById("detail_transport").textContent = livreur.moyen_transport
+
+          // Ouvrir le modal
+          viewLivreurModal.classList.remove("hidden")
+          document.body.style.overflow = "hidden"
+        } else {
+          window.showNotification(data.message, "error")
+        }
+      })
+      .catch((error) => {
+        console.error("Erreur:", error)
+        window.showNotification("Une erreur est survenue lors de la récupération des détails du livreur", "error")
+      })
+  }
+})
