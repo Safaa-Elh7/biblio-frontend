@@ -124,31 +124,31 @@
       <div class="py-4">
         <ul>
           <li class="px-4 py-2">
-            <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.dashboard.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-home mr-3"></i>
               <span>Accueil</span>
             </a>
           </li>
           <li class="px-4 py-2">
-            <a href="#" class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.user.index') }}" class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-users mr-3"></i>
               <span>Users</span>
             </a>
           </li>
           <li class="px-4 py-2">
-            <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.livreur.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-truck mr-3"></i>
               <span>Livreurs</span>
             </a>
           </li>
           <li class="px-4 py-2">
-            <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+            <a href="" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-credit-card mr-3"></i>
-              <span>Payments</span>
+              <span>Orders</span>
             </a>
           </li>
           <li class="px-4 py-2">
-            <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.article.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-book mr-3"></i>
               <span>Articles</span>
             </a>
@@ -156,14 +156,16 @@
         </ul>
       </div>
       <div class="absolute bottom-0 w-64 border-t border-primary-dark">
-        <div class="flex items-center px-4 py-3">
-          <div class="flex items-center">
-            <div class="w-8 h-8 rounded-full bg-primary-dark flex items-center justify-center text-white">
-              <i class="fas fa-user-shield"></i>
-            </div>
-            <div class="ml-2">
-              <div class="text-white text-sm font-medium">Admin</div>
-              <div class="text-white text-xs opacity-70">admin@mybookspace.com</div>
+        <div class="absolute bottom-0 w-64 border-t border-primary-dark">
+          <div class="flex items-center px-4 py-3">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-primary-dark flex items-center justify-center text-white">
+                <i class="fas fa-user-shield"></i>
+              </div>
+              <div class="ml-2">
+                <div class="text-white text-sm font-medium">{{ Auth::user()->nom }}</div>
+                <div class="text-white text-xs opacity-70">{{ Auth::user()->email }}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -192,19 +194,19 @@
         <div class="py-4">
           <ul>
             <li class="px-4 py-2">
-              <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+              <a href="{{ route('bibliothecaire.dashboard.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
                 <i class="fas fa-home mr-3"></i>
                 <span>Accueil</span>
               </a>
             </li>
             <li class="px-4 py-2">
-              <a href="#" class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
+              <a href="{{ route('bibliothecaire.user.index') }}" class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
                 <i class="fas fa-users mr-3"></i>
                 <span>Users</span>
               </a>
             </li>
             <li class="px-4 py-2">
-              <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+              <a href="{{ route('bibliothecaire.livreur.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
                 <i class="fas fa-truck mr-3"></i>
                 <span>Livreurs</span>
               </a>
@@ -212,11 +214,11 @@
             <li class="px-4 py-2">
               <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
                 <i class="fas fa-credit-card mr-3"></i>
-                <span>Payments</span>
+                <span>Orders</span>
               </a>
             </li>
             <li class="px-4 py-2">
-              <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+              <a href="{{ route('bibliothecaire.article.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
                 <i class="fas fa-book mr-3"></i>
                 <span>Articles</span>
               </a>
@@ -230,8 +232,8 @@
                 <i class="fas fa-user-shield"></i>
               </div>
               <div class="ml-2">
-                <div class="text-white text-sm font-medium">Admin</div>
-                <div class="text-white text-xs opacity-70">admin@mybookspace.com</div>
+                <div class="text-white text-sm font-medium">{{ Auth::user()->nom }}</div>
+                <div class="text-white text-xs opacity-70">{{ Auth::user()->email }}</div>
               </div>
             </div>
           </div>
@@ -245,18 +247,7 @@
       <header class="bg-white shadow-sm">
         <div class="flex items-center justify-between px-4 py-3">
           <h1 class="text-2xl font-semibold text-gray-800">Tableau de Bord Utilisateurs</h1>
-          <div class="flex items-center">
-            <div class="relative mr-4">
-              <input type="text" placeholder="Rechercher..." class="search-input bg-gray-100 rounded-full py-2 px-4 pl-10 focus:outline-none transition duration-200 w-64">
-              <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-            </div>
-            <div class="relative">
-              <button class="relative p-2 text-gray-600 hover:text-primary focus:outline-none">
-                <i class="fas fa-bell text-xl"></i>
-                <span class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">3</span>
-              </button>
-            </div>
-          </div>
+          
         </div>
       </header>
 

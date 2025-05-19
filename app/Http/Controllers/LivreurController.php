@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Livraison;
 use App\Models\Livreur;
 use App\Models\User;
+use App\Models\Utilisateur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -13,12 +14,6 @@ use Illuminate\Validation\Rule;
 
 class LivreurController extends Controller
 {
-    /**
-     * Affiche le tableau de bord du livreur connecté
-     */
-    /**
-     * Affiche le tableau de bord du livreur connecté
-     */
     public function index()
     {
         // Récupérer le livreur connecté
@@ -50,10 +45,9 @@ class LivreurController extends Controller
      */
     public function show()
     {
-        $livreurs = DB::table('livreur')
-            ->join('users', 'livreur.id_livreur', '=', 'users.id_users')
-            ->select('livreur.*', 'users.nom', 'users.prenom', 'users.email', 'users.telephone')
-            ->get();
+        
+         $livreurs = Utilisateur::with('user')->where('id_role', 4)->get();
+
             
         return view('bibliothecaire.livreur', compact('livreurs'));
     }
@@ -111,7 +105,7 @@ class LivreurController extends Controller
     {
         $livreur = DB::table('livreur')
             ->join('users', 'livreur.id_livreur', '=', 'users.id_users')
-            ->select('livreur.*', 'users.nom', 'users.prenom', 'users.email', 'users.telephone', 'users.id_users')
+            ->select('livreur.*', 'users.name', 'users.prenom', 'users.email', 'users.telephone', 'users.id_users')
             ->where('livreur.id_livreur', $id)
             ->first();
 
