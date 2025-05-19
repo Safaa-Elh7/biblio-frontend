@@ -397,636 +397,251 @@
 
   <!-- JavaScript -->
   <script>
-    // Wait for DOM to be fully loaded
-    document.addEventListener("DOMContentLoaded", () => {
-      // Create logo
-      createLogo();
-
-      // Sample data for livreurs
-      const livreurs = [
-        {
-          id_livreur: 1,
-          nom: "Dupont",
-          prenom: "Jean",
-          zone_livraison: "Centre-ville",
-          moyen_transport: "Vélo",
-          telephone: "06 12 34 56 78",
-          email: "jean.dupont@mybookspace.com",
-          statut: "Actif",
-          date_embauche: "2022-03-15",
-          livraisons: 145
-        },
-        {
-          id_livreur: 2,
-          nom: "Martin",
-          prenom: "Sophie",
-          zone_livraison: "Nord",
-          moyen_transport: "Scooter",
-          telephone: "06 23 45 67 89",
-          email: "sophie.martin@mybookspace.com",
-          statut: "Actif",
-          date_embauche: "2022-05-20",
-          livraisons: 98
-        },
-        {
-          id_livreur: 3,
-          nom: "Leroy",
-          prenom: "Thomas",
-          zone_livraison: "Sud",
-          moyen_transport: "Voiture",
-          telephone: "06 34 56 78 90",
-          email: "thomas.leroy@mybookspace.com",
-          statut: "En congé",
-          date_embauche: "2021-11-10",
-          livraisons: 210
-        },
-        {
-          id_livreur: 4,
-          nom: "Dubois",
-          prenom: "Marie",
-          zone_livraison: "Est",
-          moyen_transport: "Moto",
-          telephone: "06 45 67 89 01",
-          email: "marie.dubois@mybookspace.com",
-          statut: "Actif",
-          date_embauche: "2023-01-05",
-          livraisons: 67
-        },
-        {
-          id_livreur: 5,
-          nom: "Petit",
-          prenom: "Lucas",
-          zone_livraison: "Ouest",
-          moyen_transport: "Vélo",
-          telephone: "06 56 78 90 12",
-          email: "lucas.petit@mybookspace.com",
-          statut: "Actif",
-          date_embauche: "2022-09-18",
-          livraisons: 112
-        },
-        {
-          id_livreur: 6,
-          nom: "Moreau",
-          prenom: "Emma",
-          zone_livraison: "Centre-ville",
-          moyen_transport: "À pied",
-          telephone: "06 67 89 01 23",
-          email: "emma.moreau@mybookspace.com",
-          statut: "Inactif",
-          date_embauche: "2021-07-22",
-          livraisons: 89
-        },
-        {
-          id_livreur: 7,
-          nom: "Simon",
-          prenom: "Hugo",
-          zone_livraison: "Banlieue",
-          moyen_transport: "Voiture",
-          telephone: "06 78 90 12 34",
-          email: "hugo.simon@mybookspace.com",
-          statut: "Actif",
-          date_embauche: "2022-11-30",
-          livraisons: 156
-        },
-        {
-          id_livreur: 8,
-          nom: "Garcia",
-          prenom: "Léa",
-          zone_livraison: "Nord",
-          moyen_transport: "Scooter",
-          telephone: "06 89 01 23 45",
-          email: "lea.garcia@mybookspace.com",
-          statut: "Actif",
-          date_embauche: "2023-02-14",
-          livraisons: 42
-        },
-        {
-          id_livreur: 9,
-          nom: "Roux",
-          prenom: "Nathan",
-          zone_livraison: "Sud",
-          moyen_transport: "Moto",
-          telephone: "06 90 12 34 56",
-          email: "nathan.roux@mybookspace.com",
-          statut: "En congé",
-          date_embauche: "2022-06-08",
-          livraisons: 134
-        },
-        {
-          id_livreur: 10,
-          nom: "Fournier",
-          prenom: "Chloé",
-          zone_livraison: "Est",
-          moyen_transport: "Vélo",
-          telephone: "06 01 23 45 67",
-          email: "chloe.fournier@mybookspace.com",
-          statut: "Actif",
-          date_embauche: "2022-08-25",
-          livraisons: 87
-        }
-      ];
-
-      // Pagination variables
-      let currentPage = 1;
-      const itemsPerPage = 5;
-      const totalPages = Math.ceil(livreurs.length / itemsPerPage);
-
-      // Initialize the table
-      updateTable();
-      updatePagination();
-
-      // Mobile sidebar toggle
-      const sidebarToggle = document.getElementById("sidebarToggle");
-      const mobileSidebar = document.getElementById("mobileSidebar");
-      const closeSidebar = document.getElementById("closeSidebar");
-      const sidebar = mobileSidebar.querySelector(".sidebar");
-
-      sidebarToggle.addEventListener("click", () => {
-        mobileSidebar.classList.remove("hidden");
-        setTimeout(() => {
-          sidebar.classList.add("translate-x-0");
-          sidebar.classList.remove("-translate-x-full");
-        }, 50);
-      });
-
-      closeSidebar.addEventListener("click", () => {
-        sidebar.classList.remove("translate-x-0");
-        sidebar.classList.add("-translate-x-full");
-        setTimeout(() => {
-          mobileSidebar.classList.add("hidden");
-        }, 300);
-      });
-
-      // Close sidebar when clicking outside
-      mobileSidebar.addEventListener("click", (e) => {
-        if (e.target === mobileSidebar) {
-          sidebar.classList.remove("translate-x-0");
-          sidebar.classList.add("-translate-x-full");
-          setTimeout(() => {
-            mobileSidebar.classList.add("hidden");
-          }, 300);
-        }
-      });
-
-      // Pagination event listeners
-      document.getElementById("prevPage").addEventListener("click", () => {
-        if (currentPage > 1) {
-          currentPage--;
-          updateTable();
-          updatePagination();
-        }
-      });
-
-      document.getElementById("nextPage").addEventListener("click", () => {
-        if (currentPage < totalPages) {
-          currentPage++;
-          updateTable();
-          updatePagination();
-        }
-      });
-
-      // Page number buttons
-      document.querySelectorAll(".pagination-button[data-page]").forEach((button) => {
-        button.addEventListener("click", function () {
-          currentPage = Number.parseInt(this.getAttribute("data-page"));
-          updateTable();
-          updatePagination();
+  // Script pour gérer les opérations CRUD sur les livreurs avec AJAX
+document.addEventListener("DOMContentLoaded", function() {
+    // Éléments du DOM
+    const addLivreurForm = document.getElementById('addLivreurForm');
+    const addLivreurModal = document.getElementById('addLivreurModal');
+    const closeModal = document.getElementById('closeModal');
+    const cancelAddLivreur = document.getElementById('cancelAddLivreur');
+    const editLivreurForm = document.getElementById('editLivreurForm');
+    const editLivreurModal = document.getElementById('editLivreurModal');
+    const closeEditModal = document.getElementById('closeEditModal');
+    const cancelEditLivreur = document.getElementById('cancelEditLivreur');
+    
+    // Token CSRF pour les requêtes AJAX
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    // Gestion du formulaire d'ajout
+    if (addLivreurForm) {
+        addLivreurForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(addLivreurForm);
+            
+            fetch('/bibliothecaire/livreurs', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Fermer le modal
+                    closeModalFunction(addLivreurModal);
+                    
+                    // Rafraîchir la liste des livreurs
+                    window.location.reload();
+                    
+                    // Afficher un message de succès
+                    showNotification(data.message);
+                } else {
+                    // Afficher un message d'erreur
+                    showNotification(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                showNotification('Une erreur est survenue lors de l\'ajout du livreur', 'error');
+            });
         });
-      });
-
-      // Add Livreur Modal functionality
-      const addLivreurBtn = document.getElementById("addLivreurBtn");
-      const addLivreurModal = document.getElementById("addLivreurModal");
-      const closeModal = document.getElementById("closeModal");
-      const cancelAddLivreur = document.getElementById("cancelAddLivreur");
-      const addLivreurForm = document.getElementById("addLivreurForm");
-
-      addLivreurBtn.addEventListener("click", () => {
-        addLivreurModal.classList.remove("hidden");
-        document.body.style.overflow = "hidden";
-      });
-
-      function closeModalFunction() {
-        addLivreurModal.classList.add("hidden");
-        document.body.style.overflow = "auto";
-        addLivreurForm.reset();
-      }
-
-      closeModal.addEventListener("click", closeModalFunction);
-      cancelAddLivreur.addEventListener("click", closeModalFunction);
-
-      // Close modal when clicking outside
-      addLivreurModal.addEventListener("click", (e) => {
-        if (e.target === addLivreurModal) {
-          closeModalFunction();
-        }
-      });
-
-      // View Livreur Modal functionality
-      const viewLivreurModal = document.getElementById("viewLivreurModal");
-      const closeViewModal = document.getElementById("closeViewModal");
-      const closeViewModalBtn = document.getElementById("closeViewModalBtn");
-      const livreurDetails = document.getElementById("livreurDetails");
-
-      function closeViewModalFunction() {
-        viewLivreurModal.classList.add("hidden");
-        document.body.style.overflow = "auto";
-      }
-
-      closeViewModal.addEventListener("click", closeViewModalFunction);
-      closeViewModalBtn.addEventListener("click", closeViewModalFunction);
-
-      // Close view modal when clicking outside
-      viewLivreurModal.addEventListener("click", (e) => {
-        if (e.target === viewLivreurModal) {
-          closeViewModalFunction();
-        }
-      });
-
-      // Form submission
-      addLivreurForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        // Get form values
-        const newLivreur = {
-          id_livreur: livreurs.length + 1,
-          nom: document.getElementById("nom").value,
-          prenom: document.getElementById("prenom").value,
-          zone_livraison: document.getElementById("zone_livraison").value,
-          moyen_transport: document.getElementById("moyen_transport").value,
-          telephone: document.getElementById("telephone").value,
-          email: document.getElementById("email").value,
-          statut: document.getElementById("statut").value,
-          date_embauche: document.getElementById("date_embauche").value,
-          livraisons: 0 // Nouveau livreur, pas encore de livraisons
-        };
-
-        // Add to livreurs array
-        livreurs.unshift(newLivreur);
-
-        // Update table and pagination
-        currentPage = 1;
-        updateTable();
-        updatePagination();
-
-        // Close modal
-        closeModalFunction();
-
-        // Show success notification
-        showNotification("Livreur ajouté avec succès!");
-      });
-
-      // Search functionality
-      const searchInput = document.querySelector(".search-input");
-      searchInput.addEventListener("input", () => {
-        currentPage = 1;
-        updateTable();
-        updatePagination();
-      });
-
-      // Function to update the table based on current page and search
-      function updateTable() {
-        const tableBody = document.getElementById("livreursTableBody");
-        tableBody.innerHTML = "";
-
-        const searchTerm = searchInput.value.toLowerCase();
-        const filteredLivreurs = livreurs.filter(
-          (livreur) =>
-            (livreur.nom && livreur.nom.toLowerCase().includes(searchTerm)) ||
-            (livreur.prenom && livreur.prenom.toLowerCase().includes(searchTerm)) ||
-            (livreur.zone_livraison && livreur.zone_livraison.toLowerCase().includes(searchTerm)) ||
-            (livreur.moyen_transport && livreur.moyen_transport.toLowerCase().includes(searchTerm)) ||
-            (livreur.email && livreur.email.toLowerCase().includes(searchTerm)) ||
-            (livreur.telephone && livreur.telephone.includes(searchTerm))
-        );
-
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = Math.min(startIndex + itemsPerPage, filteredLivreurs.length);
-
-        // Update pagination info
-        document.getElementById("startEntry").textContent = filteredLivreurs.length > 0 ? startIndex + 1 : 0;
-        document.getElementById("endEntry").textContent = endIndex;
-        document.getElementById("totalEntries").textContent = filteredLivreurs.length;
-
-        // Create table rows
-        for (let i = startIndex; i < endIndex; i++) {
-          const livreur = filteredLivreurs[i];
-          const row = document.createElement("tr");
-          row.className = "table-row border-b hover:bg-gray-50";
-
-          // Status badge color
-          let statusColor = "";
-          switch(livreur.statut) {
-            case "Actif":
-              statusColor = "bg-green-100 text-green-800";
-              break;
-            case "Inactif":
-              statusColor = "bg-red-100 text-red-800";
-              break;
-            case "En congé":
-              statusColor = "bg-yellow-100 text-yellow-800";
-              break;
-            default:
-              statusColor = "bg-gray-100 text-gray-800";
-          }
-
-          row.innerHTML = `
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${livreur.id_livreur}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${livreur.nom} ${livreur.prenom}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${livreur.zone_livraison}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${livreur.moyen_transport}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm">
-              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColor}">
-                ${livreur.statut}
-              </span>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${livreur.livraisons}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              <div class="flex space-x-2">
-                <button class="action-button bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="editLivreur(${livreur.id_livreur})">
-                  <i class="fas fa-edit mr-1"></i> Modifier
-                </button>
-                <button class="action-button bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="deleteLivreur(${livreur.id_livreur})">
-                  <i class="fas fa-trash mr-1"></i> Supprimer
-                </button>
-                <button class="action-button bg-gray-600 hover:bg-gray-700 text-white py-1 px-3 rounded text-xs flex items-center" onclick="viewLivreurDetails(${livreur.id_livreur})">
-                  <i class="fas fa-info-circle mr-1"></i> Détail
-                </button>
-              </div>
-            </td>
-          `;
-
-          tableBody.appendChild(row);
-        }
-      }
-
-      // Function to update pagination buttons
-      function updatePagination() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const filteredLivreurs = livreurs.filter(
-          (livreur) =>
-            (livreur.nom && livreur.nom.toLowerCase().includes(searchTerm)) ||
-            (livreur.prenom && livreur.prenom.toLowerCase().includes(searchTerm)) ||
-            (livreur.zone_livraison && livreur.zone_livraison.toLowerCase().includes(searchTerm)) ||
-            (livreur.moyen_transport && livreur.moyen_transport.toLowerCase().includes(searchTerm)) ||
-            (livreur.email && livreur.email.toLowerCase().includes(searchTerm)) ||
-            (livreur.telephone && livreur.telephone.includes(searchTerm))
-        );
-
-        const totalFilteredPages = Math.ceil(filteredLivreurs.length / itemsPerPage);
-
-        // Update pagination buttons
-        const paginationContainer = document.getElementById("pagination");
-        const pageButtons = paginationContainer.querySelectorAll("[data-page]");
-
-        // Update active state
-        pageButtons.forEach((button) => {
-          const page = Number.parseInt(button.getAttribute("data-page"));
-          if (page === currentPage) {
-            button.classList.add("bg-primary", "text-white");
-            button.classList.remove("bg-gray-200", "text-gray-700");
-          } else {
-            button.classList.remove("bg-primary", "text-white");
-            button.classList.add("bg-gray-200", "text-gray-700");
-          }
-        });
-
-        // Disable/enable prev/next buttons
-        const prevButton = document.getElementById("prevPage");
-        const nextButton = document.getElementById("nextPage");
-
-        if (currentPage === 1) {
-          prevButton.classList.add("opacity-50", "cursor-not-allowed");
-        } else {
-          prevButton.classList.remove("opacity-50", "cursor-not-allowed");
-        }
-
-        if (currentPage === totalFilteredPages || totalFilteredPages === 0) {
-          nextButton.classList.add("opacity-50", "cursor-not-allowed");
-        } else {
-          nextButton.classList.remove("opacity-50", "cursor-not-allowed");
-        }
-      }
-
-      // Create logo
-      function createLogo() {
-        const canvas = document.createElement("canvas");
-        canvas.width = 40;
-        canvas.height = 40;
-        const ctx = canvas.getContext("2d");
-
-        // Draw background
-        ctx.fillStyle = "#FFFFFF";
-        ctx.beginPath();
-        ctx.arc(20, 20, 20, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Draw book icon
-        ctx.fillStyle = "#8B2635";
-        ctx.beginPath();
-        ctx.moveTo(12, 10);
-        ctx.lineTo(28, 10);
-        ctx.lineTo(28, 30);
-        ctx.lineTo(12, 30);
-        ctx.closePath();
-        ctx.fill();
-
-        // Draw book pages
-        ctx.fillStyle = "#FFFFFF";
-        ctx.beginPath();
-        ctx.moveTo(14, 12);
-        ctx.lineTo(26, 12);
-        ctx.lineTo(26, 28);
-        ctx.lineTo(14, 28);
-        ctx.closePath();
-        ctx.fill();
-
-        // Draw book lines
-        ctx.strokeStyle = "#8B2635";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(16, 16);
-        ctx.lineTo(24, 16);
-        ctx.moveTo(16, 20);
-        ctx.lineTo(24, 20);
-        ctx.moveTo(16, 24);
-        ctx.lineTo(24, 24);
-        ctx.stroke();
-
-        // Set the logo
-        const logoImg = document.getElementById("logo");
-        const mobileLogoImg = document.getElementById("mobileLogo");
-        logoImg.src = canvas.toDataURL();
-        mobileLogoImg.src = canvas.toDataURL();
-      }
-
-      // Make functions available globally
-      window.editLivreur = function(id) {
-        showNotification("Modification du livreur #" + id);
-      };
-
-      window.deleteLivreur = function(id) {
-        if (confirm("Êtes-vous sûr de vouloir supprimer ce livreur?")) {
-          const index = livreurs.findIndex(livreur => livreur.id_livreur === id);
-          if (index !== -1) {
-            livreurs.splice(index, 1);
-            updateTable();
-            updatePagination();
-            showNotification("Livreur #" + id + " supprimé avec succès!");
-          }
-        }
-      };
-
-      window.viewLivreurDetails = function(id) {
-        const livreur = livreurs.find(livreur => livreur.id_livreur === id);
-        if (livreur) {
-          // Format date
-          const dateEmbauche = new Date(livreur.date_embauche);
-          const formattedDate = dateEmbauche.toLocaleDateString('fr-FR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          });
-
-          // Status badge color
-          let statusColor = "";
-          switch(livreur.statut) {
-            case "Actif":
-              statusColor = "bg-green-100 text-green-800";
-              break;
-            case "Inactif":
-              statusColor = "bg-red-100 text-red-800";
-              break;
-            case "En congé":
-              statusColor = "bg-yellow-100 text-yellow-800";
-              break;
-            default:
-              statusColor = "bg-gray-100 text-gray-800";
-          }
-
-          // Populate livreur details
-          livreurDetails.innerHTML = `
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="space-y-4">
-                <div class="flex items-center space-x-4">
-                  <div class="w-16 h-16 bg-primary-light rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                    ${livreur.prenom.charAt(0)}${livreur.nom.charAt(0)}
-                  </div>
-                  <div>
-                    <h3 class="text-xl font-semibold text-gray-800">${livreur.prenom} ${livreur.nom}</h3>
-                    <p class="text-gray-600">ID: ${livreur.id_livreur}</p>
-                  </div>
-                </div>
-                <div class="pt-2">
-                  <p class="text-gray-600"><span class="font-medium">Email:</span> ${livreur.email}</p>
-                  <p class="text-gray-600"><span class="font-medium">Téléphone:</span> ${livreur.telephone}</p>
-                  <p class="text-gray-600"><span class="font-medium">Date d'embauche:</span> ${formattedDate}</p>
-                  <p class="text-gray-600"><span class="font-medium">Statut:</span> 
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColor}">
-                      ${livreur.statut}
-                    </span>
-                  </p>
-                </div>
-              </div>
-              <div class="space-y-4">
-                <div class="bg-gray-50 p-4 rounded-lg">
-                  <h4 class="text-lg font-medium text-gray-800 mb-2">Informations de livraison</h4>
-                  <p class="text-gray-600"><span class="font-medium">Zone de livraison:</span> ${livreur.zone_livraison}</p>
-                  <p class="text-gray-600"><span class="font-medium">Moyen de transport:</span> ${livreur.moyen_transport}</p>
-                  <p class="text-gray-600"><span class="font-medium">Nombre de livraisons:</span> ${livreur.livraisons}</p>
-                </div>
-                <div class="bg-gray-50 p-4 rounded-lg">
-                  <h4 class="text-lg font-medium text-gray-800 mb-2">Statistiques</h4>
-                  <div class="flex items-center justify-between">
-                    <span class="text-gray-600">Livraisons ce mois</span>
-                    <span class="font-medium">${Math.floor(livreur.livraisons * 0.15)}</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-gray-600">Livraisons en retard</span>
-                    <span class="font-medium">${Math.floor(livreur.livraisons * 0.03)}</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-gray-600">Évaluation moyenne</span>
-                    <span class="font-medium">4.${Math.floor(Math.random() * 10)}/5</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="mt-6 bg-gray-50 p-4 rounded-lg">
-              <h4 class="text-lg font-medium text-gray-800 mb-2">Dernières livraisons</h4>
-              <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                  <thead>
-                    <tr>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Adresse</th>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-gray-200">
-                    <tr>
-                      <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${new Date(Date.now() - 86400000).toLocaleDateString('fr-FR')}</td>
-                      <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">Martin Dubois</td>
-                      <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">15 Rue des Fleurs, ${livreur.zone_livraison}</td>
-                      <td class="px-4 py-2 whitespace-nowrap text-sm">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Livré</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${new Date(Date.now() - 172800000).toLocaleDateString('fr-FR')}</td>
-                      <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">Sophie Bernard</td>
-                      <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">8 Avenue du Parc, ${livreur.zone_livraison}</td>
-                      <td class="px-4 py-2 whitespace-nowrap text-sm">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Livré</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${new Date(Date.now() - 259200000).toLocaleDateString('fr-FR')}</td>
-                      <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">Lucas Moreau</td>
-                      <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">22 Rue de la Gare, ${livreur.zone_livraison}</td>
-                      <td class="px-4 py-2 whitespace-nowrap text-sm">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">En retard</span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          `;
-
-          // Show modal
-          viewLivreurModal.classList.remove("hidden");
-          document.body.style.overflow = "hidden";
-        }
-      };
-    });
-
-    // Function to show notifications
-    function showNotification(message) {
-      // Remove any existing notifications
-      const existingNotifications = document.querySelectorAll('.notification');
-      existingNotifications.forEach(notification => {
-        notification.remove();
-      });
-
-      // Create new notification
-      const notification = document.createElement("div");
-      notification.className = "notification";
-      notification.textContent = message;
-
-      document.body.appendChild(notification);
-
-      // Remove notification after delay
-      setTimeout(() => {
-        notification.classList.add("hiding");
-        setTimeout(() => {
-          if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
-          }
-        }, 300);
-      }, 3000);
     }
+    
+    // Gestion du formulaire d'édition
+    if (editLivreurForm) {
+        editLivreurForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(editLivreurForm);
+            const livreurId = editLivreurForm.getAttribute('data-id');
+            
+            // Utiliser la méthode PUT pour la mise à jour
+            formData.append('_method', 'PUT');
+            
+            fetch(`/bibliothecaire/livreurs/${livreurId}`, {
+                method: 'POST', // POST avec _method=PUT
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Fermer le modal
+                    closeModalFunction(editLivreurModal);
+                    
+                    // Rafraîchir la liste des livreurs
+                    window.location.reload();
+                    
+                    // Afficher un message de succès
+                    showNotification(data.message);
+                } else {
+                    // Afficher un message d'erreur
+                    showNotification(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                showNotification('Une erreur est survenue lors de la mise à jour du livreur', 'error');
+            });
+        });
+    }
+    
+    // Fonction pour ouvrir le modal d'édition
+    window.editLivreur = function(id) {
+        fetch(`/bibliothecaire/livreurs/${id}`, {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Remplir le formulaire avec les données du livreur
+                const livreur = data.livreur;
+                document.getElementById('edit_nom').value = livreur.nom;
+                document.getElementById('edit_prenom').value = livreur.prenom;
+                document.getElementById('edit_email').value = livreur.email;
+                document.getElementById('edit_telephone').value = livreur.telephone;
+                document.getElementById('edit_zone_livraison').value = livreur.zone_livraison;
+                document.getElementById('edit_moyen_transport').value = livreur.moyen_transport;
+                
+                // Définir l'ID du livreur pour la soumission du formulaire
+                editLivreurForm.setAttribute('data-id', livreur.id_users);
+                
+                // Ouvrir le modal
+                editLivreurModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                showNotification(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            showNotification('Une erreur est survenue lors de la récupération des données du livreur', 'error');
+        });
+    };
+    
+    // Fonction pour supprimer un livreur
+    window.deleteLivreur = function(id) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer ce livreur?')) {
+            fetch(`/bibliothecaire/livreurs/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Rafraîchir la liste des livreurs
+                    window.location.reload();
+                    
+                    // Afficher un message de succès
+                    showNotification(data.message);
+                } else {
+                    // Afficher un message d'erreur
+                    showNotification(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                showNotification('Une erreur est survenue lors de la suppression du livreur', 'error');
+            });
+        }
+    };
+    
+    // Fonction pour voir les détails d'un livreur
+    window.viewLivreurDetails = function(id) {
+        fetch(`/bibliothecaire/livreurs/${id}`, {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Récupérer les données du livreur
+                const livreur = data.livreur;
+                
+                // Remplir le modal avec les détails du livreur
+                const livreurDetails = document.getElementById('livreurDetails');
+                
+                // Mettre à jour le contenu avec les détails du livreur
+                // (Le code pour remplir livreurDetails est déjà dans votre HTML)
+                
+                // Ouvrir le modal
+                document.getElementById('viewLivreurModal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                showNotification(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            showNotification('Une erreur est survenue lors de la récupération des détails du livreur', 'error');
+        });
+    };
+    
+    // Fonction pour fermer les modals
+    function closeModalFunction(modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        if (modal === addLivreurModal) {
+            addLivreurForm.reset();
+        } else if (modal === editLivreurModal) {
+            editLivreurForm.reset();
+        }
+    }
+    
+    // Événements pour fermer les modals
+    if (closeModal) {
+        closeModal.addEventListener('click', () => closeModalFunction(addLivreurModal));
+    }
+    if (cancelAddLivreur) {
+        cancelAddLivreur.addEventListener('click', () => closeModalFunction(addLivreurModal));
+    }
+    if (closeEditModal) {
+        closeEditModal.addEventListener('click', () => closeModalFunction(editLivreurModal));
+    }
+    if (cancelEditLivreur) {
+        cancelEditLivreur.addEventListener('click', () => closeModalFunction(editLivreurModal));
+    }
+    
+    // Fonction pour afficher les notifications
+    window.showNotification = function(message, type = 'success') {
+        // Supprimer les notifications existantes
+        const existingNotifications = document.querySelectorAll('.notification');
+        existingNotifications.forEach(notification => {
+            notification.remove();
+        });
+        
+        // Créer une nouvelle notification
+        const notification = document.createElement('div');
+        notification.className = `notification ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        // Supprimer la notification après un délai
+        setTimeout(() => {
+            notification.classList.add('hiding');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    };
+});    
   </script>
 </body>
 </html>

@@ -52,7 +52,7 @@ class LivreurController extends Controller
     {
         $livreurs = DB::table('livreur')
             ->join('users', 'livreur.id_livreur', '=', 'users.id_users')
-            ->select('livreur.*', 'users.nom', 'users.prenom', 'users.email', 'users.telephone')
+            ->select('livreur.*', 'users.name as nom', 'users.prenom', 'users.email', 'users.telephone')
             ->get();
             
         return view('bibliothecaire.livreur', compact('livreurs'));
@@ -80,7 +80,7 @@ class LivreurController extends Controller
         try {
             // Créer l'utilisateur
             $user = new User();
-            $user->nom = $validatedData['nom'];
+            $user->name = $validatedData['nom'];
             $user->prenom = $validatedData['prenom'];
             $user->email = $validatedData['email'];
             $user->telephone = $validatedData['telephone'];
@@ -111,7 +111,7 @@ class LivreurController extends Controller
     {
         $livreur = DB::table('livreur')
             ->join('users', 'livreur.id_livreur', '=', 'users.id_users')
-            ->select('livreur.*', 'users.nom', 'users.prenom', 'users.email', 'users.telephone', 'users.id_users')
+            ->select('livreur.*', 'users.name as nom', 'users.prenom', 'users.email', 'users.telephone', 'users.id_users')
             ->where('livreur.id_livreur', $id)
             ->first();
 
@@ -150,7 +150,7 @@ class LivreurController extends Controller
         try {
             // Mettre à jour l'utilisateur
             $user = User::findOrFail($id);
-            $user->nom = $validatedData['nom'];
+            $user->name = $validatedData['nom'];
             $user->prenom = $validatedData['prenom'];
             $user->email = $validatedData['email'];
             $user->telephone = $validatedData['telephone'];
