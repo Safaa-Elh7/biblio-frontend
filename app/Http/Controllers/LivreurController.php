@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Livraison;
 use App\Models\Livreur;
 use App\Models\User;
+use App\Models\Utilisateur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -13,12 +14,6 @@ use Illuminate\Validation\Rule;
 
 class LivreurController extends Controller
 {
-    /**
-     * Affiche le tableau de bord du livreur connecté
-     */
-    /**
-     * Affiche le tableau de bord du livreur connecté
-     */
     public function index()
     {
         // Récupérer le livreur connecté

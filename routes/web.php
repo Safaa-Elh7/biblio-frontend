@@ -15,6 +15,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\bookController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\DashboardBiblioController;
+use App\Http\Controllers\OrderBiblioController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PanierController;
 use App\Http\Controllers\PaymentBiblioController;
@@ -125,7 +126,7 @@ Route::get('/bibliothecaire/livreurs/{id}', [LivreurController::class, 'edit'])-
 Route::put('/bibliothecaire/livreurs/{id}', [LivreurController::class, 'update'])->name('bibliothecaire.livreur.update');
 Route::delete('/bibliothecaire/livreurs/{id}', [LivreurController::class, 'destroy'])->name('bibliothecaire.livreur.destroy');
 Route::get('/users', [UserBiblioController::class, 'show'])->name('bibliothecaire.user.index');
-Route::get('/payment', [PaymentBiblioController::class, 'show'])->name('bibliothecaire.payment.show');
+Route::get('bibliothecaire/orders', [OrderBiblioController::class, 'index'])->name('bibliothecaire.order.show');
 
 
 Route::get('/orders', [OrderController::class, 'history'])->name('order.history');

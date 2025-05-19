@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>MyBookSpace - Gestion des Livreurs</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -104,14 +105,14 @@
     <div class="sidebar bg-primary w-64 flex-shrink-0 hidden md:block">
       <div class="flex items-center justify-center h-16 border-b border-primary-dark">
         <div class="flex items-center">
-          <img id="logo" alt="Logo" class="w-10 h-10 rounded-full bg-white">
+          <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-10 h-10 rounded-full bg-white">
           <span class="ml-2 text-white text-xl font-semibold">MyBookSpace</span>
         </div>
       </div>
       <div class="py-4">
         <ul>
           <li class="px-4 py-2">
-            <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.dashboard.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-home mr-3"></i>
               <span>Accueil</span>
             </a>
@@ -123,7 +124,7 @@
             </a>
           </li>
           <li class="px-4 py-2">
-            <a href="#" class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.livreur.index') }}" class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-truck mr-3"></i>
               <span>Livreurs</span>
             </a>
@@ -131,11 +132,11 @@
           <li class="px-4 py-2">
             <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-credit-card mr-3"></i>
-              <span>Payments</span>
+              <span>Orders</span>
             </a>
           </li>
           <li class="px-4 py-2">
-            <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
+            <a href="{{ route('bibliothecaire.article.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
               <i class="fas fa-book mr-3"></i>
               <span>Articles</span>
             </a>
@@ -149,8 +150,8 @@
               <i class="fas fa-user-shield"></i>
             </div>
             <div class="ml-2">
-              <div class="text-white text-sm font-medium">Admin</div>
-              <div class="text-white text-xs opacity-70">admin@mybookspace.com</div>
+              <div class="text-white text-sm font-medium">{{ Auth::user()->nom }}</div>
+              <div class="text-white text-xs opacity-70">{{ Auth::user()->email }}</div>
             </div>
           </div>
         </div>
@@ -169,7 +170,7 @@
       <div class="sidebar bg-primary w-64 h-full transform -translate-x-full transition-transform duration-300 ease-in-out">
         <div class="flex items-center justify-between h-16 border-b border-primary-dark px-4">
           <div class="flex items-center">
-            <img id="mobileLogo" alt="Logo" class="w-10 h-10 rounded-full bg-white">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-10 h-10 rounded-full bg-white">
             <span class="ml-2 text-white text-xl font-semibold">MyBookSpace</span>
           </div>
           <button id="closeSidebar" class="text-white">
@@ -191,7 +192,7 @@
               </a>
             </li>
             <li class="px-4 py-2">
-              <a href="{{ route('bibliothecaire.livreur.index') }} " class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
+              <a href="{{ route('bibliothecaire.livreur.index') }}" class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
                 <i class="fas fa-truck mr-3"></i>
                 <span>Livreurs</span>
               </a>
@@ -199,7 +200,7 @@
             <li class="px-4 py-2">
               <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
                 <i class="fas fa-credit-card mr-3"></i>
-                <span>Payments</span>
+                <span>Orders</span>
               </a>
             </li>
             <li class="px-4 py-2">
@@ -217,8 +218,8 @@
                 <i class="fas fa-user-shield"></i>
               </div>
               <div class="ml-2">
-                <div class="text-white text-sm font-medium">Admin</div>
-                <div class="text-white text-xs opacity-70">admin@mybookspace.com</div>
+                <div class="text-white text-sm font-medium">{{ Auth::user()->nom }}</div>
+                <div class="text-white text-xs opacity-70">{{ Auth::user()->email }}</div>
               </div>
             </div>
           </div>
@@ -232,18 +233,7 @@
       <header class="bg-white shadow-sm">
         <div class="flex items-center justify-between px-4 py-3">
           <h1 class="text-2xl font-semibold text-gray-800">Gestion des Livreurs</h1>
-          <div class="flex items-center">
-            <div class="relative mr-4">
-              <input type="text" placeholder="Rechercher..." class="search-input bg-gray-100 rounded-full py-2 px-4 pl-10 focus:outline-none transition duration-200 w-64">
-              <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-            </div>
-            <div class="relative">
-              <button class="relative p-2 text-gray-600 hover:text-primary focus:outline-none">
-                <i class="fas fa-bell text-xl"></i>
-                <span class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">3</span>
-              </button>
-            </div>
-          </div>
+          
         </div>
       </header>
 
@@ -266,33 +256,45 @@
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Zone de livraison</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Moyen de transport</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Livraisons</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Téléphone</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody id="livreursTableBody">
-                <!-- Table rows will be populated by JavaScript -->
+                @foreach($livreurs as $livreur)
+                <tr class="table-row border-b">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $livreur->user->livreur->id_livreur }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->user->name }} {{ $livreur->user->prenom }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->user->livreur->zone_livraison }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->user->livreur->moyen_transport }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->user->email }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->user->telephone }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div class="flex space-x-2">
+                      <button onclick="viewLivreurDetails({{ $livreur->id_livreur }})" class="text-blue-600 hover:text-blue-900">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                      <button onclick="editLivreur({{ $livreur->id_livreur }})" class="text-yellow-600 hover:text-yellow-900">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button onclick="deleteLivreur({{ $livreur->id_livreur }})" class="text-red-600 hover:text-red-900">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                @endforeach
               </tbody>
             </table>
           </div>
           
           <div class="flex justify-between items-center mt-6">
             <div class="text-sm text-gray-600">
-              Affichage de <span id="startEntry">1</span> à <span id="endEntry">5</span> sur <span id="totalEntries">50</span> entrées
+              Affichage de <span id="startEntry">1</span> à <span id="endEntry">{{ count($livreurs) }}</span> sur <span id="totalEntries">{{ count($livreurs) }}</span> entrées
             </div>
             <div class="flex items-center space-x-1" id="pagination">
-              <button class="pagination-button px-3 py-1.5 bg-gray-200 text-gray-700 rounded-l-md hover:bg-gray-300 transition-colors" id="prevPage">
-                <i class="fas fa-chevron-left"></i>
-              </button>
-              
-              <button class="pagination-button min-w-[40px] px-3 py-1.5 bg-primary text-white font-medium hover:bg-primary-dark transition-colors" data-page="1">1</button>
-              <button class="pagination-button min-w-[40px] px-3 py-1.5 bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors" data-page="2">2</button>
-              <button class="pagination-button min-w-[40px] px-3 py-1.5 bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors" data-page="3">3</button>
-              
-              <button class="pagination-button px-3 py-1.5 bg-gray-200 text-gray-700 rounded-r-md hover:bg-gray-300 transition-colors" id="nextPage">
-                <i class="fas fa-chevron-right"></i>
-              </button>
+              <!-- Pagination sera générée par JavaScript si nécessaire -->
             </div>
           </div>
         </div>
@@ -364,11 +366,11 @@
         </div>
         
         <div class="flex justify-end space-x-3 pt-4">
-          <button type="button" id="cancelAddLivreur" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-200">
+          <button type="button" id="cancelEditLivreur" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-200">
             Annuler
           </button>
           <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition duration-200">
-            Enregistrer
+            Mettre à jour
           </button>
         </div>
       </form>
@@ -384,7 +386,32 @@
       <h2 class="text-2xl font-semibold text-gray-800 mb-6">Détails du livreur</h2>
       
       <div id="livreurDetails" class="space-y-4">
-        <!-- Livreur details will be populated by JavaScript -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-3">
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Nom complet</h3>
+              <p id="detail_nom" class="text-base font-medium text-gray-900"></p>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Email</h3>
+              <p id="detail_email" class="text-base text-gray-900"></p>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Téléphone</h3>
+              <p id="detail_telephone" class="text-base text-gray-900"></p>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Zone de livraison</h3>
+              <p id="detail_zone" class="text-base text-gray-900"></p>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Moyen de transport</h3>
+              <p id="detail_transport" class="text-base text-gray-900"></p>
+            </div>
+          </div>
+        </div>
       </div>
       
       <div class="flex justify-end space-x-3 pt-6">

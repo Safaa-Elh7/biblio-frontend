@@ -111,16 +111,18 @@
         </ul>
       </div>
       <div class="absolute bottom-0 w-64 border-t border-primary-dark">
-        <div class="flex items-center px-4 py-3">
-          <div class="flex items-center">
-            <i class="fas fa-user-shield text-white mr-2"></i>
-            <div>
-              <div class="text-white text-sm font-medium">Admin</div>
-              <div class="text-white text-xs opacity-70">admin@mybookspace.com</div>
+          <div class="flex items-center px-4 py-3">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-primary-dark flex items-center justify-center text-white">
+                <i class="fas fa-user-shield"></i>
+              </div>
+              <div class="ml-2">
+                <div class="text-white text-sm font-medium">{{ Auth::user()->nom }}</div>
+                <div class="text-white text-xs opacity-70">{{ Auth::user()->email }}</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
     </div>
 
     <!-- Mobile sidebar toggle -->
