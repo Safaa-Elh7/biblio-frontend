@@ -10,16 +10,17 @@ class ArticleController extends Controller
 {
     protected $apiUrl = 'http://localhost:8081/api/articles';
 
-    public function show()
+    public function index()
     {
         return view('bibliothecaire.article');
     }
 
-    public function index()
+    public function show()
     {
         try {
             $response = Http::get($this->apiUrl);
             $articles = $response->json();
+            
             
             // If this is an AJAX request or explicitly requested JSON, return JSON
             if (request()->ajax() || request()->wantsJson() || request()->has('json')) {
@@ -27,7 +28,7 @@ class ArticleController extends Controller
             }
             
             // Otherwise return the view with articles
-            return view('client.article', compact('articles'));
+            return view('bibliothecaire.article', compact('articles'));
         } catch (\Exception $e) {
             if (request()->ajax() || request()->wantsJson() || request()->has('json')) {
                 return response()->json(['error' => 'Failed to fetch articles: ' . $e->getMessage()], 500);
