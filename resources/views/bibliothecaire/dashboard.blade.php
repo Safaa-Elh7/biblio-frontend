@@ -66,11 +66,11 @@
             </div>
             
             <nav class="mt-6">
-                <a href="{{ route('bibliothecaire.dashboard.index') }}" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 transition-colors">
+                <a href="{{ route('bibliothecaire.dashboard.index') }}" class="flex items-center px-6 py-3 bg-red-700 hover:bg-red-700 transition-colors">
                     <i class="fas fa-home mr-3"></i>
                     <span>Tableau de bord</span>
                 </a>
-                <a href="{{ route('bibliothecaire.article.index') }}" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 transition-colors">
+                <a href="{{ route('bibliothecaire.article.index') }}" class="flex items-center px-6 py-3 text-red-200  transition-colors">
                     <i class="fas fa-book mr-3"></i>
                     <span>Livres</span>
                 </a>
@@ -78,7 +78,7 @@
                     <i class="fas fa-shopping-cart mr-3"></i>
                     <span>Commandes</span>
                 </a>
-                <a href="{{ route('bibliothecaire.payment.show') }}" class="flex items-center px-6 py-3 bg-red-700 text-white transition-colors">
+                <a href="{{ route('bibliothecaire.payment.show') }}" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 text-white transition-colors">
                     <i class="fas fa-credit-card mr-3"></i>
                     <span>Paiements</span>
                 </a>
@@ -90,6 +90,7 @@
                     <i class="fas fa-truck mr-3"></i>
                     <span>Livreurs</span>
                 </a>
+                
             </nav>
         </div>
 
@@ -112,7 +113,8 @@
                         </button>
                     </form>
                         <div class="flex items-center space-x-2">
-                            <span class="text-gray-700">Admin</span>
+                            <div class="text-black text-sm font-medium">{{ Auth::user()->nom }}</div>
+                <div class="text-black text-xs opacity-70">{{ Auth::user()->email }}</div>
                             <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-red-600">
                                 <i class="fas fa-user"></i>
                             </div>

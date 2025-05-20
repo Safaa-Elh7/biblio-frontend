@@ -34,22 +34,9 @@
       font-family: 'Poppins', sans-serif;
     }
 
-    .sidebar {
-      transition: all 0.3s ease;
-    }
-
-    .sidebar-item {
-      transition: all 0.2s ease;
-    }
-
-    .sidebar-item:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .sidebar-item.active {
-      background-color: rgba(255, 255, 255, 0.15);
-      border-left: 4px solid white;
-    }
+    .sidebar-gradient {
+            background: linear-gradient(135deg, #8B2635 0%, #A53545 100%);
+        }
 
     .action-button {
       transition: all 0.2s ease;
@@ -104,64 +91,43 @@
 <body class="bg-gray-100">
   <div class="flex h-screen overflow-hidden">
     <!-- Sidebar -->
-    <div class="sidebar bg-primary w-64 flex-shrink-0 hidden md:block">
-      <div class="flex items-center justify-center h-16 border-b border-primary-dark">
-        <div class="flex items-center">
-          <img id="logo" alt="Logo" class="w-10 h-10 rounded-full bg-white">
-          <span class="ml-2 text-white text-xl font-semibold">MyBookSpace</span>
-        </div>
-      </div>
-      <div class="py-4">
-        <ul>
-          <li class="px-4 py-2">
-            <a href="{{ route('bibliothecaire.dashboard.index') }}"
-              class="sidebar-item flex items-center text-white py-2 px-4 rounded">
-              <i class="fas fa-home mr-3"></i>
-              <span>Accueil</span>
-            </a>
-          </li>
-          <li class="px-4 py-2">
-            <a href="{{ route('bibliothecaire.user.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
-              <i class="fas fa-users mr-3"></i>
-              <span>Users</span>
-            </a>
-          </li>
-          <li class="px-4 py-2">
-            <a href="{{ route('bibliothecaire.livreur.index') }}"
-              class="sidebar-item flex items-center text-white py-2 px-4 rounded">
-              <i class="fas fa-truck mr-3"></i>
-              <span>Livreurs</span>
-            </a>
-          </li>
-          <li class="px-4 py-2">
-            <a href="#" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
-              <i class="fas fa-credit-card mr-3"></i>
-              <span>Orders</span>
-            </a>
-          </li>
-          <li class="px-4 py-2">
-            <a href="{{ route('bibliothecaire.article.index') }}"
-              class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
-              <i class="fas fa-book mr-3"></i>
-              <span>Articles</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="absolute bottom-0 w-64 border-t border-primary-dark">
-          <div class="flex items-center px-4 py-3">
-            <div class="flex items-center">
-              <div class="w-8 h-8 rounded-full bg-primary-dark flex items-center justify-center text-white">
-                <i class="fas fa-user-shield"></i>
-              </div>
-              <div class="ml-2">
-                <div class="text-white text-sm font-medium">{{ Auth::user()->nom }}</div>
-                <div class="text-white text-xs opacity-70">{{ Auth::user()->email }}</div>
-              </div>
+    <div class="w-64 sidebar-gradient text-white">
+            <div class="p-6">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white rounded-full p-2">
+                        <i class="fas fa-book text-red-600"></i>
+                    </div>
+                    <span class="text-xl font-bold">MyBookSpace</span>
+                </div>
             </div>
-          </div>
+            
+            <nav class="mt-6">
+                <a href="{{ route('bibliothecaire.dashboard.index') }}" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 transition-colors">
+                    <i class="fas fa-home mr-3"></i>
+                    <span>Tableau de bord</span>
+                </a>
+                <a href="{{ route('bibliothecaire.article.index') }}" class="flex items-center px-6 py-3 bg-red-700  transition-colors">
+                    <i class="fas fa-book mr-3"></i>
+                    <span>Livres</span>
+                </a>
+                <a href="{{ route('bibliothecaire.order.show') }}" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 transition-colors">
+                    <i class="fas fa-shopping-cart mr-3"></i>
+                    <span>Commandes</span>
+                </a>
+                <a href="{{ route('bibliothecaire.payment.show') }}" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 text-white transition-colors">
+                    <i class="fas fa-credit-card mr-3"></i>
+                    <span>Paiements</span>
+                </a>
+                <a href="{{ route('bibliothecaire.user.index') }}" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 transition-colors">
+                    <i class="fas fa-users mr-3"></i>
+                    <span>Utilisateurs</span>
+                </a>
+                <a href="{{ route('bibliothecaire.livreur.index') }}" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 transition-colors">
+                    <i class="fas fa-truck mr-3"></i>
+                    <span>Livreurs</span>
+                </a>
+            </nav>
         </div>
-    </div>
 
     <!-- Mobile sidebar toggle -->
     <div class="md:hidden fixed bottom-4 right-4 z-50">
@@ -171,70 +137,7 @@
     </div>
 
     <!-- Mobile sidebar -->
-    <div id="mobileSidebar" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-40 hidden">
-      <div
-        class="sidebar bg-primary w-64 h-full transform -translate-x-full transition-transform duration-300 ease-in-out">
-        <div class="flex items-center justify-between h-16 border-b border-primary-dark px-4">
-          <div class="flex items-center">
-            <img id="mobileLogo" alt="Logo" class="w-10 h-10 rounded-full bg-white">
-            <span class="ml-2 text-white text-xl font-semibold">MyBookSpace</span>
-          </div>
-          <button id="closeSidebar" class="text-white">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <div class="py-4">
-          <ul>
-            <li class="px-4 py-2">
-              <a href="{{ route('bibliothecaire.dashboard.index') }}"
-                class="sidebar-item flex items-center text-white py-2 px-4 rounded">
-                <i class="fas fa-home mr-3"></i>
-                <span>Accueil</span>
-              </a>
-            </li>
-            <li class="px-4 py-2">
-              <a href="{{ route('bibliothecaire.user.index') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
-                <i class="fas fa-users mr-3"></i>
-                <span>Users</span>
-              </a>
-            </li>
-            <li class="px-4 py-2">
-              <a href="{{ route('bibliothecaire.livreur.index') }}"
-                class="sidebar-item flex items-center text-white py-2 px-4 rounded">
-                <i class="fas fa-truck mr-3"></i>
-                <span>Livreurs</span>
-              </a>
-            </li>
-            <li class="px-4 py-2">
-              <a href="{{ route('bibliothecaire.payment.show') }}" class="sidebar-item flex items-center text-white py-2 px-4 rounded">
-                <i class="fas fa-credit-card mr-3"></i>
-                <span>Payments</span>
-              </a>
-            </li>
-            <li class="px-4 py-2">
-              <a href="{{ route('bibliothecaire.article.index') }}"
-                class="sidebar-item active flex items-center text-white py-2 px-4 rounded">
-                <i class="fas fa-book mr-3"></i>
-                <span>Articles</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div class="absolute bottom-0 w-64 border-t border-primary-dark">
-          <div class="flex items-center px-4 py-3">
-            <div class="flex items-center">
-              <div class="w-8 h-8 rounded-full bg-primary-dark flex items-center justify-center text-white">
-                <i class="fas fa-user-shield"></i>
-              </div>
-              <div class="ml-2">
-                <div class="text-white text-sm font-medium">{{ Auth::user()->nom }}</div>
-                <div class="text-white text-xs opacity-70">{{ Auth::user()->email }}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    
 
     <!-- Main content -->
     <div class="flex-1 overflow-y-auto">
@@ -242,8 +145,15 @@
       <header class="bg-white shadow-sm">
         <div class="flex items-center justify-between px-4 py-3">
           <h1 class="text-2xl font-semibold text-gray-800">Gestion des Articles</h1>
-          
+          <div class="flex items-center space-x-2">
+                            <div class="text-black text-sm font-medium">{{ Auth::user()->nom }}</div>
+                <div class="text-black text-xs opacity-70">{{ Auth::user()->email }}</div>
+                            <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-red-600">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
         </div>
+
       </header>
 
       <!-- Articles content -->
@@ -258,6 +168,7 @@
               <h3 class="text-gray-500 text-sm">Total des livres</h3>
               <p class="text-2xl font-semibold text-gray-800" id="totalBooks">...</p>
             </div>
+              
           </div>
           
           <div class="bg-white rounded-lg shadow-md p-4 flex items-center transition-transform transform hover:scale-105">

@@ -112,26 +112,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .subscribe-btn {
-            background-color: #4ade80;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            transform: rotate(90deg);
-            transform-origin: center;
-            white-space: nowrap;
-            margin-top: auto;
-            font-size: 0.875rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
-
-        .subscribe-btn:hover {
-            transform: rotate(90deg) scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        }
-
+        
         /* Styles des catégories */
         .categories-container {
             display: flex;
@@ -162,6 +143,8 @@
 
         .category-item {
             display: flex;
+
+            
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -605,24 +588,22 @@
         </div>
 
         <div class="sidebar-icon active">
-            <i class="fas fa-home"></i>
+           <a href=""> <i class="fas fa-home"></i></a>
         </div>
 
         <div class="sidebar-icon">
-            <i class="fas fa-shopping-cart"></i>
+           <a href="{{route('client.panier.index')}}"> <i class="fas fa-shopping-cart"></i></a>
         </div>
 
         <div class="sidebar-icon">
-            <i class="fas fa-camera"></i>
+        <a href="{{route('order.history')}}" class="text-white text-xl mb-6"><i class="fas fa-history"></i></a>
         </div>
 
         <div class="sidebar-icon">
             <i class="fas fa-envelope"></i>
         </div>
 
-        <div class="subscribe-btn">
-            Subscribe
-        </div>
+       
     </div>
 
     <!-- Main Content -->
@@ -760,6 +741,7 @@
 
             <div class="book-grid" id="popularBooks">
                 <!-- Les livres seront ajoutés dynamiquement par JavaScript -->
+                 
             </div>
         </div>
 
@@ -796,6 +778,12 @@
         </div>
     </div>
 
+    @if(session('success'))
+        <script>
+            alert("{{ session('success') }}");
+        </script>
+    @endif
+
    <script>
     // Fonction pour gérer la visibilité de la bannière "Best of Today"
 function updateBannerVisibility() {
@@ -814,6 +802,15 @@ function updateBannerVisibility() {
 
 // Supprimer le tableau books statique
 let books = [];
+
+// Fonction pour gérer les URLs d'images de manière cohérente
+function getImageUrl(imagePath, defaultUrl = 'https://via.placeholder.com/150x200?text=Livre') {
+    if (!imagePath) return defaultUrl;
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+        return imagePath;
+    }
+    return `/storage/${imagePath.replace(/^\/+/, '')}`;
+}
 
 // Fonction pour sécuriser l'accès aux propriétés
 function getBookProperty(book, property, defaultValue = "Non disponible") {
@@ -837,11 +834,11 @@ function loadBooks() {
             if (Array.isArray(data) && data.length > 0) {
                 // Remplir books avec les données récupérées
                 books = data.map(book => ({
-                    id: getBookProperty(book, 'id', Math.random().toString(36).substr(2, 9)),
+                    id: getBookProperty(book, 'id_article', Math.random().toString(36).substr(2, 9)),
                     title: getBookProperty(book, 'titre', 'Titre inconnu'),
                     author: getBookProperty(book, 'auteur', 'Auteur inconnu'),
                     category: getBookProperty(book, 'category', 'all'),
-                    cover: getBookProperty(book, 'image', 'https://images.unsplash.com/photo-1598618253208-d75408cee680?q=80&w=1000&auto=format&fit=crop'),
+                    image: getBookProperty(book, 'image', null), // Nous utiliserons getImageUrl() lors de l'affichage
                     prix_emprunt: getBookProperty(book, 'prix_emprunt', 0),
                     isBestSeller: book.prix_emprunt > 100 || getBookProperty(book, 'isBestSeller', false)
                 }));
@@ -888,7 +885,7 @@ function generateDemoBooks() {
             title: `Livre de démonstration ${i}`,
             author: `Auteur ${i}`,
             category: category,
-            cover: `https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000&auto=format&fit=crop`,
+            image: `image${i}.jpg`,
             prix_emprunt: Math.floor(Math.random() * 200) + 50,
             isBestSeller: isBestSeller
         });
@@ -924,7 +921,7 @@ function displayBooks(containerId, booksToDisplay) {
         
         const title = getBookProperty(book, 'title', 'Titre inconnu');
         const author = getBookProperty(book, 'author', 'Auteur inconnu');
-        const image = getBookProperty(book, 'cover', '');
+        const image = getBookProperty(book, 'image', '');
         const isBestSeller = getBookProperty(book, 'isBestSeller', false);
 
         
@@ -939,7 +936,8 @@ function displayBooks(containerId, booksToDisplay) {
         
         // Ajouter un effet de clic
         bookCard.addEventListener('click', function() {
-            showToast(`Vous avez sélectionné "${title}" de ${author}`);
+            // Rediriger vers la page du livre avec l'ID
+            window.location.href = `/client/book/${book.id}`;
         });
         
         container.appendChild(bookCard);

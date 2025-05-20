@@ -218,11 +218,6 @@
             
         }
 
-        .subscribe-btn {
-            writing-mode: vertical-rl;
-            transform: rotate(180deg);
-            text-orientation: mixed;
-        }
     </style>
 </head>
 
@@ -259,12 +254,7 @@
             </a>
         </div>
         
-        <!-- Subscribe Button -->
-        <div class="mt-auto mb-6">
-            <button class="subscribe-btn bg-green-500 text-white px-2 py-6 rounded-md text-xs font-medium hover:bg-green-600 transition-colors">
-                Subscribe
-            </button>
-        </div>
+        
     </div>
 
     <!-- Main Content -->

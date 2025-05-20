@@ -442,9 +442,6 @@
             <i class="fas fa-envelope"></i>
         </div>
         
-        <div class="sidebar-icon mt-auto bg-green-500 rounded">
-            <span class="rotate-90 whitespace-nowrap text-xs font-medium">Subscribe</span>
-        </div>
     </div>
     
     <!-- Main Content -->

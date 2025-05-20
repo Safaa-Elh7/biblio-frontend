@@ -112,26 +112,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .subscribe-btn {
-            background-color: #4ade80;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            transform: rotate(90deg);
-            transform-origin: center;
-            white-space: nowrap;
-            margin-top: auto;
-            font-size: 0.875rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
-
-        .subscribe-btn:hover {
-            transform: rotate(90deg) scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        }
-
+        
         /* Styles des catégories */
         .categories-container {
             display: flex;
@@ -622,9 +603,7 @@
             <i class="fas fa-envelope"></i>
         </div>
 
-        <div class="subscribe-btn">
-            Subscribe
-        </div>
+       
     </div>
 
     <!-- Main Content -->

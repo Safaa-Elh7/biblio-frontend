@@ -76,7 +76,8 @@
                         </button>
                     </form>
                         <div class="flex items-center space-x-2">
-                            <span class="text-gray-700">Admin</span>
+                            <div class="text-black text-sm font-medium">{{ Auth::user()->nom }}</div>
+                <div class="text-black text-xs opacity-70">{{ Auth::user()->email }}</div>
                             <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-red-600">
                                 <i class="fas fa-user"></i>
                             </div>

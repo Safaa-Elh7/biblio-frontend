@@ -37,36 +37,31 @@
             </div>
             
             <nav class="mt-6">
-                <a href="#" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 transition-colors">
+                <a href="{{ route('bibliothecaire.dashboard.index') }}" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 transition-colors">
                     <i class="fas fa-home mr-3"></i>
-                    Accueil
+                    <span>Tableau de bord</span>
                 </a>
-                <a href="#" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 transition-colors">
-                    <i class="fas fa-users mr-3"></i>
-                    Users
-                </a>
-                <a href="#" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 transition-colors">
-                    <i class="fas fa-truck mr-3"></i>
-                    Livreurs
-                </a>
-                <a href="#" class="flex items-center px-6 py-3 bg-red-700 text-white">
-                    <i class="fas fa-shopping-cart mr-3"></i>
-                    Orders
-                </a>
-                <a href="#" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 transition-colors">
+                <a href="{{ route('bibliothecaire.article.index') }}" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 transition-colors">
                     <i class="fas fa-book mr-3"></i>
-                    Articles
+                    <span>Livres</span>
+                </a>
+                <a href="{{ route('bibliothecaire.order.show') }}" class="flex items-center px-6 py-3 bg-red-700  transition-colors">
+                    <i class="fas fa-shopping-cart mr-3"></i>
+                    <span>Commandes</span>
+                </a>
+                <a href="{{ route('bibliothecaire.payment.show') }}" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 text-white transition-colors">
+                    <i class="fas fa-credit-card mr-3"></i>
+                    <span>Paiements</span>
+                </a>
+                <a href="{{ route('bibliothecaire.user.index') }}" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 transition-colors">
+                    <i class="fas fa-users mr-3"></i>
+                    <span>Utilisateurs</span>
+                </a>
+                <a href="{{ route('bibliothecaire.livreur.index') }}" class="flex items-center px-6 py-3 text-red-200 hover:bg-red-700 transition-colors">
+                    <i class="fas fa-truck mr-3"></i>
+                    <span>Livreurs</span>
                 </a>
             </nav>
-            
-            <div class="absolute bottom-0 w-64 p-6">
-                <div class="flex items-center space-x-3">
-                    <div class="bg-red-700 rounded-full p-2">
-                        <i class="fas fa-user text-white"></i>
-                    </div>
-                    <span class="text-sm">elansarisal@gmail.com</span>
-                </div>
-            </div>
         </div>
 
         <!-- Main Content -->
@@ -81,11 +76,12 @@
                                    class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
                             <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                         </div>
-                        <div class="relative">
-                            <button class="bg-red-600 text-white p-2 rounded-full">
-                                <i class="fas fa-bell"></i>
-                            </button>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                        <div class="flex items-center space-x-2">
+                            <div class="text-black text-sm font-medium">{{ Auth::user()->nom }}</div>
+                <div class="text-black text-xs opacity-70">{{ Auth::user()->email }}</div>
+                            <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-red-600">
+                                <i class="fas fa-user"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
