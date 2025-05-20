@@ -202,24 +202,27 @@
                 <div class="mt-6 space-y-2">
                     <div class="flex justify-between">
                         <span class="text-gray-600">Sous-total:</span>
-                        <span>{{ $order->subtotal }} Dh</span>
+                        <span>{{ number_format($order->subtotal, 2) }} Dh</span>
                     </div>
                     
                     <div class="flex justify-between">
                         <span class="text-gray-600">TVA (4%):</span>
-                        <span>{{ $order->tax }} Dh</span>
+                        <span>{{ number_format($order->tax, 2) }} Dh</span>
                     </div>
                     
                     <div class="flex justify-between">
-                        <span class="text-gray-600">Frais de livraison:</span>
-                        <span>{{ $order->shipping ?? 20 }} Dh</span>
+                        <span class="text-gray-600 flex items-center">
+                            <i class="fas fa-truck mr-2 text-sidebar"></i>
+                            Frais de livraison:
+                        </span>
+                        <span>{{ number_format($order->shipping ?? 20, 2) }} Dh</span>
                     </div>
                     
                     <div class="divider my-3"></div>
                     
                     <div class="flex justify-between font-bold">
                         <span>Total:</span>
-                        <span>{{ $order->total }} Dh</span>
+                        <span>{{ number_format($order->subtotal + $order->tax + ($order->shipping ?? 20), 2) }} Dh</span>
                     </div>
                 </div>
             </div>
