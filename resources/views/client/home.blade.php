@@ -809,7 +809,9 @@ function getImageUrl(imagePath, defaultUrl = 'https://via.placeholder.com/150x20
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
         return imagePath;
     }
-    return `/storage/${imagePath.replace(/^\/+/, '')}`;
+    // Nettoyer le chemin de l'image et s'assurer qu'il commence correctement
+    const cleanedPath = imagePath.replace(/^\/+/, '');
+    return `/storage/${cleanedPath}`;
 }
 
 // Fonction pour sécuriser l'accès aux propriétés
@@ -823,75 +825,108 @@ function getBookProperty(book, property, defaultValue = "Non disponible") {
 
 // Fonction pour charger les livres depuis l'API
 function loadBooks() {
-    fetch("http://localhost:8081/api/articles")
-        .then(res => {
-            if (!res.ok) {
-                throw new Error("Erreur réseau lors de la récupération des articles");
-            }
-            return res.json();
-        })
-        .then(data => {
-            if (Array.isArray(data) && data.length > 0) {
-                // Remplir books avec les données récupérées
-                books = data.map(book => ({
-                    id: getBookProperty(book, 'id_article', Math.random().toString(36).substr(2, 9)),
-                    title: getBookProperty(book, 'titre', 'Titre inconnu'),
-                    author: getBookProperty(book, 'auteur', 'Auteur inconnu'),
-                    category: getBookProperty(book, 'category', 'all'),
-                    image: getBookProperty(book, 'image', null), // Nous utiliserons getImageUrl() lors de l'affichage
-                    prix_emprunt: getBookProperty(book, 'prix_emprunt', 0),
-                    isBestSeller: book.prix_emprunt > 100 || getBookProperty(book, 'isBestSeller', false)
-                }));
-
-                console.log('Livres chargés avec succès:', books.length);
-
-                // Afficher les livres après le chargement
-                displayBooks("popularBooks", books);
-                displayBooks("bestSellerBooks", books.filter(book => book.isBestSeller));
-                
-                // Afficher un message de confirmation
-                showToast(`${books.length} livres chargés avec succès`);
-            } else {
-                console.warn("Aucun livre n'a été renvoyé par l'API ou format invalide");
-                showToast("Aucun livre disponible pour le moment");
-            }
-        })
-        .catch(err => {
-            console.error("Erreur lors du chargement des articles :", err);
-            showToast("Impossible de charger les livres. Veuillez réessayer plus tard.");
+    // Afficher un indicateur de chargement
+    document.getElementById('popularBooks').innerHTML = '<div class="col-span-full text-center py-8 text-text-medium">Chargement des livres...</div>';
+    document.getElementById('bestSellerBooks').innerHTML = '<div class="col-span-full text-center py-8 text-text-medium">Chargement des livres...</div>';
+    
+    // Définir les points de terminaison de l'API à essayer
+    const apiEndpoints = [
+        "http://localhost:8081/api/articles",
+        "http://127.0.0.1:8081/api/articles",
+        "/api/articles" // Endpoint relatif (si l'API est sur le même domaine)
+    ];
+    
+    // Fonction pour essayer le prochain endpoint
+    function tryNextEndpoint(index = 0) {
+        if (index >= apiEndpoints.length) {
+            console.error("Tous les endpoints API ont échoué");
+            showToast("Impossible de charger les livres. Utilisation des données de démonstration.");
             
-            // Utiliser des données de démonstration en cas d'échec
+            // Utiliser des données de démonstration si tous les endpoints ont échoué
             const demoBooks = generateDemoBooks();
             books = demoBooks;
             
-            // Afficher les livres de démonstration
             displayBooks("popularBooks", books);
             displayBooks("bestSellerBooks", books.filter(book => book.isBestSeller));
-        });
+            return;
+        }
+        
+        const endpoint = apiEndpoints[index];
+        console.log(`Tentative de chargement depuis: ${endpoint}`);
+        
+        fetch(endpoint)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`Erreur HTTP: ${res.status}`);
+                }
+                return res.json();
+            })
+            .then(data => {
+                if (Array.isArray(data) && data.length > 0) {
+                    // Remplir books avec les données récupérées
+                    books = data.map(book => ({
+                        id: getBookProperty(book, 'id_article', Math.random().toString(36).substr(2, 9)),
+                        title: getBookProperty(book, 'titre', 'Titre inconnu'),
+                        author: getBookProperty(book, 'auteur', 'Auteur inconnu'),
+                        category: getBookProperty(book, 'categorie', 'all'),
+                        image: getImageUrl(getBookProperty(book, 'image', null)),
+                        prix_emprunt: getBookProperty(book, 'prix_emprunt', 0),
+                        isBestSeller: book.prix_emprunt > 100 || getBookProperty(book, 'isBestSeller', false)
+                    }));
+
+                    console.log('Livres chargés avec succès:', books.length);
+
+                    // Afficher les livres après le chargement
+                    displayBooks("popularBooks", books);
+                    displayBooks("bestSellerBooks", books.filter(book => book.isBestSeller));
+                    
+                    // Afficher un message de confirmation
+                    showToast(`${books.length} livres chargés avec succès`);
+                } else {
+                    console.warn("Aucun livre n'a été renvoyé par l'API ou format invalide");
+                    // Essayer le prochain endpoint
+                    tryNextEndpoint(index + 1);
+                }
+            })
+            .catch(err => {
+                console.error(`Erreur lors du chargement depuis ${endpoint}:`, err);
+                // Essayer le prochain endpoint
+                tryNextEndpoint(index + 1);
+            });
+    }
+    
+    // Commencer par le premier endpoint
+    tryNextEndpoint();
 }
 
 // Fonction pour générer des livres de démonstration en cas d'échec de l'API
 function generateDemoBooks() {
-    const categories = ['romantic', 'fiction', 'manga', 'education', 'all'];
-    const demoBooks = [];
+    // Données de démonstration avec des titres et auteurs plus réalistes
+    const demoData = [
+        { title: "L'Art de la Guerre", author: "Sun Tzu", category: "education", image: "https://covers.openlibrary.org/b/id/8231990-L.jpg" },
+        { title: "Harry Potter et la Pierre Philosophale", author: "J.K. Rowling", category: "fiction", image: "https://covers.openlibrary.org/b/id/8267078-L.jpg" },
+        { title: "Le Petit Prince", author: "Antoine de Saint-Exupéry", category: "fiction", image: "https://covers.openlibrary.org/b/id/8239239-L.jpg" },
+        { title: "Orgueil et Préjugés", author: "Jane Austen", category: "romantic", image: "https://covers.openlibrary.org/b/id/8033979-L.jpg" },
+        { title: "One Piece Tome 1", author: "Eiichiro Oda", category: "manga", image: "https://covers.openlibrary.org/b/id/7449913-L.jpg" },
+        { title: "Naruto Tome 1", author: "Masashi Kishimoto", category: "manga", image: "https://covers.openlibrary.org/b/id/8582456-L.jpg" },
+        { title: "Roméo et Juliette", author: "William Shakespeare", category: "romantic", image: "https://covers.openlibrary.org/b/id/12645114-L.jpg" },
+        { title: "Les Misérables", author: "Victor Hugo", category: "fiction", image: "https://covers.openlibrary.org/b/id/8560629-L.jpg" },
+        { title: "Histoire des Mathématiques", author: "Carl B. Boyer", category: "education", image: "https://covers.openlibrary.org/b/id/8569457-L.jpg" },
+        { title: "Attack on Titan Tome 1", author: "Hajime Isayama", category: "manga", image: "https://covers.openlibrary.org/b/id/7883651-L.jpg" },
+        { title: "L'Étranger", author: "Albert Camus", category: "fiction", image: "https://covers.openlibrary.org/b/id/8237752-L.jpg" },
+        { title: "Les Fleurs du Mal", author: "Charles Baudelaire", category: "romantic", image: "https://covers.openlibrary.org/b/id/12850379-L.jpg" }
+    ];
     
-    // Générer 12 livres de démonstration
-    for (let i = 1; i <= 12; i++) {
-        const category = categories[Math.floor(Math.random() * categories.length)];
-        const isBestSeller = Math.random() > 0.7; // 30% de chance d'être un best-seller
-        
-        demoBooks.push({
-            id: i,
-            title: `Livre de démonstration ${i}`,
-            author: `Auteur ${i}`,
-            category: category,
-            image: `image${i}.jpg`,
-            prix_emprunt: Math.floor(Math.random() * 200) + 50,
-            isBestSeller: isBestSeller
-        });
-    }
-    
-    return demoBooks;
+    // Construire des objets livre complets avec tous les attributs nécessaires
+    return demoData.map((item, index) => ({
+        id: index + 1,
+        title: item.title,
+        author: item.author,
+        category: item.category,
+        image: item.image,
+        prix_emprunt: Math.floor(Math.random() * 150) + 50, // Prix entre 50 et 200 DH
+        isBestSeller: index < 4 // Les 4 premiers livres sont des best-sellers
+    }));
 }
 
 // Fonction pour afficher les livres avec animation
@@ -923,14 +958,16 @@ function displayBooks(containerId, booksToDisplay) {
         const author = getBookProperty(book, 'author', 'Auteur inconnu');
         const image = getBookProperty(book, 'image', '');
         const isBestSeller = getBookProperty(book, 'isBestSeller', false);
-
+        const prix = getBookProperty(book, 'prix_emprunt', 0);
         
         const bestSellerBadge = isBestSeller ? `<span class="book-badge">Best Seller</span>` : '';
+        const prixElement = `<span class="price-tag mt-1 text-accent font-semibold">${prix} DH</span>`;
         
         bookCard.innerHTML = `
-            <img src="${image}" alt="${title}" class="book-cover">
+            <img src="${image}" alt="${title}" class="book-cover" onerror="this.src='https://via.placeholder.com/150x200?text=Livre'">
             <h3 class="book-title">${title}</h3>
             <span class="author-name">${author}</span>
+            ${prixElement}
             ${bestSellerBadge}
         `;
         
@@ -970,29 +1007,36 @@ function initCategoryFilters() {
             if (category === 'all') {
                 filteredBooks = books;
             } else {
-                filteredBooks = books.filter(book => 
-                    getBookProperty(book, 'categorie', '').toLowerCase() === category.toLowerCase()
-                );
+                // Vérifier à la fois la catégorie et le type de catégorie (certains livres peuvent avoir "categorie" ou "category")
+                filteredBooks = books.filter(book => {
+                    const bookCategory = getBookProperty(book, 'category', '') || getBookProperty(book, 'categorie', '');
+                    return bookCategory.toLowerCase() === category.toLowerCase();
+                });
             }
 
-            // Afficher les livres filtrés dans la section Popular
-            displayBooks('popularBooks', filteredBooks);
+            // Si aucun livre trouvé, afficher un message
+            if (filteredBooks.length === 0) {
+                showToast(`Aucun livre trouvé dans la catégorie ${category}`);
+                // Afficher un message dans les sections
+                displayBooks('popularBooks', []);
+                displayBooks('bestSellerBooks', []);
+            } else {
+                // Afficher les livres filtrés dans la section Popular
+                displayBooks('popularBooks', filteredBooks);
 
-            // Filtrer les best-sellers également
-            const filteredBestSellers = category === 'all'
-                ? books.filter(book => getBookProperty(book, 'isBestSeller', false))
-                : books.filter(book => 
-                    getBookProperty(book, 'categorie', '').toLowerCase() === category.toLowerCase() && 
+                // Filtrer les best-sellers également
+                const filteredBestSellers = filteredBooks.filter(book => 
                     getBookProperty(book, 'isBestSeller', false)
                 );
 
-            displayBooks('bestSellerBooks', filteredBestSellers);
+                displayBooks('bestSellerBooks', filteredBestSellers);
+
+                // Afficher un message de confirmation
+                showToast(`Affichage de ${filteredBooks.length} livres de la catégorie: ${category}`);
+            }
 
             // Mettre à jour la visibilité de la bannière
             updateBannerVisibility();
-
-            // Afficher un message de confirmation
-            showToast(`Affichage des livres de la catégorie: ${category}`);
         });
     });
 }

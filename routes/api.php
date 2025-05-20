@@ -28,3 +28,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/livraisons/{id}/update-status', [\App\Http\Controllers\LivraisonController::class, 'updateStatus']);
     Route::delete('/livraisons/{id}', [\App\Http\Controllers\LivraisonController::class, 'destroy']);
 });
+
+Route::get('/articles', function () {
+    $articles = \App\Models\Article::all();
+    return response()->json($articles);
+});
