@@ -6,6 +6,7 @@ use App\Models\Livraison;
 use App\Models\Livreur;
 use App\Models\User;
 use App\Models\Utilisateur;
+use Dflydev\DotAccessData\Util;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -45,11 +46,9 @@ class LivreurController extends Controller
      */
     public function show()
     {
-        $livreurs = DB::table('livreur')
-            ->join('users', 'livreur.id_livreur', '=', 'users.id_users')
-            ->select('livreur.*', 'users.name as nom', 'users.prenom', 'users.email', 'users.telephone')
-            ->get();
-            
+        // Utiliser Eloquent avec les relations au lieu de requêtes manuelles
+        $livreurs = Utilisateur::where('id_role', 4)->get();
+            //dd($livreurs);
         return view('bibliothecaire.livreur', compact('livreurs'));
     }
 
@@ -104,17 +103,26 @@ class LivreurController extends Controller
      */
     public function edit($id)
     {
-        $livreur = DB::table('livreur')
-            ->join('users', 'livreur.id_livreur', '=', 'users.id_users')
-            ->select('livreur.*', 'users.name as nom', 'users.prenom', 'users.email', 'users.telephone', 'users.id_users')
-            ->where('livreur.id_livreur', $id)
-            ->first();
+        // Utiliser Eloquent au lieu de requête manuelle
+        $livreur = Livreur::with('user')->where('id_livreur', $id)->first();
 
         if (!$livreur) {
             return response()->json(['success' => false, 'message' => 'Livreur non trouvé'], 404);
         }
 
-        return response()->json(['success' => true, 'livreur' => $livreur]);
+        // Restructurer les données pour correspondre au format attendu par le frontend
+        $livreurData = [
+            'id_livreur' => $livreur->id_livreur,
+            'nom' => $livreur->user->name,
+            'prenom' => $livreur->user->prenom,
+            'email' => $livreur->user->email,
+            'telephone' => $livreur->user->telephone,
+            'zone_livraison' => $livreur->zone_livraison,
+            'moyen_transport' => $livreur->moyen_transport,
+            'id_users' => $livreur->user->id_users
+        ];
+
+        return response()->json(['success' => true, 'livreur' => $livreurData]);
     }
 
     /**

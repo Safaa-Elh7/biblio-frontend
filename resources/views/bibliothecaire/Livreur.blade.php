@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,52 +29,52 @@
   </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-    
+
     body {
       font-family: 'Poppins', sans-serif;
     }
-    
+
     .sidebar {
       transition: all 0.3s ease;
     }
-    
+
     .sidebar-item {
       transition: all 0.2s ease;
     }
-    
+
     .sidebar-item:hover {
       background-color: rgba(255, 255, 255, 0.1);
     }
-    
+
     .sidebar-item.active {
       background-color: rgba(255, 255, 255, 0.15);
       border-left: 4px solid white;
     }
-    
+
     .action-button {
       transition: all 0.2s ease;
     }
-    
+
     .action-button:hover {
       transform: translateY(-2px);
     }
-    
+
     .table-row {
       transition: background-color 0.2s ease;
     }
-    
+
     .table-row:hover {
       background-color: rgba(0, 0, 0, 0.02);
     }
-    
+
     .pagination-button {
       transition: all 0.2s ease;
     }
-    
+
     .pagination-button:hover:not(.active) {
       background-color: #e2e8f0;
     }
-    
+
     .search-input:focus {
       box-shadow: 0 0 0 3px rgba(139, 38, 53, 0.3);
     }
@@ -99,6 +100,7 @@
     }
   </style>
 </head>
+
 <body class="bg-gray-100">
   <div class="flex h-screen overflow-hidden">
     <!-- Sidebar -->
@@ -233,7 +235,7 @@
       <header class="bg-white shadow-sm">
         <div class="flex items-center justify-between px-4 py-3">
           <h1 class="text-2xl font-semibold text-gray-800">Gestion des Livreurs</h1>
-          
+
         </div>
       </header>
 
@@ -247,7 +249,7 @@
               <span>Ajouter un livreur</span>
             </button>
           </div>
-          
+
           <div class="overflow-x-auto">
             <table class="min-w-full bg-white">
               <thead>
@@ -261,34 +263,33 @@
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody id="livreursTableBody">
-                @foreach($livreurs as $livreur)
-                <tr class="table-row border-b">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $livreur->user->livreur->id_livreur }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->user->name }} {{ $livreur->user->prenom }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->user->livreur->zone_livraison }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->user->livreur->moyen_transport }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->user->email }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->user->telephone }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div class="flex space-x-2">
-                      <button onclick="viewLivreurDetails({{ $livreur->id_livreur }})" class="text-blue-600 hover:text-blue-900">
-                        <i class="fas fa-eye"></i>
-                      </button>
-                      <button onclick="editLivreur({{ $livreur->id_livreur }})" class="text-yellow-600 hover:text-yellow-900">
-                        <i class="fas fa-edit"></i>
-                      </button>
-                      <button onclick="deleteLivreur({{ $livreur->id_livreur }})" class="text-red-600 hover:text-red-900">
-                        <i class="fas fa-trash"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                @endforeach
+              @foreach($livreurs as $livreur)
+              <tr class="table-row border-b">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $livreur->id_livreur }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->users->name }} {{ $livreur->prenom }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->zone_livraison }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->moyen_transport }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->email }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->telephone }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-2">
+                    <button onclick="viewLivreurDetails({{ $livreur->id_livreur }})" class="text-blue-600 hover:text-blue-900">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button onclick="editLivreur({{ $livreur->id_livreur }})" class="text-yellow-600 hover:text-yellow-900">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="deleteLivreur({{ $livreur->id_livreur }})" class="text-red-600 hover:text-red-900">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              @endforeach
               </tbody>
             </table>
           </div>
-          
+
           <div class="flex justify-between items-center mt-6">
             <div class="text-sm text-gray-600">
               Affichage de <span id="startEntry">1</span> à <span id="endEntry">{{ count($livreurs) }}</span> sur <span id="totalEntries">{{ count($livreurs) }}</span> entrées
@@ -309,7 +310,7 @@
         <i class="fas fa-times"></i>
       </button>
       <h2 class="text-2xl font-semibold text-gray-800 mb-6">Ajouter un livreur</h2>
-      
+
       <form id="addLivreurForm" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -364,7 +365,7 @@
             <input type="date" id="date_embauche" name="date_embauche" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
           </div>
         </div>
-        
+
         <div class="flex justify-end space-x-3 pt-4">
           <button type="button" id="cancelEditLivreur" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-200">
             Annuler
@@ -384,7 +385,7 @@
         <i class="fas fa-times"></i>
       </button>
       <h2 class="text-2xl font-semibold text-gray-800 mb-6">Détails du livreur</h2>
-      
+
       <div id="livreurDetails" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="space-y-3">
@@ -413,7 +414,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="flex justify-end space-x-3 pt-6">
         <button type="button" id="closeViewModalBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-200">
           Fermer
@@ -424,251 +425,252 @@
 
   <!-- JavaScript -->
   <script>
-  // Script pour gérer les opérations CRUD sur les livreurs avec AJAX
-document.addEventListener("DOMContentLoaded", function() {
-    // Éléments du DOM
-    const addLivreurForm = document.getElementById('addLivreurForm');
-    const addLivreurModal = document.getElementById('addLivreurModal');
-    const closeModal = document.getElementById('closeModal');
-    const cancelAddLivreur = document.getElementById('cancelAddLivreur');
-    const editLivreurForm = document.getElementById('editLivreurForm');
-    const editLivreurModal = document.getElementById('editLivreurModal');
-    const closeEditModal = document.getElementById('closeEditModal');
-    const cancelEditLivreur = document.getElementById('cancelEditLivreur');
-    
-    // Token CSRF pour les requêtes AJAX
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    
-    // Gestion du formulaire d'ajout
-    if (addLivreurForm) {
+    // Script pour gérer les opérations CRUD sur les livreurs avec AJAX
+    document.addEventListener("DOMContentLoaded", function() {
+      // Éléments du DOM
+      const addLivreurForm = document.getElementById('addLivreurForm');
+      const addLivreurModal = document.getElementById('addLivreurModal');
+      const closeModal = document.getElementById('closeModal');
+      const cancelAddLivreur = document.getElementById('cancelAddLivreur');
+      const editLivreurForm = document.getElementById('editLivreurForm');
+      const editLivreurModal = document.getElementById('editLivreurModal');
+      const closeEditModal = document.getElementById('closeEditModal');
+      const cancelEditLivreur = document.getElementById('cancelEditLivreur');
+
+      // Token CSRF pour les requêtes AJAX
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+      // Gestion du formulaire d'ajout
+      if (addLivreurForm) {
         addLivreurForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(addLivreurForm);
-            
-            fetch('/bibliothecaire/livreurs', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: formData
+          e.preventDefault();
+
+          const formData = new FormData(addLivreurForm);
+
+          fetch('/bibliothecaire/livreurs', {
+              method: 'POST',
+              headers: {
+                'X-CSRF-TOKEN': csrfToken
+              },
+              body: formData
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    // Fermer le modal
-                    closeModalFunction(addLivreurModal);
-                    
-                    // Rafraîchir la liste des livreurs
-                    window.location.reload();
-                    
-                    // Afficher un message de succès
-                    showNotification(data.message);
-                } else {
-                    // Afficher un message d'erreur
-                    showNotification(data.message, 'error');
-                }
+              if (data.success) {
+                // Fermer le modal
+                closeModalFunction(addLivreurModal);
+
+                // Rafraîchir la liste des livreurs
+                window.location.reload();
+
+                // Afficher un message de succès
+                showNotification(data.message);
+              } else {
+                // Afficher un message d'erreur
+                showNotification(data.message, 'error');
+              }
             })
             .catch(error => {
-                console.error('Erreur:', error);
-                showNotification('Une erreur est survenue lors de l\'ajout du livreur', 'error');
+              console.error('Erreur:', error);
+              showNotification('Une erreur est survenue lors de l\'ajout du livreur', 'error');
             });
         });
-    }
-    
-    // Gestion du formulaire d'édition
-    if (editLivreurForm) {
+      }
+
+      // Gestion du formulaire d'édition
+      if (editLivreurForm) {
         editLivreurForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(editLivreurForm);
-            const livreurId = editLivreurForm.getAttribute('data-id');
-            
-            // Utiliser la méthode PUT pour la mise à jour
-            formData.append('_method', 'PUT');
-            
-            fetch(`/bibliothecaire/livreurs/${livreurId}`, {
-                method: 'POST', // POST avec _method=PUT
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: formData
+          e.preventDefault();
+
+          const formData = new FormData(editLivreurForm);
+          const livreurId = editLivreurForm.getAttribute('data-id');
+
+          // Utiliser la méthode PUT pour la mise à jour
+          formData.append('_method', 'PUT');
+
+          fetch(`/bibliothecaire/livreurs/${livreurId}`, {
+              method: 'POST', // POST avec _method=PUT
+              headers: {
+                'X-CSRF-TOKEN': csrfToken
+              },
+              body: formData
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    // Fermer le modal
-                    closeModalFunction(editLivreurModal);
-                    
-                    // Rafraîchir la liste des livreurs
-                    window.location.reload();
-                    
-                    // Afficher un message de succès
-                    showNotification(data.message);
-                } else {
-                    // Afficher un message d'erreur
-                    showNotification(data.message, 'error');
-                }
+              if (data.success) {
+                // Fermer le modal
+                closeModalFunction(editLivreurModal);
+
+                // Rafraîchir la liste des livreurs
+                window.location.reload();
+
+                // Afficher un message de succès
+                showNotification(data.message);
+              } else {
+                // Afficher un message d'erreur
+                showNotification(data.message, 'error');
+              }
             })
             .catch(error => {
-                console.error('Erreur:', error);
-                showNotification('Une erreur est survenue lors de la mise à jour du livreur', 'error');
+              console.error('Erreur:', error);
+              showNotification('Une erreur est survenue lors de la mise à jour du livreur', 'error');
             });
         });
-    }
-    
-    // Fonction pour ouvrir le modal d'édition
-    window.editLivreur = function(id) {
+      }
+
+      // Fonction pour ouvrir le modal d'édition
+      window.editLivreur = function(id) {
         fetch(`/bibliothecaire/livreurs/${id}`, {
             method: 'GET',
             headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
+              'X-CSRF-TOKEN': csrfToken,
+              'Accept': 'application/json'
             }
-        })
-        .then(response => response.json())
-        .then(data => {
+          })
+          .then(response => response.json())
+          .then(data => {
             if (data.success) {
-                // Remplir le formulaire avec les données du livreur
-                const livreur = data.livreur;
-                document.getElementById('edit_nom').value = livreur.nom;
-                document.getElementById('edit_prenom').value = livreur.prenom;
-                document.getElementById('edit_email').value = livreur.email;
-                document.getElementById('edit_telephone').value = livreur.telephone;
-                document.getElementById('edit_zone_livraison').value = livreur.zone_livraison;
-                document.getElementById('edit_moyen_transport').value = livreur.moyen_transport;
-                
-                // Définir l'ID du livreur pour la soumission du formulaire
-                editLivreurForm.setAttribute('data-id', livreur.id_users);
-                
-                // Ouvrir le modal
-                editLivreurModal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
+              // Remplir le formulaire avec les données du livreur
+              const livreur = data.livreur;
+              document.getElementById('edit_nom').value = livreur.nom;
+              document.getElementById('edit_prenom').value = livreur.prenom;
+              document.getElementById('edit_email').value = livreur.email;
+              document.getElementById('edit_telephone').value = livreur.telephone;
+              document.getElementById('edit_zone_livraison').value = livreur.zone_livraison;
+              document.getElementById('edit_moyen_transport').value = livreur.moyen_transport;
+
+              // Définir l'ID du livreur pour la soumission du formulaire
+              editLivreurForm.setAttribute('data-id', livreur.id_users);
+
+              // Ouvrir le modal
+              editLivreurModal.classList.remove('hidden');
+              document.body.style.overflow = 'hidden';
             } else {
-                showNotification(data.message, 'error');
+              showNotification(data.message, 'error');
             }
-        })
-        .catch(error => {
+          })
+          .catch(error => {
             console.error('Erreur:', error);
             showNotification('Une erreur est survenue lors de la récupération des données du livreur', 'error');
-        });
-    };
-    
-    // Fonction pour supprimer un livreur
-    window.deleteLivreur = function(id) {
+          });
+      };
+
+      // Fonction pour supprimer un livreur
+      window.deleteLivreur = function(id) {
         if (confirm('Êtes-vous sûr de vouloir supprimer ce livreur?')) {
-            fetch(`/bibliothecaire/livreurs/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                }
+          fetch(`/bibliothecaire/livreurs/${id}`, {
+              method: 'DELETE',
+              headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+              }
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    // Rafraîchir la liste des livreurs
-                    window.location.reload();
-                    
-                    // Afficher un message de succès
-                    showNotification(data.message);
-                } else {
-                    // Afficher un message d'erreur
-                    showNotification(data.message, 'error');
-                }
+              if (data.success) {
+                // Rafraîchir la liste des livreurs
+                window.location.reload();
+
+                // Afficher un message de succès
+                showNotification(data.message);
+              } else {
+                // Afficher un message d'erreur
+                showNotification(data.message, 'error');
+              }
             })
             .catch(error => {
-                console.error('Erreur:', error);
-                showNotification('Une erreur est survenue lors de la suppression du livreur', 'error');
+              console.error('Erreur:', error);
+              showNotification('Une erreur est survenue lors de la suppression du livreur', 'error');
             });
         }
-    };
-    
-    // Fonction pour voir les détails d'un livreur
-    window.viewLivreurDetails = function(id) {
+      };
+
+      // Fonction pour voir les détails d'un livreur
+      window.viewLivreurDetails = function(id) {
         fetch(`/bibliothecaire/livreurs/${id}`, {
             method: 'GET',
             headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
+              'X-CSRF-TOKEN': csrfToken,
+              'Accept': 'application/json'
             }
-        })
-        .then(response => response.json())
-        .then(data => {
+          })
+          .then(response => response.json())
+          .then(data => {
             if (data.success) {
-                // Récupérer les données du livreur
-                const livreur = data.livreur;
-                
-                // Remplir le modal avec les détails du livreur
-                const livreurDetails = document.getElementById('livreurDetails');
-                
-                // Mettre à jour le contenu avec les détails du livreur
-                // (Le code pour remplir livreurDetails est déjà dans votre HTML)
-                
-                // Ouvrir le modal
-                document.getElementById('viewLivreurModal').classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
+              // Récupérer les données du livreur
+              const livreur = data.livreur;
+
+              // Remplir le modal avec les détails du livreur
+              const livreurDetails = document.getElementById('livreurDetails');
+
+              // Mettre à jour le contenu avec les détails du livreur
+              // (Le code pour remplir livreurDetails est déjà dans votre HTML)
+
+              // Ouvrir le modal
+              document.getElementById('viewLivreurModal').classList.remove('hidden');
+              document.body.style.overflow = 'hidden';
             } else {
-                showNotification(data.message, 'error');
+              showNotification(data.message, 'error');
             }
-        })
-        .catch(error => {
+          })
+          .catch(error => {
             console.error('Erreur:', error);
             showNotification('Une erreur est survenue lors de la récupération des détails du livreur', 'error');
-        });
-    };
-    
-    // Fonction pour fermer les modals
-    function closeModalFunction(modal) {
+          });
+      };
+
+      // Fonction pour fermer les modals
+      function closeModalFunction(modal) {
         modal.classList.add('hidden');
         document.body.style.overflow = 'auto';
         if (modal === addLivreurModal) {
-            addLivreurForm.reset();
+          addLivreurForm.reset();
         } else if (modal === editLivreurModal) {
-            editLivreurForm.reset();
+          editLivreurForm.reset();
         }
-    }
-    
-    // Événements pour fermer les modals
-    if (closeModal) {
+      }
+
+      // Événements pour fermer les modals
+      if (closeModal) {
         closeModal.addEventListener('click', () => closeModalFunction(addLivreurModal));
-    }
-    if (cancelAddLivreur) {
+      }
+      if (cancelAddLivreur) {
         cancelAddLivreur.addEventListener('click', () => closeModalFunction(addLivreurModal));
-    }
-    if (closeEditModal) {
+      }
+      if (closeEditModal) {
         closeEditModal.addEventListener('click', () => closeModalFunction(editLivreurModal));
-    }
-    if (cancelEditLivreur) {
+      }
+      if (cancelEditLivreur) {
         cancelEditLivreur.addEventListener('click', () => closeModalFunction(editLivreurModal));
-    }
-    
-    // Fonction pour afficher les notifications
-    window.showNotification = function(message, type = 'success') {
+      }
+
+      // Fonction pour afficher les notifications
+      window.showNotification = function(message, type = 'success') {
         // Supprimer les notifications existantes
         const existingNotifications = document.querySelectorAll('.notification');
         existingNotifications.forEach(notification => {
-            notification.remove();
+          notification.remove();
         });
-        
+
         // Créer une nouvelle notification
         const notification = document.createElement('div');
         notification.className = `notification ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
         notification.textContent = message;
-        
+
         document.body.appendChild(notification);
-        
+
         // Supprimer la notification après un délai
         setTimeout(() => {
-            notification.classList.add('hiding');
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 300);
+          notification.classList.add('hiding');
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+          }, 300);
         }, 3000);
-    };
-});    
+      };
+    });
   </script>
 </body>
+
 </html>
