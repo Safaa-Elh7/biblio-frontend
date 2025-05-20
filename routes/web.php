@@ -137,6 +137,9 @@ Route::put('/bibliothecaire/livreurs/{id}', [LivreurController::class, 'update']
 Route::delete('/bibliothecaire/livreurs/{id}', [LivreurController::class, 'destroy'])->name('bibliothecaire.livreur.destroy');
 Route::get('/users', [UserBiblioController::class, 'show'])->name('bibliothecaire.user.index');
 Route::get('bibliothecaire/orders', [OrderBiblioController::class, 'index'])->name('bibliothecaire.order.show');
+Route::get('bibliothecaire/orders/{id}', [OrderBiblioController::class, 'show'])->name('bibliothecaire.order.details');
+Route::get('bibliothecaire/payments', [PaymentBiblioController::class, 'show'])->name('bibliothecaire.payment.show');
+Route::get('bibliothecaire/payments/export', [PaymentBiblioController::class, 'export'])->name('bibliothecaire.payment.export');
 
 
 Route::get('/orders', [OrderController::class, 'history'])->name('order.history');
