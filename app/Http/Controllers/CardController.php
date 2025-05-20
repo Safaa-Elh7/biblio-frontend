@@ -51,6 +51,12 @@ class CardController extends Controller
             'cvv' => 'required|string|max:4',
         ]);
         
+        // Validate that the card number has exactly 16 digits (after removing spaces)
+        $cardNumber = str_replace(' ', '', $validatedData['cardNumber']);
+        if (strlen($cardNumber) !== 16 || !ctype_digit($cardNumber)) {
+            return redirect()->back()->withErrors(['cardNumber' => 'Credit card number must be exactly 16 digits'])->withInput();
+        }
+        
         // Récupérer le panier
         $cart = session()->get('cart', []);
         

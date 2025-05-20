@@ -586,20 +586,19 @@
                     <h2 class="section-title">
                         <i class="fas fa-shipping-fast"></i>
                         Shipping address
-                    </h2>
-                    <div class="input-group">
-                        <label class="input-label">Full name</label>
-                        <input type="text" placeholder="Enter your full name" class="input-field" id="fullName" name="fullName">
-                        <i class="fas fa-user input-icon"></i>
-                    </div>
+                    </h2>                        <div class="input-group">
+                            <label class="input-label">Full name</label>
+                            <input type="text" placeholder="Enter your full name" class="input-field" id="fullName" name="fullName" required>
+                            <i class="fas fa-user input-icon"></i>
+                        </div>
                     <div class="input-group">
                         <label class="input-label">Address</label>
-                        <input type="text" placeholder="Enter your address" class="input-field" id="address" name="address">
+                        <input type="text" placeholder="Enter your address" class="input-field" id="address" name="address" required>
                         <i class="fas fa-home input-icon"></i>
                     </div>
                     <div class="input-group">
                         <label class="input-label">City</label>
-                        <input type="text" placeholder="Enter your city" class="input-field" id="city" name="city">
+                        <input type="text" placeholder="Enter your city" class="input-field" id="city" name="city" required>
                         <i class="fas fa-city input-icon"></i>
                     </div>
                     <div class="input-group">
@@ -625,8 +624,10 @@
                     <div class="card-details">
                         <div class="input-group">
                             <label class="input-label">Card number</label>
-                            <input type="text" placeholder="1234 5678 9565 5555" class="input-field" id="cardNumber" name="cardNumber">
+                            <input type="text" placeholder="1234 5678 9012 3456" class="input-field" id="cardNumber" name="cardNumber" required minlength="19" maxlength="19" 
+                                pattern="[0-9]{4}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}" title="Please enter a valid card number in format: XXXX XXXX XXXX XXXX">
                             <i class="fas fa-credit-card input-icon"></i>
+                            <small class="text-gray-500 mt-1 text-xs">Must be a 16-digit number (format: XXXX XXXX XXXX XXXX)</small>
                         </div>
                         <div class="input-group">
                             <label class="input-label">Card holder</label>
@@ -710,23 +711,66 @@
             // Gérer la soumission du formulaire
             if (cardForm && placeOrderBtn) {
                 placeOrderBtn.addEventListener('click', function(e) {
-                    // Vérifier si le formulaire est valide
-                    if (cardForm.checkValidity()) {
-                        // Afficher l'animation de chargement
+                    e.preventDefault(); // Prevent the default form submission
+                    
+                    // Track validation errors
+                    let errors = [];
+                    
+                    // Verify credit card number (must be exactly 16 digits)
+                    const cardNumberInput = document.getElementById('cardNumber');
+                    const cardNumber = cardNumberInput.getAttribute('data-raw-value') || cardNumberInput.value.replace(/\D/g, '');
+                    
+                    if (cardNumber.length !== 16) {
+                        cardNumberInput.classList.add('border-red-500');
+                        const errorMsg = document.getElementById('cardNumberError');
+                        if (errorMsg) {
+                            errorMsg.textContent = 'Card number must be exactly 16 digits';
+                            errorMsg.classList.remove('hidden');
+                        }
+                        errors.push("Please enter a valid 16-digit card number");
+                    } else {
+                        cardNumberInput.classList.remove('border-red-500');
+                        cardNumberInput.classList.add('border-green-500');
+                        const errorMsg = document.getElementById('cardNumberError');
+                        if (errorMsg) errorMsg.classList.add('hidden');
+                    }
+                    
+                    // Additional validation - make sure all required fields are filled
+                    const requiredFields = ['fullName', 'address', 'city', 'zipCode', 'cardHolder', 'expiryDate', 'cvv'];
+                    
+                    for (let field of requiredFields) {
+                        const input = document.getElementById(field);
+                        if (!input.value.trim()) {
+                            input.classList.add('border-red-500');
+                            errors.push(`${field} is required`);
+                        } else {
+                            input.classList.remove('border-red-500');
+                        }
+                    }
+                    
+                    // If all fields are valid, submit the form
+                    if (errors.length === 0) {
+                        // Show loading animation
                         loadingOverlay.classList.add('active');
                         
-                        // Soumettre le formulaire après une courte pause pour l'animation
+                        // Submit the form after a short delay for the animation
                         setTimeout(() => {
                             cardForm.submit();
                         }, 1000);
                     } else {
-                        // Déclencher la validation native du formulaire
-                        cardForm.reportValidity();
+                        // Display the first error message
+                        alert(errors[0]);
                     }
                 });
+            }
             
             // Formatage automatique du numéro de carte
             const cardNumberInput = document.getElementById('cardNumber');
+            const cardNumberError = document.createElement('div');
+            cardNumberError.className = 'text-red-500 text-xs mt-1 hidden';
+            cardNumberError.id = 'cardNumberError';
+            cardNumberInput.parentNode.appendChild(cardNumberError);
+            
             cardNumberInput.addEventListener('input', function(e) {
                 let value = e.target.value.replace(/\D/g, '');
                 if (value.length > 16) value = value.slice(0, 16);
@@ -741,6 +785,24 @@
                 }
                 
                 e.target.value = formattedValue;
+                
+                // Set a data attribute with the raw number (without spaces)
+                this.setAttribute('data-raw-value', value);
+                
+                // Add visual feedback for card validation
+                if (value.length === 16) {
+                    this.classList.add('border-green-500');
+                    this.classList.remove('border-red-500');
+                    cardNumberError.classList.add('hidden');
+                } else if (value.length > 0) {
+                    this.classList.add('border-red-500');
+                    this.classList.remove('border-green-500');
+                    cardNumberError.textContent = 'Card number must be exactly 16 digits';
+                    cardNumberError.classList.remove('hidden');
+                } else {
+                    this.classList.remove('border-green-500', 'border-red-500');
+                    cardNumberError.classList.add('hidden');
+                }
             });
             
             // Formatage automatique de la date d'expiration
@@ -799,17 +861,8 @@
                 return isValid;
             }
             
-            // Traitement de la commande
-            placeOrderBtn.addEventListener('click', function() {
-                if (validateFields()) {
-                    // Afficher l'animation de chargement
-                    loadingOverlay.classList.add('active');
-                    // Soumettre le formulaire
-                    document.getElementById('checkoutForm').submit();
-                } else {
-                    alert('Veuillez remplir tous les champs obligatoires.');
-                }
-            });
+            // We don't need this event handler as it's already defined above
+            // and having two event handlers on the same button causes conflicts
         });
     </script>
 </body>
