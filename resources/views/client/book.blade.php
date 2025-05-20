@@ -393,9 +393,10 @@
         const empruntForm = document.getElementById('emprunt-form');
         if (empruntForm) {
             empruntForm.addEventListener('submit', function(e) {
-                e.preventDefault(); // Pour la démo, empêcher l'envoi réel du formulaire
+                e.preventDefault(); // Empêcher la soumission standard pour soumettre via AJAX
                 
                 const button = this.querySelector('button');
+                const formData = new FormData(this);
                 
                 // Changer l'apparence du bouton pendant le chargement
                 if (button) {
@@ -404,15 +405,37 @@
                     button.disabled = true;
                     button.classList.add('opacity-75');
                     
-                    // Simuler un délai de chargement
-                    setTimeout(() => {
+                    // Soumettre le formulaire via AJAX
+                    fetch('{{ route('client.panier.add') }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
                         button.innerHTML = originalText;
                         button.disabled = false;
                         button.classList.remove('opacity-75');
                         
                         // Afficher la notification
-                        showNotification("Le livre a été ajouté à votre panier");
-                    }, 1000);
+                        showNotification(data.message || "Le livre a été ajouté à votre panier");
+                        
+                        // Mettre à jour le compteur du panier
+                        const cartCount = document.querySelector('.sidebar-icon .rounded-full');
+                        if (cartCount && data.cart) {
+                            cartCount.textContent = Object.keys(data.cart).length;
+                        }
+                    })
+                    .catch(error => {
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                        button.classList.remove('opacity-75');
+                        showNotification("Une erreur s'est produite. Veuillez réessayer.");
+                        console.error('Error:', error);
+                    });
                 }
             });
         }

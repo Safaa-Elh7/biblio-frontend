@@ -85,6 +85,82 @@ class OrderController extends Controller
     }
     
     /**
+     * Permet à un utilisateur de mettre à jour certaines informations de sa commande
+     * comme l'adresse de livraison tant que la commande n'est pas expédiée.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        // Vérifier que l'utilisateur est connecté
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Vous devez être connecté pour modifier cette commande.');
+        }
+        
+        // Récupérer la commande de l'utilisateur par son ID
+        $order = Order::where('id', $id)
+            ->where('user_id', Auth::id()) // Sécurité: seulement les commandes de l'utilisateur
+            ->first();
+            
+        if (!$order) {
+            return redirect()->back()->with('error', 'Commande introuvable ou vous n\'avez pas la permission de la modifier.');
+        }
+        
+        // Vérifier que la commande est toujours modifiable (statut "pending" ou "processing")
+        if (!in_array($order->status, ['pending', 'processing'])) {
+            return redirect()->back()->with('error', 'Cette commande ne peut plus être modifiée car elle a déjà été expédiée ou livrée.');
+        }
+        
+        // Valider les données
+        $validatedData = $request->validate([
+            'full_name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'zip_code' => 'required|string|max:20',
+        ]);
+        
+        // Mettre à jour les informations de livraison
+        $order->update($validatedData);
+        
+        return redirect()->back()->with('success', 'Les informations de livraison ont été mises à jour avec succès.');
+    }
+    
+    /**
+     * Permet à un utilisateur d'annuler sa commande si elle n'est pas encore expédiée.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function cancel($id)
+    {
+        // Vérifier que l'utilisateur est connecté
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Vous devez être connecté pour annuler cette commande.');
+        }
+        
+        // Récupérer la commande de l'utilisateur par son ID
+        $order = Order::where('id', $id)
+            ->where('user_id', Auth::id()) // Sécurité: seulement les commandes de l'utilisateur
+            ->first();
+            
+        if (!$order) {
+            return redirect()->back()->with('error', 'Commande introuvable ou vous n\'avez pas la permission de l\'annuler.');
+        }
+        
+        // Vérifier que la commande est toujours annulable (statut "pending" ou "processing")
+        if (!in_array($order->status, ['pending', 'processing'])) {
+            return redirect()->back()->with('error', 'Cette commande ne peut plus être annulée car elle a déjà été expédiée ou livrée.');
+        }
+        
+        // Mettre à jour le statut de la commande
+        $order->update(['status' => 'cancelled']);
+        
+        return redirect()->back()->with('success', 'Votre commande a été annulée avec succès.');
+    }
+
+    /**
      * Permet à un administrateur de voir toutes les commandes.
      * 
      * @return \Illuminate\Http\Response
@@ -92,7 +168,7 @@ class OrderController extends Controller
     public function adminIndex()
     {
         // Vérifier que l'utilisateur est un admin
-        if (!Auth::check() || !Auth::Utilisateur()->isBibliothecaire()) {
+        if (!Auth::check() || !Auth::user()->role_id != 2) {
             abort(403, 'Accès non autorisé.');
         }
         

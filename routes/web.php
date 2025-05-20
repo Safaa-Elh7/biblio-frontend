@@ -54,6 +54,11 @@ Route::middleware(['auth', 'role:bibliothecaire'])
      ->group(function () {
           Route::get('dashboard', [BibliothecaireController::class, 'index'])
                ->name('dashboard');
+          
+          // Routes pour la gestion des commandes par l'administrateur
+          Route::get('/orders', [OrderController::class, 'adminIndex'])->name('orders.index');
+          Route::get('/orders/{id}', [OrderController::class, 'adminShow'])->name('orders.show');
+          Route::put('/orders/{id}/status', [OrderController::class, 'adminUpdateStatus'])->name('orders.update.status');
      });
 
 Route::middleware(['auth', 'role:livreur'])
@@ -108,7 +113,12 @@ Route::middleware(['auth'])
     ->prefix('client')
     ->name('client.')
     ->group(function () {
+        // Routes pour la gestion des commandes par le client
         Route::get('/orders', [OrderController::class, 'history'])->name('order.history');
+        Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order.show');
+        Route::put('/orders/{id}', [OrderController::class, 'update'])->name('order.update');
+        Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('order.cancel');
+        Route::get('/orders/search', [OrderController::class, 'search'])->name('order.search');
         Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order.show');
         Route::get('/orders/search', [OrderController::class, 'search'])->name('order.search');
     });

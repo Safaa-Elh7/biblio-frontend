@@ -684,7 +684,7 @@
                     <span>Total</span>
                     <span>{{ $total + $shipping }} Dh</span>
                 </div>
-                <button type="button" class="place-order-btn" id="placeOrderBtn">
+                <button type="submit" class="place-order-btn" id="placeOrderBtn">
                     Place Order
                 </button>
                 <div class="secure-badge">
@@ -705,6 +705,25 @@
             const placeOrderBtn = document.getElementById('placeOrderBtn');
             const loadingOverlay = document.getElementById('loadingOverlay');
             const inputFields = document.querySelectorAll('.input-field');
+            const cardForm = document.querySelector('form');
+            
+            // Gérer la soumission du formulaire
+            if (cardForm && placeOrderBtn) {
+                placeOrderBtn.addEventListener('click', function(e) {
+                    // Vérifier si le formulaire est valide
+                    if (cardForm.checkValidity()) {
+                        // Afficher l'animation de chargement
+                        loadingOverlay.classList.add('active');
+                        
+                        // Soumettre le formulaire après une courte pause pour l'animation
+                        setTimeout(() => {
+                            cardForm.submit();
+                        }, 1000);
+                    } else {
+                        // Déclencher la validation native du formulaire
+                        cardForm.reportValidity();
+                    }
+                });
             
             // Formatage automatique du numéro de carte
             const cardNumberInput = document.getElementById('cardNumber');
