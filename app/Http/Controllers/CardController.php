@@ -31,8 +31,8 @@ class CardController extends Controller
         // Total général
         $total = $subtotal + $tax;
         
-        // Check if the fixed version exists, use it instead
-        $view = file_exists(resource_path('views/client/card.blade.php')) ? 'client.card' : 'client.card';
+        // Use the client.card view
+        $view = 'client.card';
         
         return view($view, compact('cart', 'subtotal', 'tax', 'shipping', 'total'));
     }
@@ -72,7 +72,8 @@ class CardController extends Controller
         }
         
         $tax = round($subtotal * 0.04);
-        $total = $subtotal + $tax;
+        $shipping = 20; // Frais de livraison fixes
+        $total = $subtotal + $tax + $shipping;
         
         
             // Créer une nouvelle commande en base de données
@@ -81,6 +82,7 @@ class CardController extends Controller
             $order->order_number = 'ORD-' . uniqid();
             $order->subtotal = $subtotal;
             $order->tax = $tax;
+            $order->shipping = $shipping;
             $order->total = $total;
             $order->full_name = $validatedData['fullName'];
             $order->address = $validatedData['address'];

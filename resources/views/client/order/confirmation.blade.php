@@ -210,6 +210,11 @@
                         <span>{{ $order->tax }} Dh</span>
                     </div>
                     
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Frais de livraison:</span>
+                        <span>{{ $order->shipping ?? 20 }} Dh</span>
+                    </div>
+                    
                     <div class="divider my-3"></div>
                     
                     <div class="flex justify-between font-bold">

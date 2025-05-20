@@ -544,6 +544,44 @@
     </style>
 </head>
 <body>
+    @if(session('error'))
+    <div id="session-error" class="fixed top-5 right-5 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded max-w-md shadow-lg z-50">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <span>{{ session('error') }}</span>
+            </div>
+            <button type="button" onclick="this.parentNode.parentNode.classList.add('hidden')" class="ml-4">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <script>
+        setTimeout(() => {
+            document.getElementById('session-error').classList.add('hidden');
+        }, 5000);
+    </script>
+    @endif
+
+    @if($errors->any())
+    <div id="validation-error" class="fixed top-5 right-5 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded max-w-md shadow-lg z-50">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <span>{{ $errors->first() }}</span>
+            </div>
+            <button type="button" onclick="this.parentNode.parentNode.classList.add('hidden')" class="ml-4">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <script>
+        setTimeout(() => {
+            document.getElementById('validation-error').classList.add('hidden');
+        }, 5000);
+    </script>
+    @endif
+    
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="logo-container">
@@ -758,8 +796,8 @@
                             cardForm.submit();
                         }, 1000);
                     } else {
-                        // Display the first error message
-                        alert(errors[0]);
+                        // Use the showNotification function to display the error message
+                        showNotification(errors[0], 'error');
                     }
                 });
             }
@@ -861,8 +899,40 @@
                 return isValid;
             }
             
+            // Fonction pour afficher un message d'erreur ou de succès
+            function showNotification(message, type = 'error') {
+                let notifContainer = document.getElementById('notification-container');
+                if (!notifContainer) {
+                    notifContainer = document.createElement('div');
+                    notifContainer.id = 'notification-container';
+                    notifContainer.className = 'fixed top-5 right-5 max-w-md shadow-lg z-50 hidden';
+                    document.body.appendChild(notifContainer);
+                }
+                
+                const bgColor = type === 'error' ? 'bg-red-100 border-red-400 text-red-700' : 'bg-green-100 border-green-400 text-green-700';
+                const icon = type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle';
+                
+                notifContainer.innerHTML = `
+                    <div class="${bgColor} border px-4 py-3 rounded relative">
+                        <div class="flex items-center">
+                            <i class="fas ${icon} mr-2"></i>
+                            <span>${message}</span>
+                            <button type="button" onclick="this.parentNode.parentNode.parentNode.classList.add('hidden')" class="ml-4">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                notifContainer.classList.remove('hidden');
+                
+                // Auto-hide après 5 secondes
+                setTimeout(() => {
+                    notifContainer.classList.add('hidden');
+                }, 5000);
+            }
+            
             // We don't need this event handler as it's already defined above
-            // and having two event handlers on the same button causes conflicts
         });
     </script>
 </body>
