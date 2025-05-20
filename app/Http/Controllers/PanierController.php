@@ -13,6 +13,9 @@ class PanierController extends Controller
 
     public function addToCart(Request $request)
     {
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Veuillez vous connecter pour ajouter des livres au panier.');
+        }
         // Récupérer le panier actuel de la session
         $cart = session()->get('cart', []);
 
