@@ -45,12 +45,23 @@ class LivreurController extends Controller
      */
     public function show()
     {
-        $livreurs = DB::table('livreur')
-            ->join('users', 'livreur.id_livreur', '=', 'users.id_users')
-            ->select('livreur.*', 'users.name as nom', 'users.prenom', 'users.email', 'users.telephone')
-            ->get();
+        // Utiliser Eloquent avec eager loading pour charger les relations
+        $livreurs = Livreur::with('user')->get();
+        
+        // Transformer les données pour les rendre compatibles avec la vue
+        $formattedLivreurs = $livreurs->map(function($livreur) {
+            return (object) [
+                'id_livreur' => $livreur->id_livreur,
+                'zone_livraison' => $livreur->zone_livraison,
+                'moyen_transport' => $livreur->moyen_transport,
+                'nom' => $livreur->user ? $livreur->user->name : 'N/A',
+                'prenom' => $livreur->user ? $livreur->user->prenom : '',
+                'email' => $livreur->user ? $livreur->user->email : 'N/A',
+                'telephone' => $livreur->user ? $livreur->user->telephone : 'N/A'
+            ];
+        });
             
-        return view('bibliothecaire.livreur', compact('livreurs'));
+        return view('bibliothecaire.livreur', ['livreurs' => $formattedLivreurs]);
     }
 
     /**
@@ -104,17 +115,27 @@ class LivreurController extends Controller
      */
     public function edit($id)
     {
-        $livreur = DB::table('livreur')
-            ->join('users', 'livreur.id_livreur', '=', 'users.id_users')
-            ->select('livreur.*', 'users.name as nom', 'users.prenom', 'users.email', 'users.telephone', 'users.id_users')
-            ->where('livreur.id_livreur', $id)
+        $livreur = Livreur::with('user')
+            ->where('id_livreur', $id)
             ->first();
 
         if (!$livreur) {
             return response()->json(['success' => false, 'message' => 'Livreur non trouvé'], 404);
         }
 
-        return response()->json(['success' => true, 'livreur' => $livreur]);
+        // Formater les données pour qu'elles soient compatibles avec le JavaScript
+        $formattedLivreur = [
+            'id_livreur' => $livreur->id_livreur,
+            'zone_livraison' => $livreur->zone_livraison,
+            'moyen_transport' => $livreur->moyen_transport,
+            'id_users' => $livreur->id_livreur, // Même valeur que id_livreur selon la relation
+            'nom' => $livreur->user ? $livreur->user->name : 'N/A',
+            'prenom' => $livreur->user ? $livreur->user->prenom : '',
+            'email' => $livreur->user ? $livreur->user->email : 'N/A',
+            'telephone' => $livreur->user ? $livreur->user->telephone : 'N/A'
+        ];
+
+        return response()->json(['success' => true, 'livreur' => $formattedLivreur]);
     }
 
     /**

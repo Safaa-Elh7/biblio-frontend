@@ -495,8 +495,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const addLivreurModal = document.getElementById('addLivreurModal');
     const closeModal = document.getElementById('closeModal');
     const cancelAddLivreur = document.getElementById('cancelAddLivreur');
-    const editLivreurForm = document.getElementById('editLivreurForm');
-    const editLivreurModal = document.getElementById('editLivreurModal');
     const closeEditModal = document.getElementById('closeEditModal');
     const cancelEditLivreur = document.getElementById('cancelEditLivreur');
     
@@ -548,6 +546,10 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     }
+    
+    // Vérifier que le formulaire d'édition existe
+    const editLivreurForm = document.getElementById('editLivreurForm');
+    const editLivreurModal = document.getElementById('editLivreurModal');
     
     // Gestion du formulaire d'édition
     if (editLivreurForm) {
@@ -604,20 +606,39 @@ document.addEventListener("DOMContentLoaded", function() {
             if (data.success) {
                 // Remplir le formulaire avec les données du livreur
                 const livreur = data.livreur;
-                document.getElementById('edit_nom').value = livreur.nom;
-                document.getElementById('edit_prenom').value = livreur.prenom;
-                document.getElementById('edit_email').value = livreur.email;
-                document.getElementById('edit_telephone').value = livreur.telephone;
-                document.getElementById('edit_zone_livraison').value = livreur.zone_livraison;
-                document.getElementById('edit_moyen_transport').value = livreur.moyen_transport;
+                console.log('Livreur data for edit:', livreur); // Log pour déboguer
                 
-                // Définir l'ID du livreur pour la soumission du formulaire
-                editLivreurForm.setAttribute('data-id', livreur.id_users);
+                // Accéder aux éléments du formulaire avec vérification
+                const nomElement = document.getElementById('edit_nom');
+                const prenomElement = document.getElementById('edit_prenom');
+                const emailElement = document.getElementById('edit_email');
+                const telephoneElement = document.getElementById('edit_telephone');
+                const zoneElement = document.getElementById('edit_zone_livraison');
+                const transportElement = document.getElementById('edit_moyen_transport');
                 
-                // Ouvrir le modal
-                editLivreurModal.classList.remove('hidden');
-                editLivreurModal.classList.add('flex');
-                document.body.style.overflow = 'hidden';
+                // Vérifier et remplir les champs s'ils existent
+                if (nomElement) nomElement.value = livreur.nom || '';
+                if (prenomElement) prenomElement.value = livreur.prenom || '';
+                if (emailElement) emailElement.value = livreur.email || '';
+                if (telephoneElement) telephoneElement.value = livreur.telephone || '';
+                if (zoneElement) zoneElement.value = livreur.zone_livraison || '';
+                if (transportElement) transportElement.value = livreur.moyen_transport || '';
+                
+                // Définir l'ID du livreur pour la soumission du formulaire (avec vérification)
+                const editForm = document.getElementById('editLivreurForm');
+                if (editForm) {
+                    editForm.setAttribute('data-id', livreur.id_users || livreur.id_livreur);
+                }
+                
+                // Ouvrir le modal avec vérification
+                const editModal = document.getElementById('editLivreurModal');
+                if (editModal) {
+                    editModal.classList.remove('hidden');
+                    editModal.classList.add('flex');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    console.error('Edit modal element not found!');
+                }
             } else {
                 showNotification(data.message, 'error');
             }
@@ -672,19 +693,30 @@ document.addEventListener("DOMContentLoaded", function() {
             if (data.success) {
                 // Récupérer les données du livreur
                 const livreur = data.livreur;
+                console.log('Livreur data received:', livreur); // Log pour déboguer
                 
-                // Remplir le modal avec les détails du livreur
-                document.getElementById('detail_nom').textContent = `${livreur.nom} ${livreur.prenom}`;
-                document.getElementById('detail_email').textContent = livreur.email;
-                document.getElementById('detail_telephone').textContent = livreur.telephone;
-                document.getElementById('detail_zone').textContent = livreur.zone_livraison;
-                document.getElementById('detail_transport').textContent = livreur.moyen_transport;
+                // Remplir le modal avec les détails du livreur (avec vérification)
+                const nomElement = document.getElementById('detail_nom');
+                const emailElement = document.getElementById('detail_email');
+                const telephoneElement = document.getElementById('detail_telephone');
+                const zoneElement = document.getElementById('detail_zone');
+                const transportElement = document.getElementById('detail_transport');
+                
+                if (nomElement) nomElement.textContent = `${livreur.nom || ''} ${livreur.prenom || ''}`;
+                if (emailElement) emailElement.textContent = livreur.email || 'N/A';
+                if (telephoneElement) telephoneElement.textContent = livreur.telephone || 'N/A';
+                if (zoneElement) zoneElement.textContent = livreur.zone_livraison || 'N/A';
+                if (transportElement) transportElement.textContent = livreur.moyen_transport || 'N/A';
                 
                 // Ouvrir le modal
                 const viewModal = document.getElementById('viewLivreurModal');
-                viewModal.classList.remove('hidden');
-                viewModal.classList.add('flex');
-                document.body.style.overflow = 'hidden';
+                if (viewModal) {
+                    viewModal.classList.remove('hidden');
+                    viewModal.classList.add('flex');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    console.error('Modal element not found!');
+                }
             } else {
                 showNotification(data.message, 'error');
             }

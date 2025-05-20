@@ -55,4 +55,27 @@ class Livreur extends Model
         }
         return 'N/A';
     }
+    
+    /**
+     * Accesseurs personnalisés pour faciliter l'accès aux données du user
+     */
+    public function getNomAttribute()
+    {
+        return $this->user ? $this->user->name : null;
+    }
+    
+    public function getPrenomAttribute()
+    {
+        return $this->user ? $this->user->prenom : null;
+    }
+    
+    public function getEmailAttribute()
+    {
+        return $this->user ? $this->user->email : null;
+    }
+    
+    public function getTelephoneAttribute()
+    {
+        return $this->user ? $this->user->telephone : null;
+    }
 }
