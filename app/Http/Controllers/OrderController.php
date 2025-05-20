@@ -24,7 +24,7 @@ class OrderController extends Controller
         
         // Si l'utilisateur est connecté, vérifier qu'il est autorisé à voir cette commande
         // (Si l'utilisateur n'est pas connecté, on autorise quand même car la commande peut être faite sans compte)
-        if (Auth::check() && Auth::id() !== $order->user_id && !Auth::Utilisateur()->isBibliothecaire()) {
+        if (Auth::check() && Auth::id() !== $order->user_id && !Auth::user()->isBibliothecaire()) {
             abort(403, 'Vous n\'êtes pas autorisé à voir cette commande.');
         }
         
@@ -168,7 +168,7 @@ class OrderController extends Controller
     public function adminIndex()
     {
         // Vérifier que l'utilisateur est un admin
-        if (!Auth::check() || !Auth::user()->role_id != 2) {
+        if (!Auth::check() || Auth::user()->role_id != 2) {
             abort(403, 'Accès non autorisé.');
         }
         
@@ -189,7 +189,7 @@ class OrderController extends Controller
     public function adminShow($id)
     {
         // Vérifier que l'utilisateur est un admin
-        if (!Auth::check() || !Auth::Utilisateur()->isBibliothecaire()) {
+        if (!Auth::check() || !Auth::user()->isBibliothecaire()) {
             abort(403, 'Accès non autorisé.');
         }
         
@@ -210,7 +210,7 @@ class OrderController extends Controller
     public function adminUpdateStatus(Request $request, $id)
     {
         // Vérifier que l'utilisateur est un admin
-        if (!Auth::check() || !Auth::Utilisateur()->isBibliothecaire()) {
+        if (!Auth::check() || !Auth::user()->isBibliothecaire()) {
             abort(403, 'Accès non autorisé.');
         }
         
@@ -244,7 +244,7 @@ class OrderController extends Controller
         $searchTerm = $request->input('search');
         
         // Si l'utilisateur est un admin, recherche dans toutes les commandes
-        if (Auth::Utilisateur()->isBibliothecaire()) {
+        if (Auth::user()->isBibliothecaire()) {
             $orders = Order::where('order_number', 'LIKE', "%{$searchTerm}%")
                 ->orWhere('full_name', 'LIKE', "%{$searchTerm}%")
                 ->orderBy('created_at', 'desc')
