@@ -264,12 +264,12 @@
               <tbody id="livreursTableBody">
                 @foreach($livreurs as $livreur)
                 <tr class="table-row border-b">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $livreur->user->livreur->id_livreur }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->user->name }} {{ $livreur->user->prenom }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->user->livreur->zone_livraison }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->user->livreur->moyen_transport }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->user->email }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->user->telephone }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $livreur->id_livreur }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->nom }} {{ $livreur->prenom }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->zone_livraison }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->moyen_transport }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->email }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $livreur->telephone }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div class="flex space-x-2">
                       <button onclick="viewLivreurDetails({{ $livreur->id_livreur }})" class="text-blue-600 hover:text-blue-900">
