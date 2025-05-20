@@ -159,4 +159,36 @@ Route::get('/test/api-connection', function() {
 Route::get('/check-storage-link', [ArticleController::class, 'checkStorageLink'])->name('check-storage-link');
 Route::get('/test-api-connection', [ArticleController::class, 'testApiConnection'])->name('test-api-connection');
 
+// Routes pour le bibliothécaire
+Route::middleware(['auth', 'role:bibliothecaire'])->prefix('bibliothecaire')->name('bibliothecaire.')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [App\Http\Controllers\BibliothecaireController::class, 'dashboard'])->name('dashboard');
+    
+    // Articles (Livres)
+    Route::get('/articles', [App\Http\Controllers\ArticleController::class, 'index'])->name('articles.index');
+    Route::get('/articles/create', [App\Http\Controllers\ArticleController::class, 'create'])->name('articles.create');
+    Route::post('/articles', [App\Http\Controllers\ArticleController::class, 'store'])->name('articles.store');
+    Route::get('/articles/{article}/edit', [App\Http\Controllers\ArticleController::class, 'edit'])->name('articles.edit');
+    Route::put('/articles/{article}', [App\Http\Controllers\ArticleController::class, 'update'])->name('articles.update');
+    Route::delete('/articles/{article}', [App\Http\Controllers\ArticleController::class, 'destroy'])->name('articles.destroy');
+
+    // Commandes
+    Route::get('/commandes', [App\Http\Controllers\OrderController::class, 'index'])->name('commandes.index');
+    Route::get('/commandes/{order}', [App\Http\Controllers\OrderController::class, 'show'])->name('commandes.show');
+    Route::put('/commandes/{order}/status', [App\Http\Controllers\OrderController::class, 'updateStatus'])->name('commandes.update-status');
+    Route::delete('/commandes/{order}', [App\Http\Controllers\OrderController::class, 'destroy'])->name('commandes.destroy');
+
+    // Livreurs
+    Route::get('/livreurs', [App\Http\Controllers\LivreurController::class, 'index'])->name('livreurs.index');
+    Route::get('/livreurs/create', [App\Http\Controllers\LivreurController::class, 'create'])->name('livreurs.create');
+    Route::post('/livreurs', [App\Http\Controllers\LivreurController::class, 'store'])->name('livreurs.store');
+    Route::get('/livreurs/{livreur}/edit', [App\Http\Controllers\LivreurController::class, 'edit'])->name('livreurs.edit');
+    Route::put('/livreurs/{livreur}', [App\Http\Controllers\LivreurController::class, 'update'])->name('livreurs.update');
+    Route::delete('/livreurs/{livreur}', [App\Http\Controllers\LivreurController::class, 'destroy'])->name('livreurs.destroy');
+
+    // Clients
+    Route::get('/clients', [App\Http\Controllers\ClientController::class, 'index'])->name('clients.index');
+    Route::get('/clients/{client}', [App\Http\Controllers\ClientController::class, 'show'])->name('clients.show');
+});
+
 require __DIR__ . '/auth.php';
