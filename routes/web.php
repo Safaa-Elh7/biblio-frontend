@@ -124,7 +124,9 @@ Route::middleware(['auth'])
     });
 Route::get('/dashboard', [DashboardBiblioController::class, 'index'])->name('bibliothecaire.dashboard.index');
 Route::get('/bibliothecaire/article', [App\Http\Controllers\ArticleController::class, 'show'])->name('bibliothecaire.article.index');
+// Routes CRUD pour les articles
 Route::get('/articles', [App\Http\Controllers\ArticleController::class, 'index'])->name('articles.index');
+Route::get('/articles/edit/{id}', [App\Http\Controllers\ArticleController::class, 'edit'])->name('articles.edit');
 Route::post('/articles', [App\Http\Controllers\ArticleController::class, 'store'])->name('articles.store');
 Route::match(['put', 'post'], '/articles/{id}', [App\Http\Controllers\ArticleController::class, 'update'])->name('articles.update');
 Route::delete('/articles/{id}', [App\Http\Controllers\ArticleController::class, 'destroy'])->name('articles.destroy');
@@ -135,7 +137,13 @@ Route::post('/bibliothecaire/livreurs', [LivreurController::class, 'store'])->na
 Route::get('/bibliothecaire/livreurs/{id}', [LivreurController::class, 'edit'])->name('bibliothecaire.livreur.edit');
 Route::put('/bibliothecaire/livreurs/{id}', [LivreurController::class, 'update'])->name('bibliothecaire.livreur.update');
 Route::delete('/bibliothecaire/livreurs/{id}', [LivreurController::class, 'destroy'])->name('bibliothecaire.livreur.destroy');
+Route::get('/api/livreurs/{id}', [LivreurController::class, 'getLivreur'])->name('api.livreur.show');
+// Routes CRUD pour les utilisateurs
 Route::get('/users', [UserBiblioController::class, 'show'])->name('bibliothecaire.user.index');
+Route::get('/users/{id}', [UserBiblioController::class, 'getUser'])->name('bibliothecaire.user.edit');
+Route::post('/users', [UserBiblioController::class, 'store'])->name('bibliothecaire.user.store');
+Route::put('/users/{id}', [UserBiblioController::class, 'update'])->name('bibliothecaire.user.update');
+Route::delete('/users/{id}', [UserBiblioController::class, 'destroy'])->name('bibliothecaire.user.destroy');
 Route::get('bibliothecaire/orders', [OrderBiblioController::class, 'index'])->name('bibliothecaire.order.show');
 Route::get('bibliothecaire/orders/{id}', [OrderBiblioController::class, 'show'])->name('bibliothecaire.order.details');
 Route::get('bibliothecaire/payments', [PaymentBiblioController::class, 'show'])->name('bibliothecaire.payment.show');

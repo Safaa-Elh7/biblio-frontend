@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>MyBookSpace - Tableau de Bord Utilisateurs</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -164,9 +165,14 @@
           <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-semibold text-gray-800">Liste des Utilisateurs</h2>
             <div class="flex space-x-2">
-              <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-md flex items-center transition duration-200">
-                <i class="fas fa-filter mr-2"></i>
-                <span>Filtrer</span>
+              <div class="relative">
+                <input type="text" id="searchUser" placeholder="Rechercher..." 
+                  class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+              </div>
+              <button id="addUserBtn" class="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-md flex items-center transition duration-200">
+                <i class="fas fa-plus mr-2"></i>
+                <span>Ajouter</span>
               </button>
               <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-md flex items-center transition duration-200">
                 <i class="fas fa-download mr-2"></i>
@@ -176,19 +182,39 @@
           </div>
           
           <div class="overflow-x-auto">
-            <table class="min-w-full bg-white">
+            <table class="min-w-full bg-white" id="usersTable">
               <thead>
                 <tr class="bg-gray-50 border-b">
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prénom</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôle</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dernière connexion</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Téléphone</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date d'inscription</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody id="usersTableBody">
-                <!-- Table rows will be populated by JavaScript -->
+                @foreach($users as $user)
+                <tr class="table-row hover:bg-gray-50 border-b">
+                  <td class="px-6 py-3 text-sm">{{ $user->id_users }}</td>
+                  <td class="px-6 py-3 text-sm">{{ $user->name }}</td>
+                  <td class="px-6 py-3 text-sm">{{ $user->prenom }}</td>
+                  <td class="px-6 py-3 text-sm">{{ $user->email }}</td>
+                  <td class="px-6 py-3 text-sm">{{ $user->telephone ?? 'Non renseigné' }}</td>
+                  <td class="px-6 py-3 text-sm">{{ $user->created_at->format('d/m/Y') }}</td>
+                  <td class="px-6 py-3 text-sm">
+                    <div class="flex space-x-1">
+                      <button class="edit-user action-button bg-blue-100 p-2 rounded-md text-blue-600 hover:bg-blue-200" data-id="{{ $user->id_users }}">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="delete-user action-button bg-red-100 p-2 rounded-md text-red-600 hover:bg-red-200" data-id="{{ $user->id_users }}">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                @endforeach
               </tbody>
             </table>
           </div>
@@ -929,5 +955,11 @@
       }, 3000);
     }
   </script>
+  
+  <!-- Include our user modal component -->
+  @include('bibliothecaire.components.user_modal')
+  
+  <!-- Include user CRUD functionality -->
+  <script src="{{ asset('js/user-crud.js') }}"></script>
 </body>
 </html>

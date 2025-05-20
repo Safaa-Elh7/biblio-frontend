@@ -112,7 +112,7 @@ class LivreurController extends Controller
     }
 
     /**
-     * Récupère les détails d'un livreur spécifique
+     * Récupère les détails d'un livreur spécifique pour l'édition
      */
     public function edit($id)
     {
@@ -137,6 +137,14 @@ class LivreurController extends Controller
         ];
 
         return response()->json(['success' => true, 'livreur' => $formattedLivreur]);
+    }
+    
+    /**
+     * Récupère les détails d'un livreur pour l'affichage
+     */
+    public function getLivreur($id)
+    {
+        return $this->edit($id); // Réutiliser la même logique que edit()
     }
 
     /**

@@ -210,6 +210,23 @@ class ArticleController extends Controller
         }
     }
 
+    // Affiche le formulaire d'édition d'un article
+    public function edit($id)
+    {
+        try {
+            $response = Http::timeout(5)->get($this->apiUrl . '/' . $id);
+            
+            if (!$response->successful()) {
+                return back()->with('error', 'Article introuvable');
+            }
+            
+            $article = $response->json();
+            return view('bibliothecaire.article_edit', compact('article'));
+        } catch (\Exception $e) {
+            return back()->with('error', 'Erreur lors de la récupération de l\'article: ' . $e->getMessage());
+        }
+    }
+    
     // Ensure getArticle handles exceptions properly
     public function getArticle($id)
     {
